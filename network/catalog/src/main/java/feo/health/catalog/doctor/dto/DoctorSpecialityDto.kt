@@ -3,7 +3,7 @@ package feo.health.catalog.doctor.dto
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DoctorSpeciality(
+data class DoctorSpecialityDto(
     val name: String,
     val link: String?
 )

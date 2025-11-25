@@ -7,10 +7,10 @@ import kotlinx.serialization.Serializable
 data class DoctorDto(
     val name: String,
     val link: String,
-    val specialities: List<DoctorSpeciality>?,
-    val experience: Int?,
-    val imageUri: String?,
-    val rating: Double?,
+    val specialities: List<DoctorSpecialityDto>? = null,
+    val experience: Int? = null,
+    val imageUri: String? = null,
+    val rating: Double? = null,
     val itemType: String,
-    val reviews: List<ReviewDto>?,
+    val reviews: List<ReviewDto>? = null,
 )

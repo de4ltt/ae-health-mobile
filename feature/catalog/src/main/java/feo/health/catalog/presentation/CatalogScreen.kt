@@ -1,27 +1,32 @@
 package feo.health.catalog.presentation
 
-import androidx.compose.animation.animateContentSize
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.material3.SearchBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import feo.health.catalog.presentation.common.CatalogItem
-import feo.health.catalog.presentation.common.SearchBar
-import feo.health.catalog.presentation.model.Clinic
-import feo.health.catalog.presentation.model.Review
-import feo.health.catalog.presentation.model.util.CatalogItemType
-import feo.health.catalog.presentation.model.util.Doctor
-import feo.health.catalog.presentation.ui.LocationItemCard
+import feo.health.catalog.presentation.component.HFilter
+import feo.health.catalog.presentation.component.Organization
+import feo.health.catalog.presentation.component.Search
+import feo.health.catalog.presentation.component.Search.SearchBar
+import feo.health.catalog.presentation.component.Specialists
+import feo.health.catalog.presentation.model.ICatalog
 import feo.health.catalog.presentation.viewmodel.CatalogViewModel
-import feo.health.ui.component.HList
-import java.time.LocalDate
+import feo.health.catalog.presentation.viewmodel.companion.CatalogEvent
+import feo.health.catalog.presentation.viewmodel.companion.CatalogState
+import feo.health.ui.component.NavAnchors
+import feo.health.ui.component.info_text.NothingFound
+import feo.health.ui.component.info_text.StartTheSearch
+import feo.health.ui.util.ILoading
 
 @Composable
 fun CatalogScreen(
@@ -29,58 +34,39 @@ fun CatalogScreen(
     catalogViewModel: CatalogViewModel
 ) {
 
-    val clinic = Clinic(
-        name = "Имя клиники",
-        link = "clinic-1431",
-        address = "г. Краснодар, ул. Горбачёва, д. 54",
-        phoneNumber = "+797888192890",
-        imageUri = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXQicZ3Hqf1JPXm9hR3IOv74H590fsZUBsHQ&s",
-        reviews = listOf(
-            Review(
-                text = "Текст комментария",
-                date = LocalDate.now(),
-                rating = 5.0
-            )
-        )
-    )
+    BackHandler {
+        catalogViewModel.onEvent(CatalogEvent.OnBack)
+    }
 
-    LocationItemCard.ClinicItemCard(
-        clinic = clinic
-    )
+    LaunchedEffect(Unit) {
+        NavAnchors.show()
+    }
 
-/*
-    Column(
-        modifier = Modifier.fillMaxSize().animateContentSize()
-    ) {
+    val state by catalogViewModel.screenState.collectAsStateWithLifecycle()
 
-        SearchBar(
-            modifier = Modifier,
-            state = catalogViewModel.searchBarState,
-            onSearch = {
-                catalogViewModel.onSearch()
-            }
-        )
+    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
 
-        Spacer(modifier = Modifier.height(20.dp))
-
-        val doctors = List(40) {
-            Doctor(
-                title = "Докторов Доктор Докторович",
-                link = "link",
-                type = CatalogItemType.DOCTOR,
-                imageUri = null,
-            )
+        AnimatedVisibility(visible = state is CatalogState.Items) {
+            SearchBar { catalogViewModel.onEvent(CatalogEvent.SearchEvent.OnSearch) }
         }
 
-        HList.LazyTitled(
-            modifier = Modifier,
-            listOrientation = HList.ListOrientation.VERTICAL,
-            contentPadding = PaddingValues(0.dp),
-            spacing = 10.dp,
-            title = "Вы недавно смотрели",
-            items = doctors,
-            itemContainer = { CatalogItem(it) }
-        )
+        when (val screenState = state) {
+            is CatalogState.ItemDetails.Found -> screenState.item.Display(onEvent = catalogViewModel::onEvent)
+
+            is CatalogState.ItemSpecialists.Found -> Specialists.Items.Screen(
+                specialists = screenState.specialists,
+                onClick = catalogViewModel::onEvent
+            )
+
+            is CatalogState.Items.Found -> Search.Screen(
+                screenState = catalogViewModel.screenState,
+                onEvent = catalogViewModel::onEvent
+            )
+
+            is CatalogState.Items.Default -> StartTheSearch(Modifier.weight(1f))
+            is CatalogState.Items.NothingFound -> NothingFound(Modifier.weight(1f))
+
+            else -> (screenState as ILoading).LoadingScreen()
+        }
     }
-*/
 }

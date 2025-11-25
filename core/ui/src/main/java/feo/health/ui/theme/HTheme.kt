@@ -3,8 +3,6 @@ package feo.health.ui.theme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
-import feo.health.ui.component.HIcons
-import feo.health.ui.component.HStrings
 
 val LocalColorScheme = staticCompositionLocalOf { HColorScheme() }
 val LocalShapes = staticCompositionLocalOf { HShapes }

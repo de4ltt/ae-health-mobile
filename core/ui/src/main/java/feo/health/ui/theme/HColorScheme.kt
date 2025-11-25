@@ -9,9 +9,11 @@ data class HColorScheme(
     val onBackground: Color = BLACK,
     val onBackgroundContainer: Color = LIGHT_GRAY
 ) {
-    object IndicationColors {
+    object Additional {
+        val BLUE = feo.health.ui.theme.BLUE
         val ORANGE: Color = feo.health.ui.theme.ORANGE
         val GREEN: Color = feo.health.ui.theme.GREEN
         val RED: Color = feo.health.ui.theme.RED
+        val TRANSPARENT = feo.health.ui.theme.TRANSPARENT
     }
 }

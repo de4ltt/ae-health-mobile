@@ -7,9 +7,9 @@ import kotlinx.serialization.Serializable
 data class ClinicDto(
     val name: String,
     val link: String,
-    val address: String?,
-    val phoneNumber: String?,
-    val imageUri: String?,
+    val address: String? = null,
+    val phoneNumber: String? = null,
+    val imageUri: String? = null,
     val itemType: String,
-    val reviews: List<ReviewDto>?
+    val reviews: List<ReviewDto>? = null
 )

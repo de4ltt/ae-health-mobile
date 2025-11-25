@@ -12,5 +12,7 @@ sealed class NetworkResult<out T> {
 fun <T, V> NetworkResult<T>.mapResult(mapper: (T) -> V): V =
     when (this) {
         is Success<T> -> mapper.invoke(this.data)
-        is NetworkResult.Error -> throw RuntimeException(exception.message)
+        is NetworkResult.Error -> throw Throwable(
+            message = ("${this.status?.value ?: 503} " + " " + exception.message)
+        )
     }

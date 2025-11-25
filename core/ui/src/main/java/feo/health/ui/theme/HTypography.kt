@@ -7,7 +7,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import feo.health.ui.R
 
-internal val fontFamily = FontFamily(
+val fontFamily = FontFamily(
     Font(resId = R.font.rubik_bold, weight = FontWeight.Bold),
     Font(resId = R.font.rubik_medium, weight = FontWeight.Medium),
     Font(resId = R.font.rubik_regular, weight = FontWeight.Normal),

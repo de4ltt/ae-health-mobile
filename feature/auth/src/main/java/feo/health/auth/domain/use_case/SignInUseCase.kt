@@ -7,6 +7,6 @@ import javax.inject.Inject
 class SignInUseCase @Inject constructor(
     private val authRepository: IAuthRepository
 ){
-    suspend operator fun invoke(signInDomain: SignInDomain) =
+    suspend operator fun invoke(signInDomain: SignInDomain): Boolean =
         authRepository.signIn(signInDomain)
 }

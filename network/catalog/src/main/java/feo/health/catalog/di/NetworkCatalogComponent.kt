@@ -16,8 +16,8 @@ import feo.health.catalog.drug.api.IDrugApi
 import feo.health.catalog.pharmacy.api.IPharmacyApi
 import feo.health.catalog.search.api.ISearchApi
 import feo.health.catalog.services.api.IServicesApi
-import feo.health.network.di.component.CatalogEndpointsComponent
 import feo.health.network.di.component.NetworkComponent
+import feo.health.secrets.di.CoreSecretsComponent
 
 @NetworkCatalogScope
 @Component(
@@ -25,7 +25,7 @@ import feo.health.network.di.component.NetworkComponent
         ClinicModule::class, DiseaseModule::class, DoctorModule::class, DrugModule::class,
         PharmacyModule::class, SearchModule::class, ServicesModule::class
     ],
-    dependencies = [NetworkComponent::class, CatalogEndpointsComponent::class]
+    dependencies = [NetworkComponent::class, CoreSecretsComponent::class]
 )
 interface NetworkCatalogComponent {
 
@@ -46,9 +46,9 @@ interface NetworkCatalogComponent {
     @Component.Builder
     interface Builder {
 
-        fun bindNetworkComponent(networkComponent: NetworkComponent): Builder
+        fun bindCoreSecretsComponent(coreSecretsComponent: CoreSecretsComponent): Builder
 
-        fun bindCatalogEndpointsComponent(catalogEndpointsComponent: CatalogEndpointsComponent): Builder
+        fun bindNetworkComponent(networkComponent: NetworkComponent): Builder
 
         fun build(): NetworkCatalogComponent
     }

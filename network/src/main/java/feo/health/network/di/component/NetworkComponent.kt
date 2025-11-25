@@ -2,10 +2,10 @@ package feo.health.network.di.component
 
 import dagger.BindsInstance
 import dagger.Component
-import feo.health.common.model.datastore.IpStorage
+import feo.health.network.datastore.HDataStore
 import feo.health.network.di.NetworkModuleScope
 import feo.health.network.di.module.NetworkModule
-import io.github.cdimascio.dotenv.Dotenv
+import feo.health.network.refresh_api.IRefreshApi
 import io.ktor.client.HttpClient
 
 @NetworkModuleScope
@@ -16,16 +16,14 @@ interface NetworkComponent {
 
     fun httpClient(): HttpClient
 
-    fun dotenv(): Dotenv
-
     @Component.Builder
     interface Builder {
 
         @BindsInstance
-        fun bindDotenv(dotenv: Dotenv): Builder
+        fun bindRefreshApi(refreshApi: IRefreshApi): Builder
 
         @BindsInstance
-        fun bindIpStorage(ipStorage: IpStorage): Builder
+        fun bindDatastore(dataStore: HDataStore): Builder
 
         fun build(): NetworkComponent
     }

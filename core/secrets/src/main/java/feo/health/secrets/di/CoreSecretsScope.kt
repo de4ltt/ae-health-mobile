@@ -1,7 +1,7 @@
-package feo.health.datastore.datastore.di
+package feo.health.secrets.di
 
 import javax.inject.Scope
 
 @Scope
 @Retention(AnnotationRetention.RUNTIME)
-annotation class DatastoreScope
+annotation class CoreSecretsScope

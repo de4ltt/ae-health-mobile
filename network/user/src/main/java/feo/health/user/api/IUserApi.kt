@@ -17,6 +17,7 @@ interface IUserApi {
     suspend fun getUserInfo(): NetworkResult<UserDto>
     suspend fun updateUserInfo(userDto: UserDto): NetworkResult<UserDto>
     suspend fun deleteUser(): NetworkResult<Unit>
+    suspend fun logOut(): NetworkResult<Unit>
 
     suspend fun changePassword(changePasswordRequest: ChangePasswordRequest): NetworkResult<Unit>
 }

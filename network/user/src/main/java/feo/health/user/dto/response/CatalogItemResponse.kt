@@ -1,5 +1,6 @@
 package feo.health.user.dto.response
 
+import feo.health.network.util.LocalDateTimeSerializer
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
@@ -7,7 +8,8 @@ import java.time.LocalDateTime
 data class CatalogItemResponse(
     val name: String,
     val type: String,
-    val link: String,
-    val imageUri: String,
+    val link: String?,
+    val imageUrl: String?,
+    @Serializable(LocalDateTimeSerializer::class)
     val dateTime: LocalDateTime
 )

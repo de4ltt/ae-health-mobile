@@ -6,9 +6,8 @@ Welcome to **AE:Health**, an innovative Android application designed to provide 
 
 AE:Health is a dedicated mobile platform for accessing healthcare information. Built with modern Android development practices, it offers intuitive navigation, real-time data integration, and smart features for easy exploration. The app supports user authentication, facility discovery, and interactive tools to enhance your informational experience. Note that the app is purely informational and does not facilitate connections between patients and doctors.
 
-![ae-health-mobile](https://github.com/user-attachments/assets/2f3ca89c-8155-4d02-a4d5-ee57781053b0)
+<img width="4011" height="8667" alt="Group 42" src="https://github.com/user-attachments/assets/666aef51-8cd8-48f0-8a96-07bc07db1b11" />
 
-Key features:
 - **Clinic Discovery**: Explore medical facilities with integrated maps, including addresses, contact details, and directions. 🗺️ For example, easily view info on clinics like "Детская клиника 'Семейная' на Кубанской".
 - **User Authentication**: Secure login and registration screens for personalized access to information, ensuring your data stays private. 🔒
 - **Specialists Directory**: Browse lists of doctors by specialty, such as oncologists, surgeons, therapists, and more. Each profile includes photos, ratings, experience, and detailed bios. 👨‍⚕️👩‍⚕️

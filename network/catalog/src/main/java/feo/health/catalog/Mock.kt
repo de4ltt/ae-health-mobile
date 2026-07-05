@@ -8,7 +8,13 @@ import feo.health.catalog.search.dto.ReviewDto
 import feo.health.catalog.services.dto.ServiceDto
 import java.time.LocalDate
 
+/**
+ * Helper container generating static mock model properties used for API fallbacks and Compose previews.
+ */
 object Mock {
+    /**
+     * List of mock doctor specialties.
+     */
     val specialities = listOf(
         DoctorSpecialityDto(
             name = "Отоларинголог",
@@ -31,6 +37,10 @@ object Mock {
             link = "link/4"
         ),
     )
+
+    /**
+     * List of mock review models.
+     */
     val reviews = listOf(
         ReviewDto(
             text = "",
@@ -63,6 +73,10 @@ object Mock {
             rating = 5.toDouble()
         ),
     )
+
+    /**
+     * List of mock Doctor DTO models.
+     */
     val doctors = List(5) { index ->
         DoctorDto(
             name = "Докторов Доктор Докторович",
@@ -75,6 +89,10 @@ object Mock {
             reviews = reviews
         )
     }
+
+    /**
+     * List of mock Clinic DTO models.
+     */
     val clinics = List(5) {
         ClinicDto(
             name = "Республиканская больница имени Яндекса и МАXа",
@@ -86,6 +104,10 @@ object Mock {
             itemType = "clinic"
         )
     }
+
+    /**
+     * List of mock Pharmacy DTO models.
+     */
     val pharmacies = List(5) {
         PharmacyDto(
             name = "Великая аптека Яндекса",
@@ -97,6 +119,10 @@ object Mock {
             )
         )
     }
+
+    /**
+     * List of mock Service DTO models.
+     */
     val services = List(5) {
         ServiceDto(
             name = "Приколюха $it",

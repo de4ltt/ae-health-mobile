@@ -1,16 +1,24 @@
 package feo.health.catalog.data.mapper
 
-import feo.health.catalog.data.mapper.DrugFormDomainToDrugFormDtoMapper.toDomainList as toFormDomainList
-import feo.health.catalog.data.mapper.DrugFormDomainToDrugFormDtoMapper.toDtoList as toFormDtoList
-import feo.health.catalog.data.mapper.InstructionSectionDomainToInstructionSectionDtoMapper.toDomainList as toInstructionDomainList
-import feo.health.catalog.data.mapper.InstructionSectionDomainToInstructionSectionDtoMapper.toDtoList as toInstructionDtoList
 import feo.health.catalog.domain.model.DrugDomain
 import feo.health.catalog.drug.dto.DrugDto
 import feo.health.mapper.IMapper
 import feo.health.mapper.Mapper
+import feo.health.catalog.data.mapper.DrugFormDomainToDrugFormDtoMapper.toDomainList as toFormDomainList
+import feo.health.catalog.data.mapper.DrugFormDomainToDrugFormDtoMapper.toDtoList as toFormDtoList
+import feo.health.catalog.data.mapper.InstructionSectionDomainToInstructionSectionDtoMapper.toDomainList as toInstructionDomainList
+import feo.health.catalog.data.mapper.InstructionSectionDomainToInstructionSectionDtoMapper.toDtoList as toInstructionDtoList
 
+/**
+ * Data mapping resolver between serialization [DrugDto] and domain [DrugDomain] models.
+ */
 @Mapper
 private object DrugMapper : IMapper<DrugDto, DrugDomain> {
+    /**
+     * Converts a [DrugDto] serial model to its corresponding domain [DrugDomain] entity.
+     *
+     * @return Resolved [DrugDomain].
+     */
     override fun DrugDto.toSecond(): DrugDomain = DrugDomain(
         name = name,
         latinName = latinName,
@@ -25,6 +33,11 @@ private object DrugMapper : IMapper<DrugDto, DrugDomain> {
         instructionSections = instructionSections.toInstructionDomainList()
     )
 
+    /**
+     * Converts a [DrugDomain] domain entity to its corresponding serial [DrugDto] model.
+     *
+     * @return Resolved [DrugDto].
+     */
     override fun DrugDomain.toFirst(): DrugDto =
         DrugDto(
             name = name,
@@ -40,8 +53,16 @@ private object DrugMapper : IMapper<DrugDto, DrugDomain> {
             instructionSections = instructionSections.toInstructionDtoList()
         )
 
+    /**
+     * Nested mapping resolver between [DrugDomain.DrugFormDomain] and [DrugDto.DrugFormDto].
+     */
     @Mapper
     private object DrugFormMapper : IMapper<DrugDomain.DrugFormDomain, DrugDto.DrugFormDto> {
+        /**
+         * Converts a [DrugDomain.DrugFormDomain] domain entity to its corresponding serial [DrugDto.DrugFormDto] model.
+         *
+         * @return Resolved [DrugDto.DrugFormDto].
+         */
         override fun DrugDomain.DrugFormDomain.toSecond(): DrugDto.DrugFormDto =
             DrugDto.DrugFormDto(
                 formName = formName,
@@ -52,6 +73,11 @@ private object DrugMapper : IMapper<DrugDto, DrugDomain> {
                 shelfLife = shelfLife
             )
 
+        /**
+         * Converts a [DrugDto.DrugFormDto] serial model to its corresponding domain [DrugDomain.DrugFormDomain] entity.
+         *
+         * @return Resolved [DrugDomain.DrugFormDomain].
+         */
         override fun DrugDto.DrugFormDto.toFirst(): DrugDomain.DrugFormDomain =
             DrugDomain.DrugFormDomain(
                 formName = formName,
@@ -63,15 +89,28 @@ private object DrugMapper : IMapper<DrugDto, DrugDomain> {
             )
     }
 
+    /**
+     * Nested mapping resolver between [DrugDomain.InstructionSectionDomain] and [DrugDto.InstructionSectionDto].
+     */
     @Mapper
     private object InstructionsSectionMapper :
         IMapper<DrugDomain.InstructionSectionDomain, DrugDto.InstructionSectionDto> {
+        /**
+         * Converts a [DrugDomain.InstructionSectionDomain] domain entity to its corresponding serial [DrugDto.InstructionSectionDto] model.
+         *
+         * @return Resolved [DrugDto.InstructionSectionDto].
+         */
         override fun DrugDomain.InstructionSectionDomain.toSecond(): DrugDto.InstructionSectionDto =
             DrugDto.InstructionSectionDto(
                 title = title,
                 text = text
             )
 
+        /**
+         * Converts a [DrugDto.InstructionSectionDto] serial model to its corresponding domain [DrugDomain.InstructionSectionDomain] entity.
+         *
+         * @return Resolved [DrugDomain.InstructionSectionDomain].
+         */
         override fun DrugDto.InstructionSectionDto.toFirst(): DrugDomain.InstructionSectionDomain =
             DrugDomain.InstructionSectionDomain(
                 title = title,

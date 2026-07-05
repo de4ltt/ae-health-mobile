@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import feo.health.ui.dispatcher.AppDispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -24,22 +25,22 @@ abstract class HViewModel<State, Event>(
     val isEmpty: Boolean
         get() = stateStack.value.isEmpty()
 
-    protected fun updateScreenState(state: State) = viewModelScope.launch(Dispatchers.Default) {
+    protected fun updateScreenState(state: State) {
         _screenState.value = state
     }
 
-    protected fun revertScreenState() = viewModelScope.launch(Dispatchers.Default) {
+    protected fun revertScreenState() {
         _screenState.value = if (stateStack.value.isNotEmpty())
             stateStack.value.last()
         else initialState
     }
 
-    protected fun pushScreenState(state: State) = viewModelScope.launch(Dispatchers.Default) {
+    protected fun pushScreenState(state: State) {
         updateScreenState(state)
         stateStack.value = stateStack.value + state
     }
 
-    protected fun onBack() = viewModelScope.launch(Dispatchers.IO) {
+    protected fun onBack() {
         updateScreenState(popScreenState() ?: initialState)
     }
 

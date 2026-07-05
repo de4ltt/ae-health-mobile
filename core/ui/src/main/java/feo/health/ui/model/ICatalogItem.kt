@@ -2,7 +2,7 @@ package feo.health.ui.model
 
 import androidx.annotation.StringRes
 import feo.health.ui.resource.HIcons
-import feo.health.ui.resource.HStrings
+import feo.health.ui.R
 
 sealed interface ICatalogItem {
     val title: String
@@ -108,12 +108,12 @@ sealed interface ICatalogItem {
             @param:StringRes val title: Int,
             val icon: HIcons
         ) {
-            DOCTOR(title = HStrings.doctorRes, icon = HIcons.DOCTOR),
-            PHARMACY(title = HStrings.pharmacyRes, icon = HIcons.MEDICINE),
-            CLINIC(title = HStrings.clinicRes, icon = HIcons.HOSPITAL),
-            SERVICE(title = HStrings.serviceRes, icon = HIcons.STETHOSCOPE),
-            DOCTOR_TYPE(title = HStrings.doctorTypeRes, icon = HIcons.DOCTOR),
-            CLINIC_TYPE(title = HStrings.clinicTypeRes, icon = HIcons.HOSPITAL);
+            DOCTOR(title = R.string.doctor, icon = HIcons.DOCTOR),
+            PHARMACY(title = R.string.pharmacy, icon = HIcons.MEDICINE),
+            CLINIC(title = R.string.clinic, icon = HIcons.HOSPITAL),
+            SERVICE(title = R.string.service, icon = HIcons.STETHOSCOPE),
+            DOCTOR_TYPE(title = R.string.doctor_type, icon = HIcons.DOCTOR),
+            CLINIC_TYPE(title = R.string.clinic_type, icon = HIcons.HOSPITAL);
 
             companion object {
                 fun String.toCatalogItemType(): CatalogItemType? =

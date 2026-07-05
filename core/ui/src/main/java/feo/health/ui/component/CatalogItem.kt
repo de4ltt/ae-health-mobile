@@ -25,7 +25,7 @@ import feo.health.ui.component.HProgressIndicator.Shimmer.defaultShimmer
 import feo.health.ui.component.container.HContainer
 import feo.health.ui.model.ICatalogItem
 import feo.health.ui.resource.HIcons
-import feo.health.ui.resource.HStrings.capitalize
+import feo.health.ui.util.capitalize
 import feo.health.ui.theme.HTheme
 
 object CatalogItem {

@@ -2,11 +2,8 @@ package feo.health.ui.util
 
 import android.content.Context
 import androidx.annotation.StringRes
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
+import feo.health.ui.R
 import feo.health.ui.component.HToast
-import feo.health.ui.resource.HStrings
-import feo.health.ui.resource.HStrings.capitalize
 
 object Validator {
 
@@ -14,21 +11,21 @@ object Validator {
         val regex: Regex,
         @param:StringRes val errorMessage: Int
     ) {
-        NAME("^[A-Za-zА-Яа-я\\s'-]{2,50}$".toRegex(), HStrings.invalidNameRes),
+        NAME("^[A-Za-zА-Яа-я\\s'-]{2,50}$".toRegex(), R.string.invalid_name),
         PASSWORD(
             "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d!@#\$%^&*]{6,}$".toRegex(),
-            HStrings.invalidPassword
+            R.string.invalid_password
         ),
-        EMAIL("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$".toRegex(), HStrings.invalidEmail),
+        EMAIL("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$".toRegex(), R.string.invalid_email),
         WEIGHT(
             "^(?:[1-9]\\d{1,2}|\\d{1,2})(?:\\.\\d)?$".toRegex(),
-            HStrings.invalidWeight
+            R.string.invalid_weight
         ),
         HEIGHT(
             "^(?:[4-9]\\d|1\\d{2}|2[0-4]\\d|250)$".toRegex(),
-            HStrings.invalidHeight
+            R.string.invalid_height
         ),
-        PHONE("^\\+?[0-9]{10,15}$".toRegex(), HStrings.invalidPhone),
+        PHONE("^\\+?[0-9]{10,15}$".toRegex(), R.string.invalid_phone),
     }
 
     fun validate(context: Context, text: String, type: FieldType): Boolean {

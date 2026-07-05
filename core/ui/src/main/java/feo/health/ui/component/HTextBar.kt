@@ -35,8 +35,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import feo.health.ui.resource.HStrings
-import feo.health.ui.resource.HStrings.capitalize
+import androidx.compose.ui.res.stringResource
+import feo.health.ui.R
+import feo.health.ui.util.capitalize
 import feo.health.ui.theme.HTheme
 import feo.health.ui.theme.fontFamily
 
@@ -52,7 +53,7 @@ object HTextBar {
         lineLimits: TextFieldLineLimits,
         outputTransformation: OutputTransformation? = null,
         contentModifier: Modifier = Modifier,
-        hintText: String = HStrings.search.capitalize(),
+        hintText: String = stringResource(R.string.search).capitalize(),
         keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
         frontItem: @Composable (RowScope.() -> Unit)? = null,
         backItem: @Composable (RowScope.() -> Unit)? = null
@@ -71,6 +72,7 @@ object HTextBar {
             keyboardOptions = keyboardOptions,
             readOnly = !enabled,
             textStyle = TextStyle(
+                color = HTheme.colors.onBackground,
                 fontSize = 15.sp,
                 fontWeight = HTheme.typography.medium.fontWeight,
                 fontFamily = fontFamily
@@ -107,7 +109,7 @@ object HTextBar {
         modifier: Modifier = Modifier,
         state: TextFieldState = rememberTextFieldState(),
         contentModifier: Modifier = Modifier,
-        hintText: String = HStrings.search.capitalize(),
+        hintText: String = stringResource(R.string.search).capitalize(),
         textStyle: TextStyle = HTheme.typography.medium,
         frontItem: @Composable (RowScope.() -> Unit)? = null,
         backItem: @Composable (RowScope.() -> Unit)? = null
@@ -136,7 +138,7 @@ object HTextBar {
                                 fontWeight = HTheme.typography.medium.fontWeight
                             )
                         BasicText(
-                            style = textStyle,
+                            style = textStyle.copy(color = HTheme.colors.onBackground),
                             maxLines = 1,
                             text = state.text.toString()
                         )
@@ -152,7 +154,7 @@ object HTextBar {
     fun Default(
         modifier: Modifier = Modifier,
         state: TextFieldState = rememberTextFieldState(),
-        hintText: String = HStrings.search.capitalize(),
+        hintText: String = stringResource(R.string.search).capitalize(),
         contentModifier: Modifier = Modifier,
         textStyle: TextStyle = HTheme.typography.medium,
         lineLimits: TextFieldLineLimits = TextFieldLineLimits.MultiLine()
@@ -172,7 +174,7 @@ object HTextBar {
         state: TextFieldState = rememberTextFieldState(),
         outputTransformation: OutputTransformation? = null,
         onInput: (String) -> Unit = {},
-        hintText: String = HStrings.search.capitalize(),
+        hintText: String = stringResource(R.string.search).capitalize(),
         enabled: Boolean = true,
         textStyle: TextStyle = HTheme.typography.medium,
         keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -243,7 +245,7 @@ object HTextBar {
                     content = {
                         HText.Default(
                             color = it,
-                            text = HStrings.search.capitalize(),
+                            text = stringResource(R.string.search).capitalize(),
                             fontWeight = FontWeight.Bold
                         )
                     }

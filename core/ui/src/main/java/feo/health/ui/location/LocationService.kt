@@ -15,10 +15,13 @@ import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.time.LocalDateTime
+import kotlin.coroutines.resume
 
 object LocationService {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var activeLocationCallback: LocationCallback? = null
     private val _locationState = MutableStateFlow<LocationState>(LocationState.Initial)
     val locationState: StateFlow<LocationState> = _locationState.asStateFlow()
 
@@ -38,26 +41,30 @@ object LocationService {
     }
 
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
-    suspend fun getLastLocation(context: Context): LocationState {
+    suspend fun getLastLocation(context: Context): LocationState = suspendCancellableCoroutine { continuation ->
         if (!hasLocationPermission(context)) {
-            _locationState.value = LocationState.Error("Location permission not granted")
-            return _locationState.value
+            val state = LocationState.Error("Location permission not granted")
+            _locationState.value = state
+            continuation.resume(state)
+            return@suspendCancellableCoroutine
         }
 
-        return try {
-            val location = fusedLocationClient.lastLocation.result
-            if (location != null) {
-                _locationState.value = LocationState.Success(location, LocalDateTime.now())
-                _locationState.value
-            } else {
-                _locationState.value = LocationState.Error("No last known location available")
-                requestLocationUpdates(context)
-                _locationState.value
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location ->
+                val state = if (location != null) {
+                    LocationState.Success(location, LocalDateTime.now())
+                } else {
+                    requestLocationUpdates(context)
+                    LocationState.Error("No last known location available")
+                }
+                _locationState.value = state
+                continuation.resume(state)
             }
-        } catch (e: Exception) {
-            _locationState.value = LocationState.Error("Failed to get location: ${e.message}")
-            _locationState.value
-        }
+            .addOnFailureListener { e ->
+                val state = LocationState.Error("Failed to get location: ${e.message}")
+                _locationState.value = state
+                continuation.resume(state)
+            }
     }
 
     @RequiresPermission(anyOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
@@ -67,25 +74,30 @@ object LocationService {
             return
         }
 
+        activeLocationCallback?.let {
+            fusedLocationClient.removeLocationUpdates(it)
+        }
+
         val locationRequest = LocationRequest.create().apply {
             interval = 10000
             fastestInterval = 5000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 
-        val locationCallback = object : LocationCallback() {
+        val callback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 locationResult.lastLocation?.let { location ->
                     _locationState.value = LocationState.Success(location, LocalDateTime.now())
-                    fusedLocationClient.removeLocationUpdates(this)
+                    stopLocationUpdates()
                 }
             }
         }
+        activeLocationCallback = callback
 
         try {
             fusedLocationClient.requestLocationUpdates(
                 locationRequest,
-                locationCallback,
+                callback,
                 Looper.getMainLooper()
             )
         } catch (e: SecurityException) {
@@ -97,7 +109,10 @@ object LocationService {
 
     fun stopLocationUpdates() {
         _locationState.value = LocationState.Initial
-        fusedLocationClient.removeLocationUpdates { /* No-op callback */ }
+        activeLocationCallback?.let {
+            fusedLocationClient.removeLocationUpdates(it)
+            activeLocationCallback = null
+        }
     }
 
     sealed class LocationState {

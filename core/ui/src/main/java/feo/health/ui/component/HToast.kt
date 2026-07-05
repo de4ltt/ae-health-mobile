@@ -34,10 +34,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import feo.health.ui.component.container.HContainer
 import feo.health.ui.resource.HIcons
-import feo.health.ui.resource.HStrings
-import feo.health.ui.resource.HStrings.capitalize
+import feo.health.ui.util.capitalize
 import feo.health.ui.theme.HColorScheme
 import feo.health.ui.theme.HTheme
+import feo.health.ui.dispatcher.AppDispatchers
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -76,21 +76,21 @@ data object HToast {
                 get() = HToastType(
                     primaryColor = HColorScheme.Additional.GREEN,
                     secondaryColor = HColorScheme.Additional.GREEN.copy(alpha = 0.2f),
-                    titleRes = HStrings.successRes,
+                    titleRes = feo.health.ui.R.string.success,
                     icon = HIcons.SUCCESS_CIRCLE
                 )
             val ERROR
                 get() = HToastType(
                     primaryColor = HColorScheme.Additional.RED,
                     secondaryColor = HColorScheme.Additional.RED.copy(alpha = 0.2f),
-                    titleRes = HStrings.oopsRes,
+                    titleRes = feo.health.ui.R.string.oops,
                     icon = HIcons.ATTENTION
                 )
             val INFO
                 get() = HToastType(
                     primaryColor = HColorScheme.Additional.BLUE,
                     secondaryColor = HColorScheme.Additional.BLUE.copy(alpha = 0.2f),
-                    titleRes = HStrings.veryImportant,
+                    titleRes = feo.health.ui.R.string.very_important,
                     icon = HIcons.INFORMATION_CIRCLE
                 )
         }
@@ -184,7 +184,7 @@ data object HToast {
     }
 
     fun makeSuccess(message: String, length: HToastLength = HToastLength.LONG) =
-        CoroutineScope(Dispatchers.Default).launch {
+        CoroutineScope(AppDispatchers.default).launch {
             toastChannel.send(
                 HToastMessage(
                     toastType = HToastType.SUCCESS,
@@ -195,7 +195,7 @@ data object HToast {
         }
 
     fun makeInfo(message: String, length: HToastLength = HToastLength.LONG) =
-        CoroutineScope(Dispatchers.Default).launch {
+        CoroutineScope(AppDispatchers.default).launch {
             toastChannel.send(
                 HToastMessage(
                     toastType = HToastType.INFO,
@@ -209,7 +209,7 @@ data object HToast {
         message: String = "Something terrible happened...",
         length: HToastLength = HToastLength.LONG
     ) =
-        CoroutineScope(Dispatchers.Default).launch {
+        CoroutineScope(AppDispatchers.default).launch {
             toastChannel.send(
                 HToastMessage(
                     toastType = HToastType.ERROR,
@@ -223,17 +223,20 @@ data object HToast {
         successMessageRequired: Boolean = false,
         onError: () -> Unit = {},
         action: () -> Unit
-    ) = try {
-        if (successMessageRequired)
+    ) {
+        try {
             action()
-        HToast.makeSuccess(message = "Операция прошла успешно")
-    } catch (e: Exception) {
-        onError
-        HToast.makeError(message = e.message ?: "Что-то пошло не так...")
+            if (successMessageRequired) {
+                HToast.makeSuccess(message = "Операция прошла успешно")
+            }
+        } catch (e: Exception) {
+            onError()
+            HToast.makeError(message = e.message ?: "Что-то пошло не так...")
+        }
     }
 
     fun CoroutineScope.tryWithToast(
-        dispatcher: CoroutineDispatcher = Dispatchers.IO,
+        dispatcher: CoroutineDispatcher = AppDispatchers.io,
         successMessageRequired: Boolean = false,
         onError: () -> Unit = {},
         action: suspend () -> Unit

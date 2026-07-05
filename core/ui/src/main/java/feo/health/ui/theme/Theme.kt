@@ -1,5 +1,6 @@
 package feo.health.ui.theme
 
+import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -13,14 +14,20 @@ fun AeHealthMobileTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        dynamicColor -> {
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            val m3Colors = if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            HColorScheme(
+                primary = m3Colors.primary,
+                secondary = m3Colors.secondary,
+                background = m3Colors.background,
+                onBackground = m3Colors.onBackground,
+                onBackgroundContainer = m3Colors.surfaceVariant
+            )
         }
-
-        darkTheme -> HColorScheme()
-        else -> HColorScheme()
+        darkTheme -> DarkColorScheme
+        else -> LightColorScheme
     }
 
-    HealthTheme(content = content)
+    HealthTheme(colorScheme = colorScheme, content = content)
 }

@@ -33,22 +33,22 @@ object HButton {
         onClick: () -> Unit,
         content: @Composable RowScope.(Color) -> Unit,
     ) = Box(
-        modifier = Modifier
-            .wrapContentSize()
+        modifier = modifier
             .background(
                 color = if (enabled) buttonColors.containerColor
                 else buttonColors.disabledContainerColor,
                 shape = buttonShape
             )
             .clickable(
+                enabled = enabled,
                 onClick = onClick,
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() }
+                interactionSource = remember { MutableInteractionSource() },
+                indication = androidx.compose.foundation.LocalIndication.current
             ),
         contentAlignment = Alignment.Center
     ) {
         Row(
-            modifier = modifier.padding(contentPadding),
+            modifier = Modifier.padding(contentPadding),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceAround
         ) {
@@ -67,8 +67,8 @@ object HButton {
         enabled: Boolean = false,
         containerColor: Color = HTheme.colors.primary,
         contentColor: Color = HTheme.colors.background,
-        disabledContainerColor: Color = HTheme.colors.onBackground,
-        disabledContentColor: Color = HTheme.colors.secondary,
+        disabledContainerColor: Color = HTheme.colors.disabledContainer,
+        disabledContentColor: Color = HTheme.colors.disabledContent,
         onClick: () -> Unit = {},
         content: @Composable RowScope.(Color) -> Unit
     ) = invoke(

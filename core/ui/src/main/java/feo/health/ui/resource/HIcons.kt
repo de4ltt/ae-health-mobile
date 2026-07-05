@@ -9,11 +9,23 @@ import androidx.compose.ui.res.painterResource
 import feo.health.ui.R
 import feo.health.ui.theme.HTheme
 
+/**
+ * Sealed interface representing vector graphics icons used across the application.
+ */
 sealed interface HIcons {
 
+    /**
+     * Renders the vector icon drawable as a Composable.
+     *
+     * @param modifier The [Modifier] to apply to the icon layout container.
+     * @param tint The color tint to paint the icon vector path. Defaults to [HTheme.colors.primary].
+     */
     @Composable
     operator fun invoke(modifier: Modifier = Modifier, tint: Color = HTheme.colors.primary)
 
+    /**
+     * Artificial intelligence assistance icon.
+     */
     data object AI : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -22,6 +34,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Upward navigation/arrow icon.
+     */
     data object ARROW_UP : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -30,6 +45,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Rightward arrow icon.
+     */
     data object ARROW_RIGHT : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -38,6 +56,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Leftward back-navigation arrow icon.
+     */
     data object ARROW_LEFT : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -46,6 +67,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Caution/attention alert icon.
+     */
     data object ATTENTION : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -54,6 +78,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Trash bin delete icon.
+     */
     data object BIN : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -62,6 +89,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Birthday cake info icon.
+     */
     data object BIRTHDAY : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -70,6 +100,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Currency/cash finance icon.
+     */
     data object CASH : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -78,6 +111,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Chat message dialogue bubble icon.
+     */
     data object CHAT : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -86,6 +122,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Right-pointing chevron disclosure details icon.
+     */
     data object CHEVRON : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -94,6 +133,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Clock/duration stopwatch history icon.
+     */
     data object CLOCK : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -102,6 +144,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Close/cancel cross indicator icon.
+     */
     data object CROSS : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -110,6 +155,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Medical practitioner specialist doctor icon.
+     */
     data object DOCTOR : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -118,6 +166,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Electronic mail letter envelope icon.
+     */
     data object EMAIL : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -126,6 +177,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Search parameters funnel filter settings icon.
+     */
     data object FILTER : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -134,6 +188,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Heart favorite selection icon.
+     */
     data object HEART : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -142,6 +199,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Home catalog search dashboard icon.
+     */
     data object HOME : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -150,6 +210,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Medical hospital clinic building icon.
+     */
     data object HOSPITAL : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -158,6 +221,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Information alert circle icon.
+     */
     data object INFORMATION_CIRCLE : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -166,6 +232,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Security lock password input icon.
+     */
     data object KEY : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -174,6 +243,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Geolocation map coordinates pin marker icon.
+     */
     data object LOCATION_MARKER : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -182,6 +254,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Medical capsule pill medicine drug icon.
+     */
     data object MEDICINE : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -190,6 +265,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Plus add item action icon.
+     */
     data object PLUS : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -198,6 +276,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Telephone contact calling icon.
+     */
     data object PHONE : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -206,6 +287,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Query magnification search bar icon.
+     */
     data object SEARCH : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -214,6 +298,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Favorite star selection rating icon.
+     */
     data object STAR : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -222,6 +309,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Stethoscope medical check diagnosis icon.
+     */
     data object STETHOSCOPE : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -230,6 +320,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Success status checkmark circle alert icon.
+     */
     data object SUCCESS_CIRCLE : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -238,6 +331,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * User profile account login icon.
+     */
     data object USER : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -246,6 +342,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Global network web search magnifying icon.
+     */
     data object WEB_SEARCH : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {
@@ -254,6 +353,9 @@ sealed interface HIcons {
         }
     }
 
+    /**
+     * Body mass index weight scale indicator icon.
+     */
     data object WEIGHT : HIcons {
         @Composable
         override operator fun invoke(modifier: Modifier, tint: Color) {

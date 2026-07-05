@@ -2,6 +2,17 @@ package feo.health.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+/**
+ * Color system token descriptor holding premium theme colors.
+ *
+ * @property primary Primary accent action color.
+ * @property secondary Muted details secondary color.
+ * @property background Clean canvas background color.
+ * @property onBackground High-contrast main text/foreground color.
+ * @property onBackgroundContainer Container surface boundary/background color.
+ * @property disabledContainer Background color of disabled interactive items.
+ * @property disabledContent Content color of disabled interactive items.
+ */
 data class HColorScheme(
     val primary: Color = Color(0xFF2563EB),          // Premium Slate Blue
     val secondary: Color = Color(0xFF4F46E5),        // Soft Indigo
@@ -11,17 +22,45 @@ data class HColorScheme(
     val disabledContainer: Color = Color(0xFFE2E8F0),     // Gray Slate for Disabled Container
     val disabledContent: Color = Color(0xFF94A3B8)       // Muted Gray for Disabled Content
 ) {
+    /**
+     * Helper presets for custom semantic colors.
+     */
     object Additional {
+        /**
+         * Semantic blue alert color.
+         */
         val BLUE = Color(23, 133, 242, 255)
+
+        /**
+         * Semantic orange warning/attention color.
+         */
         val ORANGE: Color = Color(176, 120, 0, 255)
+
+        /**
+         * Semantic green success status color.
+         */
         val GREEN: Color = Color(2, 136, 0, 255)
+
+        /**
+         * Semantic red failure status color.
+         */
         val RED: Color = Color(145, 0, 0, 255)
+
+        /**
+         * Clear transparent color.
+         */
         val TRANSPARENT = Color(0, 0, 0, 0)
     }
 }
 
+/**
+ * Custom light palette color scheme preset.
+ */
 val LightColorScheme = HColorScheme()
 
+/**
+ * Custom dark palette color scheme preset.
+ */
 val DarkColorScheme = HColorScheme(
     primary = Color(0xFF3B82F6),          // Vibrant Neon Blue
     secondary = Color(0xFF6366F1),        // Indigo Light

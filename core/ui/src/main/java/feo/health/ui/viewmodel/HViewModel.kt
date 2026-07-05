@@ -30,8 +30,14 @@ abstract class HViewModel<State, Event>(
      */
     abstract fun onEvent(event: Event): Any
 
+    /**
+     * History stack holding previous screen states to enable rollbacks and back transitions.
+     */
     private val stateStack: MutableStateFlow<List<State>> = MutableStateFlow<List<State>>(emptyList())
 
+    /**
+     * Internal mutable backing state flow.
+     */
     private val _screenState: MutableStateFlow<State> =
         MutableStateFlow(initialState)
 

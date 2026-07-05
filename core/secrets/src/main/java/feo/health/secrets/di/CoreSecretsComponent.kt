@@ -24,6 +24,9 @@ interface CoreSecretsComponent {
 
         /**
          * Binds a concrete implementation of [HSecrets] into the dependency graph.
+         *
+         * @param secrets Concrete implementation of secrets holder component.
+         * @return The updated [Builder] instance.
          */
         @BindsInstance
         fun bindSecrets(secrets: HSecrets): Builder

@@ -52,11 +52,21 @@ import kotlinx.coroutines.launch
  */
 data object HToast {
 
+    /**
+     * Internal coroutine channel queue for toast notifications.
+     */
     private val toastChannel: Channel<HToastMessage> = Channel(
         capacity = 5,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
 
+    /**
+     * Data wrapper for a single toast notification.
+     *
+     * @property toastType Visual category of the toast.
+     * @property message The text content of the toast message.
+     * @property length Visual display duration.
+     */
     private data class HToastMessage(
         val toastType: HToastType,
         val message: String,
@@ -65,6 +75,8 @@ data object HToast {
 
     /**
      * Duration length for displaying the toast message.
+     *
+     * @property lengthMillis Duration in milliseconds.
      */
     enum class HToastLength(val lengthMillis: Long) {
         SHORT(1500L),
@@ -72,13 +84,27 @@ data object HToast {
         LONG(5000L)
     }
 
+    /**
+     * Internal style descriptor for toast types.
+     *
+     * @property primaryColor Accent status color.
+     * @property secondaryColor Translucent background tint.
+     * @property titleRes Resource ID for header title text.
+     * @property icon Status vector asset icon.
+     */
     private data class HToastType(
         val primaryColor: Color,
         val secondaryColor: Color,
         @param:StringRes val titleRes: Int,
         val icon: HIcons
     ) {
+        /**
+         * Companion object holding standard preconfigured toast presets.
+         */
         companion object {
+            /**
+             * Green success alert theme type preset.
+             */
             val SUCCESS
                 get() = HToastType(
                     primaryColor = HColorScheme.Additional.GREEN,
@@ -86,6 +112,10 @@ data object HToast {
                     titleRes = feo.health.ui.R.string.success,
                     icon = HIcons.SUCCESS_CIRCLE
                 )
+
+            /**
+             * Red error alert theme type preset.
+             */
             val ERROR
                 get() = HToastType(
                     primaryColor = HColorScheme.Additional.RED,
@@ -93,6 +123,10 @@ data object HToast {
                     titleRes = feo.health.ui.R.string.oops,
                     icon = HIcons.ATTENTION
                 )
+
+            /**
+             * Blue information alert theme type preset.
+             */
             val INFO
                 get() = HToastType(
                     primaryColor = HColorScheme.Additional.BLUE,
@@ -138,6 +172,11 @@ data object HToast {
         }
     }
 
+    /**
+     * Internal layout builder that constructs the toast banner card.
+     *
+     * @param toastMessage The active toast details to render.
+     */
     @Composable
     private operator fun invoke(toastMessage: HToastMessage) = HContainer.Default(
         paddingValues = PaddingValues(10.dp),

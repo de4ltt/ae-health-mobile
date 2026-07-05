@@ -47,6 +47,23 @@ import feo.health.ui.util.capitalize
  */
 object HTextBar {
 
+    /**
+     * Core layout container of the text input bar.
+     * Integrates state tracking, visual decorators, and style definitions.
+     *
+     * @param modifier The [Modifier] to apply to the input layout.
+     * @param state The [TextFieldState] managing input text value.
+     * @param textStyle Typography configurations.
+     * @param enabled Set false to lock user input capabilities.
+     * @param onInput Callback triggered when text state updates.
+     * @param lineLimits Line constraints of the field.
+     * @param outputTransformation Formatting rules (e.g. secure fields).
+     * @param contentModifier Inner layout Modifier.
+     * @param hintText Placeholder text.
+     * @param keyboardOptions Keyboard configurations.
+     * @param frontItem Start icon composable.
+     * @param backItem End icon composable.
+     */
     @Composable
     private operator fun invoke(
         modifier: Modifier = Modifier,

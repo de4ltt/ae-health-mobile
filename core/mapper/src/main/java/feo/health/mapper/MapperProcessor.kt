@@ -17,12 +17,21 @@ import com.google.devtools.ksp.validate
  * Automatically generates shortened mapping functions by subtracting the common CamelCase word
  * intersection between source and target classes. It also generates deprecation wrappers
  * for backward compatibility with previous long-named functions.
+ *
+ * @property codeGenerator KSP tool used to create new file resources.
+ * @property logger KSP diagnostic logger tool.
  */
 class MapperProcessor(
     private val codeGenerator: CodeGenerator,
     private val logger: KSPLogger
 ) : SymbolProcessor {
 
+    /**
+     * Processes annotations on symbols in the source codebase.
+     *
+     * @param resolver KSP environment resolver.
+     * @return List of unresolved annotated symbols.
+     */
     override fun process(resolver: Resolver): List<KSAnnotated> {
         val annotationName = "feo.health.mapper.Mapper"
         val symbols = resolver.getSymbolsWithAnnotation(annotationName)
@@ -32,6 +41,12 @@ class MapperProcessor(
         return invalidSymbols
     }
 
+    /**
+     * Generates a concrete file containing short-named two-way extension mapper mappings
+     * for the provided class.
+     *
+     * @param classDeclaration The mapper class declaration.
+     */
     private fun generateMapper(classDeclaration: KSClassDeclaration) {
         val autoMapperInterface = classDeclaration.superTypes
             .map { it.resolve() }
@@ -206,7 +221,22 @@ class MapperProcessor(
         }
     }
 
+    /**
+     * Deduces short target method names by performing CamelCase word tokenization
+     * and subtracting intersection of words between source and target classes.
+     *
+     * @param first Qualified/simple name of the first class.
+     * @param second Qualified/simple name of the second class.
+     * @return Pair of short names to map First->Second and Second->First respectively.
+     */
     private fun getShortenedMethodNames(first: String, second: String): Pair<String, String> {
+        /**
+         * Inner helper function calculating token set subtraction.
+         *
+         * @param source The source class name.
+         * @param target The target class name.
+         * @return The resulting short name prefix.
+         */
         fun getMethodName(source: String, target: String): String {
             val sourceWords = source.split(Regex("(?=[A-Z])")).filter { it.isNotEmpty() }
             val targetWords = target.split(Regex("(?=[A-Z])")).filter { it.isNotEmpty() }
@@ -221,6 +251,13 @@ class MapperProcessor(
         return Pair(getMethodName(first, second), getMethodName(second, first))
     }
 
+    /**
+     * Invoked at the completion of processing rounds.
+     */
     override fun finish() {}
+
+    /**
+     * Invoked if KSP encounters processing round errors.
+     */
     override fun onError() {}
 }

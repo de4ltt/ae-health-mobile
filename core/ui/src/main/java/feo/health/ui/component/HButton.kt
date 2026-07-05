@@ -30,6 +30,14 @@ object HButton {
     /**
      * Core layout container of the button.
      * Handles background, shape, click events, and content arrangement.
+     *
+     * @param modifier The [Modifier] to apply to the button.
+     * @param buttonColors The color scheme configuration of the button.
+     * @param buttonShape The background shape.
+     * @param contentPadding Padding applied inside the button content container.
+     * @param enabled Decides if the button is interactive.
+     * @param onClick Callback triggered on click event.
+     * @param content The inner composable content of the button.
      */
     @Composable
     private operator fun invoke(

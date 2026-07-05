@@ -24,12 +24,22 @@ import com.valentinilk.shimmer.shimmer
 import feo.health.ui.component.HProgressIndicator.Shimmer.defaultShimmer
 import feo.health.ui.component.container.HContainer
 import feo.health.ui.model.ICatalogItem
-import feo.health.ui.resource.HIcons
-import feo.health.ui.util.capitalize
 import feo.health.ui.theme.HTheme
+import feo.health.ui.util.capitalize
 
+/**
+ * Renders UI components for items in a medical/drug catalog, support lists,
+ * or doctor directories.
+ */
 object CatalogItem {
 
+    /**
+     * Renders a generic catalog list item with an image, title, and subtitle.
+     *
+     * @param T The item model implementing [ICatalogItem].
+     * @param item The catalog item details.
+     * @param onClick Callback triggered on item click event.
+     */
     @Composable
     fun <T : ICatalogItem> CatalogItem(
         item: T,
@@ -75,6 +85,9 @@ object CatalogItem {
         }
     }
 
+    /**
+     * Renders a shimmer skeleton loading item matching the structure of [CatalogItem].
+     */
     @Composable
     fun ShimmerCatalogItem() {
         Row(

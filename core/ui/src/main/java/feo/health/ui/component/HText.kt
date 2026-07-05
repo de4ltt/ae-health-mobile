@@ -27,6 +27,23 @@ import feo.health.ui.theme.fontFamily
  */
 object HText {
 
+    /**
+     * Internal layout builder that renders plain string text using BasicText.
+     * Enforces the default design system typography.
+     *
+     * @param modifier The [Modifier] to apply to the text box.
+     * @param text The text message to display.
+     * @param color The [ColorProducer] that provides the text color.
+     * @param textAlign Alignment of text characters.
+     * @param fontSize Visual size of text.
+     * @param textDecoration Custom decoration runs (e.g. underline).
+     * @param fontWeight Weight thickness of the text.
+     * @param maxLines Limit of line spans.
+     * @param autoSize Configuration logic for automatic text scaling.
+     * @param overflow Handling visual clipping overflows.
+     * @param basicMarquee Setting to scroll text horizontally if overflowing.
+     * @param onTextLayout Callback invoked when text layout calculation completes.
+     */
     @Composable
     private operator fun invoke(
         modifier: Modifier = Modifier,
@@ -62,6 +79,22 @@ object HText {
         )
     )
 
+    /**
+     * Internal layout builder that renders [AnnotatedString] text using BasicText.
+     * Enforces the default design system typography.
+     *
+     * @param modifier The [Modifier] to apply to the text box.
+     * @param text The [AnnotatedString] containing styled text runs.
+     * @param color The [ColorProducer] that provides the text color.
+     * @param textAlign Alignment of text characters.
+     * @param fontSize Visual size of text.
+     * @param fontWeight Weight thickness of the text.
+     * @param textDecoration Custom decoration runs (e.g. underline).
+     * @param maxLines Limit of line spans.
+     * @param autoSize Configuration logic for automatic text scaling.
+     * @param basicMarquee Setting to scroll text horizontally if overflowing.
+     * @param onTextLayout Callback invoked when text layout calculation completes.
+     */
     @Composable
     private operator fun invoke(
         modifier: Modifier = Modifier,

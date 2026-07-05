@@ -2,36 +2,22 @@ package feo.health.ui.component.container
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.text.Layout
-import android.util.Log
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -43,29 +29,36 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.ImageLoader
 import coil3.compose.AsyncImagePainter
 import coil3.compose.rememberAsyncImagePainter
-import coil3.disk.DiskCache
-import coil3.disk.directory
-import coil3.memory.MemoryCache
 import feo.health.ui.component.HProgressIndicator
 import feo.health.ui.component.HText
 import feo.health.ui.image_loader.HImageLoader
 import feo.health.ui.theme.HTheme
 import feo.health.ui.util.HConnectivityChecker
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.StateFlow
-import java.io.File
 
+/**
+ * Layout container wrapper utilities supplying standard shapes, background tints, titles,
+ * and media/image loader components according to the application theme styling system.
+ */
 object HContainer {
 
+    /**
+     * Renders a basic content card box with standard rounded corners and padding layouts.
+     *
+     * @param modifier The [Modifier] to apply to the container layout.
+     * @param shape Clip shape of the container borders. Defaults to [HTheme.shapes.rounded12].
+     * @param backgroundColor Color tint of the container background. Defaults to [HTheme.colors.onBackgroundContainer].
+     * @param spacing Vertical spacing applied between column child elements. Defaults to 10.dp.
+     * @param contentAlignment Alignment of child elements within the Box. Defaults to [Alignment.Center].
+     * @param paddingValues Padding applied around the inner Column block. Defaults to 15.dp.
+     * @param content Composable block representing nested layout components inside the container.
+     */
     @Composable
     fun Default(
         modifier: Modifier = Modifier,
@@ -89,6 +82,13 @@ object HContainer {
         },
     )
 
+    /**
+     * Renders a top-titled layout screen container with standard spacing.
+     *
+     * @param modifier The [Modifier] to apply to the screen.
+     * @param title Title header text displayed at the top of the column.
+     * @param content Composable representing the primary screen body content.
+     */
     @Composable
     fun TitledScreen(
         modifier: Modifier = Modifier,
@@ -108,8 +108,21 @@ object HContainer {
         content()
     }
 
+    /**
+     * Nested utility object providing media loading layouts and image containers.
+     */
     object Image {
 
+        /**
+         * Renders a responsive network image viewer enlisting automatic reload retry checks,
+         * shimmer skeleton animations, and fallback vector icons on error.
+         *
+         * @param modifier The [Modifier] applied to the outer layout container.
+         * @param imageModifier The [Modifier] applied to the image view or shimmer loading view itself.
+         * @param progressIndicator Spinner/Loader indicator variant to display during network fetch. Defaults to [HProgressIndicator.Circular].
+         * @param onError Composable to render as error fallback (e.g. status vector icons).
+         * @param model Image asset location identifier (URI, resource ID, or file path).
+         */
         @Composable
         fun AsyncImage(
             modifier: Modifier = Modifier,
@@ -150,7 +163,7 @@ object HContainer {
                 ) {
                     when (it) {
                         is AsyncImagePainter.State.Loading -> progressIndicator(
-                            modifier = imageModifier
+                             modifier = imageModifier
                         )
 
                         is AsyncImagePainter.State.Success -> Image(

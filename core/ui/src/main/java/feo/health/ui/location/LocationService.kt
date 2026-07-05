@@ -19,16 +19,46 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import java.time.LocalDateTime
 import kotlin.coroutines.resume
 
+/**
+ * Service singleton wrapping Google Play Services [FusedLocationProviderClient] to query,
+ * request, and track user geolocation coordinates.
+ */
 object LocationService {
+    /**
+     * Backing API client instance used to fetch geo coordinates.
+     */
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    /**
+     * Callback handler listening to active location update cycles.
+     */
     private var activeLocationCallback: LocationCallback? = null
+
+    /**
+     * Internal location state holder flow.
+     */
     private val _locationState = MutableStateFlow<LocationState>(LocationState.Initial)
+
+    /**
+     * Read-only StateFlow observing the current device location state.
+     */
     val locationState: StateFlow<LocationState> = _locationState.asStateFlow()
 
+    /**
+     * Initializes the fused location provider client context.
+     *
+     * @param context Application/Activity context descriptor.
+     */
     fun initialize(context: Context) {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
     }
 
+    /**
+     * Checks if location permission has been explicitly granted by the user.
+     *
+     * @param context Active system context context.
+     * @return `true` if fine or coarse location is granted, `false` otherwise.
+     */
     fun hasLocationPermission(context: Context): Boolean {
         return ContextCompat.checkSelfPermission(
             context,
@@ -40,6 +70,12 @@ object LocationService {
                 ) == PackageManager.PERMISSION_GRANTED
     }
 
+    /**
+     * Fetches the last known device location. If unavailable, falls back to requesting new updates.
+     *
+     * @param context Active system context context.
+     * @return The updated [LocationState] result.
+     */
     @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     suspend fun getLastLocation(context: Context): LocationState = suspendCancellableCoroutine { continuation ->
         if (!hasLocationPermission(context)) {
@@ -67,6 +103,11 @@ object LocationService {
             }
     }
 
+    /**
+     * Requests high-accuracy coordinates updates using a timed callback loop.
+     *
+     * @param context Active system context context.
+     */
     @RequiresPermission(anyOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     private fun requestLocationUpdates(context: Context) {
         if (!hasLocationPermission(context)) {
@@ -107,6 +148,9 @@ object LocationService {
         }
     }
 
+    /**
+     * Stops requesting coordinates updates and resets the location state to initial.
+     */
     fun stopLocationUpdates() {
         _locationState.value = LocationState.Initial
         activeLocationCallback?.let {
@@ -115,9 +159,28 @@ object LocationService {
         }
     }
 
+    /**
+     * Sealed class wrapper representing the current device location retrieval state.
+     */
     sealed class LocationState {
+        /**
+         * Represents the initial/idle geolocation state.
+         */
         object Initial : LocationState()
+
+        /**
+         * Represents a successful geolocation fetch.
+         *
+         * @property location The fetched Android location model.
+         * @property timestamp The timestamp of the location fetch.
+         */
         data class Success(val location: Location, val timestamp: LocalDateTime) : LocationState()
+
+        /**
+         * Represents a failed geolocation fetch.
+         *
+         * @property message Error details.
+         */
         data class Error(val message: String) : LocationState()
     }
 }

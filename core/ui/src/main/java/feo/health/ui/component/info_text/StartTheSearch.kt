@@ -10,8 +10,16 @@ import feo.health.ui.R
 import feo.health.ui.component.HText
 import feo.health.ui.util.capitalize
 
+/**
+ * Visual screen component instructing the user to type in the input field to initiate a query.
+ */
 object StartTheSearch {
 
+    /**
+     * Renders the start search view layout.
+     *
+     * @param modifier The [Modifier] to apply to the screen box.
+     */
     @Composable
     operator fun invoke(modifier: Modifier = Modifier) {
         Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Companion.Center) {

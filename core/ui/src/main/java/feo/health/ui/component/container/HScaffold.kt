@@ -1,29 +1,34 @@
 package feo.health.ui.component.container
 
-import android.widget.Space
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import feo.health.ui.component.HToast
 import feo.health.ui.component.NavAnchors
 import feo.health.ui.theme.HTheme
-import kotlinx.coroutines.flow.StateFlow
-import java.nio.file.WatchEvent
 
+/**
+ * Screen layout wrappers managing status header bars, navigation anchors,
+ * background themes, and system alerts.
+ */
 object HScaffold {
 
+    /**
+     * Renders a basic vertical screen scaffold column.
+     *
+     * @param modifier The [Modifier] applied to the outer layout container.
+     * @param topBar Composable header layout.
+     * @param bottomBar Composable footer layout.
+     * @param content Composable body layout.
+     */
     @Composable
     fun Default(
         modifier: Modifier = Modifier,
@@ -38,6 +43,15 @@ object HScaffold {
         }
     }
 
+    /**
+     * Renders the primary application screen layout, setting background themes,
+     * embedding bottom navigation, and overlaying toast alerts.
+     *
+     * @param modifier The [Modifier] applied to the Scaffold wrapper.
+     * @param navHostController The active navigation host controller.
+     * @param topBar Composable header layout.
+     * @param content Composable body layout receiving content padding Modifiers.
+     */
     @Composable
     fun Main(
         modifier: Modifier,

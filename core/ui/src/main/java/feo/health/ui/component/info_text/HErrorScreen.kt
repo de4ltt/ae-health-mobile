@@ -15,8 +15,18 @@ import androidx.compose.ui.unit.sp
 import feo.health.ui.component.HButton
 import feo.health.ui.component.HText
 
+/**
+ * Composable screen showing standard error messages with an interactive retry action button.
+ */
 object HErrorScreen {
 
+    /**
+     * Renders the error message view.
+     *
+     * @param message Description detail text explaining the error.
+     * @param onRetry Callback triggered when user clicks the retry button.
+     * @param modifier The [Modifier] to apply to the error view container.
+     */
     @Composable
     operator fun invoke(
         message: String,

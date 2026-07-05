@@ -32,8 +32,27 @@ import androidx.compose.ui.unit.sp
 import feo.health.ui.component.HText
 import feo.health.ui.theme.HTheme
 
+/**
+ * Component providing custom segmented control selectors with animated backdrop indicators.
+ */
 object HOptionSelector {
 
+    /**
+     * Renders a single-line horizontal segmented selector control.
+     * Computes child sizes dynamically to animate the highlight backdrop offset.
+     *
+     * @param T Generic type of option items.
+     * @param options List of possible values.
+     * @param selectedOption The currently active option.
+     * @param onOptionSelected Callback triggered when a new option is clicked.
+     * @param extractName Composable method determining display string titles for generic elements.
+     * @param modifier The [Modifier] to apply to the layout container.
+     * @param contentPadding Inner padding of the segmented control box. Defaults to 4.dp.
+     * @param containerColor Background color of the control track. Defaults to [HTheme.colors.onBackgroundContainer].
+     * @param selectedContainerColor Color of the selected highlight slider. Defaults to [HTheme.colors.background].
+     * @param unselectedColor Color of unselected option text. Defaults to [HTheme.colors.secondary].
+     * @param selectedColor Color of selected option text. Defaults to [HTheme.colors.secondary].
+     */
     @Composable
     fun <T> SingleLine(
         options: List<T>,
@@ -83,8 +102,8 @@ object HOptionSelector {
                             )
                             .onGloballyPositioned { coordinates ->
                                 if (isSelected) {
-                                    selectedOffset = with(density) { coordinates.positionInParent().x.toDp() }
-                                    selectedWidth = with(density) { coordinates.size.width.toDp() }
+                                     selectedOffset = with(density) { coordinates.positionInParent().x.toDp() }
+                                     selectedWidth = with(density) { coordinates.size.width.toDp() }
                                 }
                             }
                             .padding(horizontal = 24.dp, vertical = 4.dp),

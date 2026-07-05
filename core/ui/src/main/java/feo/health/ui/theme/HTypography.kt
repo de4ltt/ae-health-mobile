@@ -7,6 +7,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import feo.health.ui.R
 
+/**
+ * Custom font family instance grouping bold, medium, normal, and semi-bold weights of the Rubik typeface.
+ */
 val fontFamily = FontFamily(
     Font(resId = R.font.rubik_bold, weight = FontWeight.Bold),
     Font(resId = R.font.rubik_medium, weight = FontWeight.Medium),
@@ -14,7 +17,13 @@ val fontFamily = FontFamily(
     Font(resId = R.font.rubik_semibold, weight = FontWeight.SemiBold)
 )
 
+/**
+ * Custom typography scale definitions used in text layout rendering.
+ */
 object HealthTypography {
+    /**
+     * Standard medium density visual text style token.
+     */
     val medium: TextStyle = TextStyle(
         fontSize = 13.sp,
         fontWeight = FontWeight.Normal

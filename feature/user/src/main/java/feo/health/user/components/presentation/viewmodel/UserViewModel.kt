@@ -2,22 +2,21 @@ package feo.health.user.components.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import feo.health.ui.component.HToast.tryWithToast
+import feo.health.ui.dispatcher.AppDispatchers
 import feo.health.ui.viewmodel.HViewModel
 import feo.health.user.components.domain.use_case.util.IFavouriteUseCases
 import feo.health.user.components.domain.use_case.util.IHistoryUseCases
 import feo.health.user.components.domain.use_case.util.IUserUseCases
 import feo.health.user.components.presentation.mapper.AdditionalMapper.toPresentationMap
-import feo.health.user.components.presentation.mapper.CatalogItemDomainToUCatalogItemMapper.toCatalogItemDomain
-import feo.health.user.components.presentation.mapper.ChangePasswordDomainToChangePasswordMapper.toChangePasswordDomain
+import feo.health.user.components.presentation.mapper.CatalogItemDomainToUCatalogItemMapper.toDomain as toCatalogItemDomain
+import feo.health.user.components.presentation.mapper.ChangePasswordDomainToChangePasswordMapper.toDomain as toChangePasswordDomain
 import feo.health.user.components.presentation.mapper.UserToUserDomainMapper.toUser
-import feo.health.user.components.presentation.mapper.UserToUserDomainMapper.toUserDomain
+import feo.health.user.components.presentation.mapper.UserToUserDomainMapper.toDomain as toUserDomain
 import feo.health.user.components.presentation.model.ChangePassword
 import feo.health.user.components.presentation.model.UCatalogItem
 import feo.health.user.components.presentation.model.User
 import feo.health.user.components.presentation.viewmodel.companion.UserEvent
 import feo.health.user.components.presentation.viewmodel.companion.UserState
-import feo.health.ui.dispatcher.AppDispatchers
-import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 class UserViewModel @Inject constructor(

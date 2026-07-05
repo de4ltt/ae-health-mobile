@@ -1,12 +1,11 @@
 package feo.health.catalog.presentation.mapper
 
 import feo.health.catalog.domain.model.DoctorDomain
-import feo.health.catalog.presentation.mapper.DoctorSpecialityToDoctorSpecialityDomainMapper.toDoctorSpecialityDomainList
+import feo.health.catalog.presentation.mapper.DoctorSpecialityToDoctorSpecialityDomainMapper.toDomainList as toDoctorSpecialityDomainList
 import feo.health.catalog.presentation.mapper.DoctorSpecialityToDoctorSpecialityDomainMapper.toDoctorSpecialityList
-import feo.health.catalog.presentation.mapper.ReviewToReviewDomainMapper.toReviewDomainList
+import feo.health.catalog.presentation.mapper.ReviewToReviewDomainMapper.toDomainList as toReviewDomainList
 import feo.health.catalog.presentation.mapper.ReviewToReviewDomainMapper.toReviewList
 import feo.health.catalog.presentation.model.ICatalog
-import feo.health.ui.model.ICatalogItem
 import feo.health.mapper.IMapper
 import feo.health.mapper.Mapper
 

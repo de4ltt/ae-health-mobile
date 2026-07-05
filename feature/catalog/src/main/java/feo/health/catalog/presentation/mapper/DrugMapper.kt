@@ -1,9 +1,9 @@
 package feo.health.catalog.presentation.mapper
 
 import feo.health.catalog.domain.model.DrugDomain
-import feo.health.catalog.presentation.mapper.DrugFormDomainToDrugFormMapper.toDrugFormDomainList
+import feo.health.catalog.presentation.mapper.DrugFormDomainToDrugFormMapper.toDomainList as toDrugFormDomainList
 import feo.health.catalog.presentation.mapper.DrugFormDomainToDrugFormMapper.toDrugFormList
-import feo.health.catalog.presentation.mapper.InstructionSectionDomainToInstructionSectionMapper.toInstructionSectionDomainList
+import feo.health.catalog.presentation.mapper.InstructionSectionDomainToInstructionSectionMapper.toDomainList as toInstructionSectionDomainList
 import feo.health.catalog.presentation.mapper.InstructionSectionDomainToInstructionSectionMapper.toInstructionSectionList
 import feo.health.catalog.presentation.model.Drug
 import feo.health.mapper.IMapper

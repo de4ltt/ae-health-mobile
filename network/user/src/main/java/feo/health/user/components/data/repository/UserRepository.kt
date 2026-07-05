@@ -2,9 +2,9 @@ package feo.health.user.components.data.repository
 
 import feo.health.network.model.mapResult
 import feo.health.user.api.IUserApi
-import feo.health.user.components.data.mapper.ChangePasswordDomainToChangePasswordRequestMapper.toChangePasswordRequest
-import feo.health.user.components.data.mapper.UserDtoToUserDomainMapper.toUserDomain
-import feo.health.user.components.data.mapper.UserDtoToUserDomainMapper.toUserDto
+import feo.health.user.components.data.mapper.ChangePasswordDomainToChangePasswordRequestMapper.toRequest as toChangePasswordRequest
+import feo.health.user.components.data.mapper.UserDtoToUserDomainMapper.toDomain as toUserDomain
+import feo.health.user.components.data.mapper.UserDtoToUserDomainMapper.toDto as toUserDto
 import feo.health.user.components.domain.model.ChangePasswordDomain
 import feo.health.user.components.domain.model.UserDomain
 import feo.health.user.components.domain.repository.IUserRepository

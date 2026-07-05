@@ -1,7 +1,7 @@
 package feo.health.catalog.presentation.mapper
 
 import feo.health.catalog.domain.model.ClinicDomain
-import feo.health.catalog.presentation.mapper.ReviewToReviewDomainMapper.toReviewDomainList
+import feo.health.catalog.presentation.mapper.ReviewToReviewDomainMapper.toDomainList
 import feo.health.catalog.presentation.mapper.ReviewToReviewDomainMapper.toReviewList
 import feo.health.catalog.presentation.model.ICatalog
 import feo.health.mapper.IMapper
@@ -28,6 +28,6 @@ private object ClinicMapper : IMapper<ClinicDomain, ICatalog.Clinic> {
             phoneNumber = phoneNumber,
             imageUri = imageUri,
             itemType = itemType,
-            reviews = reviews?.toReviewDomainList()
+            reviews = reviews?.toDomainList()
         )
 }

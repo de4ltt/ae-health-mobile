@@ -10,7 +10,6 @@ import feo.health.ai.data.di.FeatureAiComponent
 import feo.health.ai.di.DaggerNetworkAIComponent
 import feo.health.ai.di.NetworkAIComponent
 import feo.health.ai.presentation.viewmodel.AiViewModel
-import feo.health.auth.api.DummyRefreshApi
 import feo.health.auth.data.di.DaggerFeatureAuthComponent
 import feo.health.auth.data.di.FeatureAuthComponent
 import feo.health.auth.di.DaggerNetworkAuthComponent
@@ -25,7 +24,6 @@ import feo.health.mobile.datastore.HDataStoreImpl
 import feo.health.mobile.di.AppComponent
 import feo.health.mobile.di.DaggerAppComponent
 import feo.health.mobile.secrets.Secrets
-import feo.health.mobile.viewmodel.ViewModelRegister
 import feo.health.network.datastore.HDataStore
 import feo.health.network.di.component.DaggerNetworkComponent
 import feo.health.network.di.component.NetworkComponent
@@ -74,7 +72,6 @@ class AEHealthApp : Application() {
             .bindFeatureAiComponent(featureAiComponent)
             .build()
         appComponent.inject(this)
-        initializeViewModels()
     }
 
     private fun initializeCoreComponents() {
@@ -86,7 +83,6 @@ class AEHealthApp : Application() {
     private fun initializeNetworkComponents() {
         networkComponent = DaggerNetworkComponent.builder()
             .bindDatastore(dataStore)
-            .bindRefreshApi(DummyRefreshApi())
             .build()
 
         networkAuthComponent = DaggerNetworkAuthComponent.builder()
@@ -95,10 +91,7 @@ class AEHealthApp : Application() {
             .build()
         refreshApi = networkAuthComponent.refreshApi()
 
-        networkComponent = DaggerNetworkComponent.builder()
-            .bindDatastore(dataStore)
-            .bindRefreshApi(refreshApi)
-            .build()
+        networkComponent.refreshApiHolder().refreshApi = refreshApi
 
         networkAIComponent = DaggerNetworkAIComponent.builder()
             .bindNetworkComponent(networkComponent)
@@ -115,17 +108,17 @@ class AEHealthApp : Application() {
 
     private fun initializeFeatureComponents() {
         featureCatalogComponent = DaggerFeatureCatalogComponent.builder()
-            .bindNetworkCatalogComponent(networkCatalogComponent)
+            .bindCatalogRepositoryProvider(networkCatalogComponent)
             .build()
         featureAuthComponent = DaggerFeatureAuthComponent.builder()
-            .bindNetworkAuthComponent(networkAuthComponent)
+            .bindAuthRepositoryProvider(networkAuthComponent)
             .bindDataStore(dataStore)
             .build()
         featureUserComponent = DaggerFeatureUserComponent.builder()
-            .bindNetworkUserComponent(networkUserComponent)
+            .bindUserRepositoryProvider(networkUserComponent)
             .build()
         featureAiComponent = DaggerFeatureAiComponent.builder()
-            .bindNetworkAiComponent(networkAIComponent)
+            .bindAiRepositoryProvider(networkAIComponent)
             .build()
     }
 
@@ -144,20 +137,5 @@ class AEHealthApp : Application() {
             }
             .build()
         HImageLoader.INSTANCE = imageLoader
-    }
-
-    private fun initializeViewModels() {
-        ViewModelRegister
-            .register<CatalogViewModel>(
-                appComponent.catalogViewModelFactory()
-            ).register<AuthViewModel>(
-                appComponent.authViewModelFactory()
-            )
-            .register<UserViewModel>(
-                appComponent.userViewModelFactory()
-            )
-            .register<AiViewModel>(
-                appComponent.aiViewModelFactory()
-            )
     }
 }

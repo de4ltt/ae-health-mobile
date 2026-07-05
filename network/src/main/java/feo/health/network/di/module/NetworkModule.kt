@@ -5,6 +5,7 @@ import dagger.Provides
 import feo.health.network.datastore.HDataStore
 import feo.health.network.di.NetworkModuleScope
 import feo.health.network.refresh_api.IRefreshApi
+import feo.health.network.refresh_api.RefreshApiHolder
 import feo.health.network.model.NetworkException
 import feo.health.network.model.NetworkResult
 import feo.health.network.refresh_api.RefreshTokenRequest
@@ -31,7 +32,7 @@ internal object NetworkModule {
 
     @NetworkModuleScope
     @Provides
-    fun provideHttpClient(dataStore: HDataStore, refreshApi: IRefreshApi): HttpClient =
+    fun provideHttpClient(dataStore: HDataStore, refreshApiHolder: RefreshApiHolder): HttpClient =
         HttpClient {
             expectSuccess = true
 
@@ -74,7 +75,8 @@ internal object NetworkModule {
                     refreshTokens {
                         val refreshToken = dataStore.getRefreshToken()
                         if (refreshToken != null) {
-                            val result = refreshApi.refreshToken(RefreshTokenRequest(refreshToken))
+                            val api = refreshApiHolder.refreshApi ?: throw IllegalStateException("refreshApi not initialized")
+                            val result = api.refreshToken(RefreshTokenRequest(refreshToken))
                             when (result) {
                                 is NetworkResult.Success -> {
                                     val response = result.data

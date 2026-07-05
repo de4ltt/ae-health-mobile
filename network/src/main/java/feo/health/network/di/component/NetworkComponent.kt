@@ -8,6 +8,8 @@ import feo.health.network.di.module.NetworkModule
 import feo.health.network.refresh_api.IRefreshApi
 import io.ktor.client.HttpClient
 
+import feo.health.network.refresh_api.RefreshApiHolder
+
 @NetworkModuleScope
 @Component(
     modules = [NetworkModule::class]
@@ -15,12 +17,10 @@ import io.ktor.client.HttpClient
 interface NetworkComponent {
 
     fun httpClient(): HttpClient
+    fun refreshApiHolder(): RefreshApiHolder
 
     @Component.Builder
     interface Builder {
-
-        @BindsInstance
-        fun bindRefreshApi(refreshApi: IRefreshApi): Builder
 
         @BindsInstance
         fun bindDatastore(dataStore: HDataStore): Builder

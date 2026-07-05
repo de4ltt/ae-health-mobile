@@ -7,6 +7,8 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import feo.health.network.datastore.HDataStore
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 private val Context.dataStore by preferencesDataStore(name = "auth_prefs")
@@ -17,6 +19,18 @@ class HDataStoreImpl @Inject constructor(private val context: Context) : HDataSt
         val ACCESS_TOKEN = stringPreferencesKey("access_token")
         val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
         val USER_ID = longPreferencesKey("user_id")
+    }
+
+    override val accessTokenFlow: Flow<String?> = context.dataStore.data.map { prefs ->
+        prefs[Keys.ACCESS_TOKEN]
+    }
+
+    override val refreshTokenFlow: Flow<String?> = context.dataStore.data.map { prefs ->
+        prefs[Keys.REFRESH_TOKEN]
+    }
+
+    override val userIdFlow: Flow<Long?> = context.dataStore.data.map { prefs ->
+        prefs[Keys.USER_ID]
     }
 
     override suspend fun saveAccessToken(token: String) {

@@ -64,4 +64,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     ksp(libs.dagger.compiler)
     implementation(libs.kotlinx.serialization.json)
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
 }

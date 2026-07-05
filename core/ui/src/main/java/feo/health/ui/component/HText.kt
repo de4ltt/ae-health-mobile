@@ -2,7 +2,6 @@ package feo.health.ui.component
 
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.text.BasicText
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,12 +13,18 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import feo.health.ui.theme.fontFamily
 
+/**
+ * A custom text component wrapper around Jetpack Compose [BasicText] that enforces
+ * the application's unified typography ([fontFamily]).
+ *
+ * It provides various layout and animation presets, such as marquee scrolling,
+ * single-line constraints with ellipsis, and auto-sizing text.
+ */
 object HText {
 
     @Composable
@@ -90,6 +95,19 @@ object HText {
         )
     )
 
+    /**
+     * Renders standard multi-line text using a dynamic [ColorProducer] to optimize
+     * color recalculations and prevent unnecessary recompositions.
+     *
+     * @param modifier The [Modifier] to apply to the text layout.
+     * @param text The plain text string to render.
+     * @param textAlign Alignment of the text within the container. Defaults to [TextAlign.Start].
+     * @param textDecoration Decorations (e.g. underline/strike-through) to apply. Defaults to [TextDecoration.None].
+     * @param color The [ColorProducer] that provides the text color.
+     * @param fontSize Size of the text font. Defaults to 15.sp.
+     * @param fontWeight Thickness of the text font. Defaults to [FontWeight.Normal].
+     * @param onTextLayout Callback invoked when the text layout is computed.
+     */
     @Composable
     fun DefaultWithColorProducer(
         modifier: Modifier = Modifier,
@@ -111,6 +129,18 @@ object HText {
         onTextLayout = onTextLayout
     )
 
+    /**
+     * Renders standard multi-line text.
+     *
+     * @param modifier The [Modifier] to apply to the text layout.
+     * @param text The plain text string to render.
+     * @param textAlign Alignment of the text within the container. Defaults to [TextAlign.Start].
+     * @param color Color of the text. If null, standard styling is used.
+     * @param fontSize Size of the text font. Defaults to 15.sp.
+     * @param textDecoration Decorations (e.g. underline/strike-through) to apply. Defaults to [TextDecoration.None].
+     * @param fontWeight Thickness of the text font. Defaults to [FontWeight.Normal].
+     * @param onTextLayout Callback invoked when the text layout is computed.
+     */
     @Composable
     fun Default(
         modifier: Modifier = Modifier,
@@ -132,6 +162,18 @@ object HText {
         onTextLayout = onTextLayout
     )
 
+    /**
+     * Renders standard multi-line text with annotated string styles.
+     *
+     * @param modifier The [Modifier] to apply to the text layout.
+     * @param text The [AnnotatedString] containing styled text runs.
+     * @param textAlign Alignment of the text within the container. Defaults to [TextAlign.Start].
+     * @param color Color of the text. If null, standard styling is used.
+     * @param fontSize Size of the text font. Defaults to 15.sp.
+     * @param textDecoration Decorations (e.g. underline/strike-through) to apply. Defaults to [TextDecoration.None].
+     * @param fontWeight Thickness of the text font. Defaults to [FontWeight.Normal].
+     * @param onTextLayout Callback invoked when the text layout is computed.
+     */
     @Composable
     fun Default(
         modifier: Modifier = Modifier,
@@ -153,6 +195,18 @@ object HText {
         onTextLayout = onTextLayout
     )
 
+    /**
+     * Renders text constrained to a single line, utilizing a dynamic [ColorProducer].
+     *
+     * @param modifier The [Modifier] to apply to the text layout.
+     * @param text The plain text string to render.
+     * @param textAlign Alignment of the text within the container. Defaults to [TextAlign.Start].
+     * @param color The [ColorProducer] that provides the text color.
+     * @param fontSize Size of the text font. Defaults to 15.sp.
+     * @param textDecoration Decorations (e.g. underline/strike-through) to apply. Defaults to [TextDecoration.None].
+     * @param fontWeight Thickness of the text font. Defaults to [FontWeight.Normal].
+     * @param onTextLayout Callback invoked when the text layout is computed.
+     */
     @Composable
     fun SingleLineWithColorProducer(
         modifier: Modifier = Modifier,
@@ -175,6 +229,19 @@ object HText {
         onTextLayout = onTextLayout
     )
 
+    /**
+     * Renders text constrained to a single line, clipping with ellipsis or custom overflow.
+     *
+     * @param modifier The [Modifier] to apply to the text layout.
+     * @param text The plain text string to render.
+     * @param textAlign Alignment of the text within the container. Defaults to [TextAlign.Start].
+     * @param color Color of the text. If null, standard styling is used.
+     * @param textDecoration Decorations (e.g. underline/strike-through) to apply. Defaults to [TextDecoration.None].
+     * @param fontSize Size of the text font. Defaults to 15.sp.
+     * @param overflow Visual overflow style to use when text overflows single line. Defaults to [TextOverflow.Ellipsis].
+     * @param fontWeight Thickness of the text font. Defaults to [FontWeight.Normal].
+     * @param onTextLayout Callback invoked when the text layout is computed.
+     */
     @Composable
     fun SingleLine(
         modifier: Modifier = Modifier,
@@ -199,6 +266,17 @@ object HText {
         onTextLayout = onTextLayout
     )
 
+    /**
+     * Renders annotated string constrained to a single line.
+     *
+     * @param modifier The [Modifier] to apply to the text layout.
+     * @param text The [AnnotatedString] containing styled text runs.
+     * @param textAlign Alignment of the text within the container. Defaults to [TextAlign.Start].
+     * @param color Color of the text. If null, standard styling is used.
+     * @param fontSize Size of the text font. Defaults to 15.sp.
+     * @param fontWeight Thickness of the text font. Defaults to [FontWeight.Normal].
+     * @param onTextLayout Callback invoked when the text layout is computed.
+     */
     @Composable
     fun SingleLine(
         modifier: Modifier = Modifier,
@@ -219,6 +297,18 @@ object HText {
         onTextLayout = onTextLayout
     )
 
+    /**
+     * Renders a single-line text that automatically scrolls horizontally (marquee) if it
+     * exceeds its layout boundaries.
+     *
+     * @param modifier The [Modifier] to apply to the text layout.
+     * @param text The plain text string to render.
+     * @param textAlign Alignment of the text within the container. Defaults to [TextAlign.Start].
+     * @param color Color of the text. If null, standard styling is used.
+     * @param fontSize Size of the text font. Defaults to 15.sp.
+     * @param fontWeight Thickness of the text font. Defaults to [FontWeight.Normal].
+     * @param onTextLayout Callback invoked when the text layout is computed.
+     */
     @Composable
     fun BasicMarquee(
         modifier: Modifier = Modifier,
@@ -240,6 +330,17 @@ object HText {
         onTextLayout = onTextLayout
     )
 
+    /**
+     * Renders a marquee-scrolling single-line text using a dynamic [ColorProducer].
+     *
+     * @param modifier The [Modifier] to apply to the text layout.
+     * @param text The plain text string to render.
+     * @param textAlign Alignment of the text within the container. Defaults to [TextAlign.Start].
+     * @param color The [ColorProducer] that provides the text color.
+     * @param fontSize Size of the text font. Defaults to 15.sp.
+     * @param fontWeight Thickness of the text font. Defaults to [FontWeight.Normal].
+     * @param onTextLayout Callback invoked when the text layout is computed.
+     */
     @Composable
     fun BasicMarqueeWithColorProducer(
         modifier: Modifier = Modifier,
@@ -261,7 +362,18 @@ object HText {
         onTextLayout = onTextLayout
     )
 
-
+    /**
+     * Renders text that dynamically auto-sizes to fit the constraints of its layout container.
+     *
+     * @param modifier The [Modifier] to apply to the text layout.
+     * @param text The plain text string to render.
+     * @param color The [ColorProducer] that provides the text color.
+     * @param textAlign Alignment of the text within the container. Defaults to [TextAlign.Start].
+     * @param fontSize Base size of the text font. Defaults to 15.sp.
+     * @param fontWeight Thickness of the text font. Defaults to [FontWeight.Normal].
+     * @param autoSize The [TextAutoSize] logic configuration.
+     * @param onTextLayout Callback invoked when the text layout is computed.
+     */
     @Composable
     fun AutoSize(
         modifier: Modifier = Modifier,

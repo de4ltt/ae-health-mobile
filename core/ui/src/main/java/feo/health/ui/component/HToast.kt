@@ -1,6 +1,5 @@
 package feo.health.ui.component
 
-import android.content.Context
 import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
@@ -33,19 +32,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import feo.health.ui.component.container.HContainer
+import feo.health.ui.dispatcher.AppDispatchers
 import feo.health.ui.resource.HIcons
-import feo.health.ui.util.capitalize
 import feo.health.ui.theme.HColorScheme
 import feo.health.ui.theme.HTheme
-import feo.health.ui.dispatcher.AppDispatchers
+import feo.health.ui.util.capitalize
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+/**
+ * A custom notification toast system that enqueues and displays success, error, and informational
+ * alert banners across the application.
+ *
+ * Utilizes a [Channel] to queue and display messages sequentially with built-in animations.
+ */
 data object HToast {
 
     private val toastChannel: Channel<HToastMessage> = Channel(
@@ -59,6 +63,9 @@ data object HToast {
         val length: HToastLength
     )
 
+    /**
+     * Duration length for displaying the toast message.
+     */
     enum class HToastLength(val lengthMillis: Long) {
         SHORT(1500L),
         MEDIUM(3000L),
@@ -96,6 +103,14 @@ data object HToast {
         }
     }
 
+    /**
+     * Composable container that listens to the toast channel and renders active toast
+     * animations at the bottom of the screen.
+     *
+     * Place this composable at the root layout level (e.g. within [HScaffold]).
+     *
+     * @param modifier The [Modifier] to be applied to the toast wrapper layout.
+     */
     @Composable
     fun Toast(modifier: Modifier = Modifier) {
         var toast: HToastMessage? by remember { mutableStateOf(null) }
@@ -183,6 +198,12 @@ data object HToast {
         }
     }
 
+    /**
+     * Enqueues a success notification message.
+     *
+     * @param message Description text of the notification.
+     * @param length Display duration of the toast. Defaults to [HToastLength.LONG].
+     */
     fun makeSuccess(message: String, length: HToastLength = HToastLength.LONG) =
         CoroutineScope(AppDispatchers.default).launch {
             toastChannel.send(
@@ -194,6 +215,12 @@ data object HToast {
             )
         }
 
+    /**
+     * Enqueues an informational notification message.
+     *
+     * @param message Description text of the notification.
+     * @param length Display duration of the toast. Defaults to [HToastLength.LONG].
+     */
     fun makeInfo(message: String, length: HToastLength = HToastLength.LONG) =
         CoroutineScope(AppDispatchers.default).launch {
             toastChannel.send(
@@ -205,6 +232,12 @@ data object HToast {
             )
         }
 
+    /**
+     * Enqueues an error notification message.
+     *
+     * @param message Description text of the error. Defaults to "Something terrible happened...".
+     * @param length Display duration of the toast. Defaults to [HToastLength.LONG].
+     */
     fun makeError(
         message: String = "Something terrible happened...",
         length: HToastLength = HToastLength.LONG
@@ -219,6 +252,14 @@ data object HToast {
             )
         }
 
+    /**
+     * Wraps a synchronous block execution inside a try-catch, showing an automatic
+     * success toast upon completion or an error toast upon failure.
+     *
+     * @param successMessageRequired Controls whether a success toast is shown on success.
+     * @param onError Callback executed if the action block throws an Exception.
+     * @param action The block of code to run.
+     */
     fun tryWithToast(
         successMessageRequired: Boolean = false,
         onError: () -> Unit = {},
@@ -235,6 +276,15 @@ data object HToast {
         }
     }
 
+    /**
+     * Wraps a suspend block execution inside a launch block, showing an automatic
+     * success toast upon completion or an error toast upon failure.
+     *
+     * @param dispatcher The [CoroutineDispatcher] to run the action on. Defaults to [AppDispatchers.io].
+     * @param successMessageRequired Controls whether a success toast is shown on success.
+     * @param onError Callback executed if the action block throws an Exception.
+     * @param action The suspend block of code to run.
+     */
     fun CoroutineScope.tryWithToast(
         dispatcher: CoroutineDispatcher = AppDispatchers.io,
         successMessageRequired: Boolean = false,

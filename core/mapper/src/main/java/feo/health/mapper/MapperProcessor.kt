@@ -10,6 +10,14 @@ import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.validate
 
+/**
+ * Kotlin Symbol Processing (KSP) processor that generates two-way extension mapping functions
+ * for classes annotated with [@Mapper] and implementing [IMapper].
+ *
+ * Automatically generates shortened mapping functions by subtracting the common CamelCase word
+ * intersection between source and target classes. It also generates deprecation wrappers
+ * for backward compatibility with previous long-named functions.
+ */
 class MapperProcessor(
     private val codeGenerator: CodeGenerator,
     private val logger: KSPLogger

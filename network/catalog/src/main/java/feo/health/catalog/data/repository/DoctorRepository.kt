@@ -6,6 +6,8 @@ import feo.health.catalog.doctor.api.IDoctorApi
 import feo.health.catalog.domain.model.DoctorDomain
 import feo.health.catalog.domain.repository.IDoctorRepository
 import feo.health.network.model.mapResult
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 
 /**
@@ -16,6 +18,9 @@ import javax.inject.Inject
 class DoctorRepository @Inject constructor(
     private val doctorApi: IDoctorApi
 ) : IDoctorRepository {
+
+    private val infoCache = RepositoryCache<String, DoctorDomain>(50)
+    private val mutex = Mutex()
 
     /**
      * Queries doctors matching text keyword query.
@@ -33,9 +38,18 @@ class DoctorRepository @Inject constructor(
      * @param link Doctor details key link.
      * @return Domain [DoctorDomain] doctor profile entity.
      */
-    override suspend fun getDoctorInfo(link: String): DoctorDomain = doctorApi
-        .getDoctorInfo(link = link)
-        .mapResult { it.toDomain() }
+    override suspend fun getDoctorInfo(link: String): DoctorDomain {
+        mutex.withLock {
+            infoCache.get(link)?.let { return it }
+        }
+        val fresh = doctorApi
+            .getDoctorInfo(link = link)
+            .mapResult { it.toDomain() }
+        mutex.withLock {
+            infoCache.put(link, fresh)
+        }
+        return fresh
+    }
 
     /**
      * Queries doctors belonging to a specific specialty.

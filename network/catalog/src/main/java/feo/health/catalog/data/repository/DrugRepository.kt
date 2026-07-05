@@ -6,6 +6,8 @@ import feo.health.catalog.domain.model.DrugDomain
 import feo.health.catalog.domain.repository.IDrugRepository
 import feo.health.catalog.drug.api.IDrugApi
 import feo.health.network.model.mapResult
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 
 /**
@@ -16,6 +18,9 @@ import javax.inject.Inject
 class DrugRepository @Inject constructor(
     private val drugApi: IDrugApi
 ) : IDrugRepository {
+
+    private val infoCache = RepositoryCache<String, DrugDomain>(100)
+    private val mutex = Mutex()
 
     /**
      * Queries drug medications matching text keyword query.
@@ -33,7 +38,16 @@ class DrugRepository @Inject constructor(
      * @param link Drug details key link.
      * @return Domain [DrugDomain] drug medication entity.
      */
-    override suspend fun getDrugInfo(link: String): DrugDomain = drugApi
-        .getDrugInfo(link = link)
-        .mapResult { it.toDomain() }
+    override suspend fun getDrugInfo(link: String): DrugDomain {
+        mutex.withLock {
+            infoCache.get(link)?.let { return it }
+        }
+        val fresh = drugApi
+            .getDrugInfo(link = link)
+            .mapResult { it.toDomain() }
+        mutex.withLock {
+            infoCache.put(link, fresh)
+        }
+        return fresh
+    }
 }

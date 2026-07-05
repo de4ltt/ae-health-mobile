@@ -8,6 +8,8 @@ import feo.health.catalog.domain.model.ClinicDomain
 import feo.health.catalog.domain.model.DoctorDomain
 import feo.health.catalog.domain.repository.IClinicRepository
 import feo.health.network.model.mapResult
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 
 /**
@@ -18,6 +20,9 @@ import javax.inject.Inject
 class ClinicRepository @Inject constructor(
     private val clinicApi: IClinicApi
 ) : IClinicRepository {
+
+    private val infoCache = RepositoryCache<String, ClinicDomain>(50)
+    private val mutex = Mutex()
 
     /**
      * Queries clinics matching text keyword query.
@@ -53,9 +58,18 @@ class ClinicRepository @Inject constructor(
     override suspend fun getClinicInfo(
         link: String,
         isLocated: Boolean
-    ): ClinicDomain = clinicApi
-        .getClinicInfo(link = link, isLocated = isLocated)
-        .mapResult{ it.toDomain() }
+    ): ClinicDomain {
+        mutex.withLock {
+            infoCache.get(link)?.let { return it }
+        }
+        val fresh = clinicApi
+            .getClinicInfo(link = link, isLocated = isLocated)
+            .mapResult{ it.toDomain() }
+        mutex.withLock {
+            infoCache.put(link, fresh)
+        }
+        return fresh
+    }
 
     /**
      * Queries list of doctor specialists practicing at a clinic.

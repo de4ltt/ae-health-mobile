@@ -83,6 +83,7 @@ class AEHealthApp : Application() {
     private fun initializeNetworkComponents() {
         networkComponent = DaggerNetworkComponent.builder()
             .bindDatastore(dataStore)
+            .bindCacheDir(cacheDir)
             .build()
 
         networkAuthComponent = DaggerNetworkAuthComponent.builder()

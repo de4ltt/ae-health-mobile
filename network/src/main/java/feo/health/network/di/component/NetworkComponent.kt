@@ -47,6 +47,15 @@ interface NetworkComponent {
         fun bindDatastore(dataStore: HDataStore): Builder
 
         /**
+         * Binds the local cache directory file dependency to the network graph.
+         *
+         * @param cacheDir The JVM local directory to write cache files.
+         * @return The Dagger [Builder] instance.
+         */
+        @BindsInstance
+        fun bindCacheDir(cacheDir: java.io.File): Builder
+
+        /**
          * Assembles and returns the [NetworkComponent].
          *
          * @return Resolved component instance.

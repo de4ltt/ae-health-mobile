@@ -1,7 +1,6 @@
 package feo.health.catalog.presentation.mapper
 
 import feo.health.catalog.domain.model.PharmacyDomain
-import feo.health.catalog.pharmacy.dto.PharmacyDto
 import feo.health.catalog.presentation.model.ICatalog
 import feo.health.mapper.IMapper
 import feo.health.mapper.Mapper

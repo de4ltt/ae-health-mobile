@@ -2,7 +2,7 @@ package feo.health.catalog.presentation.model
 
 import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.Color
-import feo.health.ui.resource.HStrings
+import feo.health.ui.R
 import feo.health.ui.theme.HColorScheme
 import java.time.LocalDate
 
@@ -16,9 +16,9 @@ data class Review(
             @param:StringRes val definition: Int,
             val color: Color
         ) {
-            GOOD(definition = HStrings.goodRes, color = HColorScheme.Additional.GREEN),
-            MIXED(definition = HStrings.mixedRes, color = HColorScheme.Additional.ORANGE),
-            BAD(definition = HStrings.badRes, color = HColorScheme.Additional.RED);
+            GOOD(definition = R.string.good, color = HColorScheme.Additional.GREEN),
+            MIXED(definition = R.string.mixed, color = HColorScheme.Additional.ORANGE),
+            BAD(definition = R.string.bad, color = HColorScheme.Additional.RED);
 
             companion object {
                 fun defineIndication(rating: Double): ReviewIndication = when {

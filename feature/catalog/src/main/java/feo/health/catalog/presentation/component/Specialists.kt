@@ -39,8 +39,7 @@ import feo.health.ui.component.HText
 import feo.health.ui.component.container.HContainer
 import feo.health.ui.component.container.HList
 import feo.health.ui.resource.HIcons
-import feo.health.ui.resource.HStrings
-import feo.health.ui.resource.HStrings.capitalize
+import feo.health.ui.util.capitalize
 import feo.health.ui.theme.HTheme
 import feo.health.ui.theme.fontFamily
 import feo.health.ui.util.ILoading
@@ -55,7 +54,7 @@ object Specialists {
             specialist: ICatalog.Doctor
         ) = HContainer.TitledScreen(
             modifier = Modifier.fillMaxSize(),
-            title = HStrings.specialistProfile.capitalize(),
+            title = stringResource(feo.health.ui.R.string.specialist_profile).capitalize(),
         ) {
             Column(
                 modifier = modifier,
@@ -99,12 +98,12 @@ object Specialists {
                         Spacer(modifier = Modifier.height(5.dp))
                         specialist.experience?.let {
                             val expString = listOf(
-                                HStrings.experience.capitalize(), it.toString(), when {
-                                    it % 10 == 1 -> HStrings.expOneYr
+                                stringResource(feo.health.ui.R.string.experience).capitalize(), it.toString(), when {
+                                    it % 10 == 1 -> stringResource(feo.health.ui.R.string.exp_one_yr)
                                     it % 10 in 2..4 ->
-                                        if (it > 4) HStrings.expTwoFourMoreYrs else HStrings.expTwoFourLessYrs
+                                        if (it > 4) stringResource(feo.health.ui.R.string.exp_two_four_more_yrs) else stringResource(feo.health.ui.R.string.exp_two_four_less_yrs)
 
-                                    else -> HStrings.expManyYrs
+                                    else -> stringResource(feo.health.ui.R.string.exp_many_yr)
                                 }
                             ).joinToString(" ")
                             HText.SingleLine(
@@ -130,7 +129,7 @@ object Specialists {
                 specialist.reviews?.let { spec ->
                     HList.LazyTitled(
                         modifier = Modifier.fillMaxWidth(),
-                        title = HStrings.reviews.capitalize(),
+                        title = stringResource(feo.health.ui.R.string.reviews).capitalize(),
                         contentPadding = PaddingValues(bottom = 15.dp),
                         fontSize = 22.sp,
                         items = spec,
@@ -139,7 +138,7 @@ object Specialists {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .wrapContentHeight(),
-                                title = HStrings.appointmentWas.capitalize() + " ${
+                                title = stringResource(feo.health.ui.R.string.appointment_was).capitalize() + " ${
                                     it.date?.format(
                                         DateTimeFormatter.ofPattern("dd.MM.yyyy")
                                     )
@@ -265,7 +264,7 @@ object Specialists {
         @Composable
         override fun LoadingScreen(vararg params: Any) = HContainer.TitledScreen(
             modifier = Modifier.fillMaxSize(),
-            title = HStrings.specialistProfile.capitalize(),
+            title = stringResource(feo.health.ui.R.string.specialist_profile).capitalize(),
         ) {
             Column(
                 modifier = Modifier,
@@ -335,7 +334,7 @@ object Specialists {
 
                 HList.LazyTitled(
                     modifier = Modifier.fillMaxWidth(),
-                    title = HStrings.reviews.capitalize(),
+                    title = stringResource(feo.health.ui.R.string.reviews).capitalize(),
                     scrollingEnabled = false,
                     contentPadding = PaddingValues(bottom = 15.dp),
                     fontSize = 22.sp,
@@ -361,7 +360,7 @@ object Specialists {
             onClick: (CatalogEvent) -> Unit
         ) = HContainer.TitledScreen(
             modifier = Modifier.fillMaxSize(),
-            title = HStrings.specialists.capitalize()
+            title = stringResource(feo.health.ui.R.string.specialists).capitalize()
         ) {
             HList.Lazy(
                 modifier = modifier,
@@ -453,7 +452,7 @@ object Specialists {
                             color = HTheme.colors.onBackground
                         )
                     ) {
-                        append("${HStrings.experience.capitalize()}: ")
+                        append("${stringResource(feo.health.ui.R.string.experience).capitalize()}: ")
                     }
                     withStyle(
                         style = SpanStyle(
@@ -465,11 +464,11 @@ object Specialists {
                     ) {
                         append(
                             "$it " + when {
-                                it % 10 == 1 -> HStrings.expOneYr
+                                it % 10 == 1 -> stringResource(feo.health.ui.R.string.exp_one_yr)
                                 it % 10 in 2..4 ->
-                                    if (it > 4) HStrings.expTwoFourMoreYrs else HStrings.expTwoFourLessYrs
+                                    if (it > 4) stringResource(feo.health.ui.R.string.exp_two_four_more_yrs) else stringResource(feo.health.ui.R.string.exp_two_four_less_yrs)
 
-                                else -> HStrings.expManyYrs
+                                else -> stringResource(feo.health.ui.R.string.exp_many_yr)
                             }
                         )
                     }
@@ -486,7 +485,7 @@ object Specialists {
                             fontFamily = fontFamily,
                             color = HTheme.colors.onBackground
                         )
-                    ) { append("${HStrings.reviews.capitalize()}: ") }
+                    ) { append("${stringResource(feo.health.ui.R.string.reviews).capitalize()}: ") }
 
                     val definition = Review.Companion.ReviewIndication.defineIndication(it)
                     withStyle(
@@ -582,7 +581,7 @@ object Specialists {
         @Composable
         override fun LoadingScreen(vararg params: Any) = HContainer.TitledScreen(
             modifier = Modifier.fillMaxSize(),
-            title = HStrings.specialists.capitalize()
+            title = stringResource(feo.health.ui.R.string.specialists).capitalize()
         ) {
             HList.Lazy(
                 modifier = Modifier,

@@ -19,15 +19,18 @@ import feo.health.catalog.services.api.IServicesApi
 import feo.health.network.di.component.NetworkComponent
 import feo.health.secrets.di.CoreSecretsComponent
 
+import feo.health.catalog.data.di.CatalogRepositoryProvider
+import feo.health.catalog.di.module.RepositoryModule
+
 @NetworkCatalogScope
 @Component(
     modules = [
         ClinicModule::class, DiseaseModule::class, DoctorModule::class, DrugModule::class,
-        PharmacyModule::class, SearchModule::class, ServicesModule::class
+        PharmacyModule::class, SearchModule::class, ServicesModule::class, RepositoryModule::class
     ],
     dependencies = [NetworkComponent::class, CoreSecretsComponent::class]
 )
-interface NetworkCatalogComponent {
+interface NetworkCatalogComponent : CatalogRepositoryProvider {
 
     fun clinicApi(): IClinicApi
 

@@ -1,6 +1,5 @@
 package feo.health.catalog.presentation.mapper
 
-import feo.health.catalog.disease.dto.DiseaseDto
 import feo.health.catalog.domain.model.DiseaseDomain
 import feo.health.catalog.presentation.model.Disease
 import feo.health.mapper.IMapper

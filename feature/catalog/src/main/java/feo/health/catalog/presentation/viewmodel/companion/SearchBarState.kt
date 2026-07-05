@@ -1,8 +1,10 @@
 package feo.health.catalog.presentation.viewmodel.companion
 
 import androidx.compose.runtime.Composable
-import feo.health.ui.resource.HStrings
-import feo.health.ui.resource.HStrings.capitalize
+import androidx.compose.ui.res.stringResource
+import feo.health.ui.R
+import feo.health.ui.util.capitalize
+import feo.health.ui.dispatcher.AppDispatchers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -28,13 +30,12 @@ object SearchBarState {
         this.input.value = input
     }
 
-    fun disableInput() = CoroutineScope(Dispatchers.IO).launch {
-        delay(1000)
+    fun disableInput() = CoroutineScope(AppDispatchers.io).launch {
+        _isFiltersVisible.value = false
         _isInputAllowed.value = false
     }
 
-    fun enableInput() = CoroutineScope(Dispatchers.IO).launch {
-        delay(1000)
+    fun enableInput() = CoroutineScope(AppDispatchers.io).launch {
         _isInputAllowed.value = true
     }
 
@@ -122,29 +123,29 @@ object SearchBarState {
 
             object Clinics : Type() {
                 override val title: String
-                    @Composable get() = HStrings.clinics.capitalize()
+                    @Composable get() = stringResource(R.string.clinics).capitalize()
             }
 
             object Doctors : Type() {
                 override val title: String
-                    @Composable get() = HStrings.doctors.capitalize()
+                    @Composable get() = stringResource(R.string.doctors).capitalize()
             }
 
             object Services : Type() {
                 override val title: String
-                    @Composable get() = HStrings.services.capitalize()
+                    @Composable get() = stringResource(R.string.services).capitalize()
             }
 
             object Pharmacies : Type() {
                 override val title: String
-                    @Composable get() = HStrings.pharmacies.capitalize()
+                    @Composable get() = stringResource(R.string.pharmacies).capitalize()
             }
 
             companion object {
                 val entries
                     get() = listOf(Clinics, Doctors, Services)
                 val groupTitle: String
-                    @Composable get() = HStrings.type.capitalize()
+                    @Composable get() = stringResource(R.string.type).capitalize()
             }
         }
 
@@ -154,12 +155,12 @@ object SearchBarState {
 
             object Title : Sorting() {
                 override val title: String
-                    @Composable get() = HStrings.title.capitalize()
+                    @Composable get() = stringResource(R.string.title).capitalize()
             }
 
             object Rating : Sorting() {
                 override val title: String
-                    @Composable get() = HStrings.rating.capitalize()
+                    @Composable get() = stringResource(R.string.rating).capitalize()
             }
 
             object Experience : Sorting() {
@@ -170,7 +171,7 @@ object SearchBarState {
                         }
                     }
                 override val title: String
-                    @Composable get() = HStrings.experience.capitalize()
+                    @Composable get() = stringResource(R.string.experience).capitalize()
             }
 
             object Distance : Sorting() {
@@ -179,14 +180,14 @@ object SearchBarState {
                         SearchBarState.FiltersState.selectedType.value.contains(Type.Pharmacies)
                     }
                 override val title: String
-                    @Composable get() = HStrings.distance.capitalize()
+                    @Composable get() = stringResource(R.string.distance).capitalize()
             }
 
             companion object {
                 val entries
                     get() = listOf(Title, Rating, Experience, Distance)
                 val groupTitle: String
-                    @Composable get() = HStrings.sorting.capitalize()
+                    @Composable get() = stringResource(R.string.sorting).capitalize()
             }
         }
 
@@ -196,29 +197,29 @@ object SearchBarState {
 
             object Any : Radius() {
                 override val title: String
-                    @Composable get() = HStrings.any.capitalize()
+                    @Composable get() = stringResource(R.string.any).capitalize()
             }
 
             object FiveHundredMeters : Radius() {
                 override val title: String
-                    @Composable get() = HStrings.fiveHundredM.capitalize()
+                    @Composable get() = stringResource(R.string.five_hundred_m).capitalize()
             }
 
             object OneKilometer : Radius() {
                 override val title: String
-                    @Composable get() = HStrings.oneKm.capitalize()
+                    @Composable get() = stringResource(R.string.one_km).capitalize()
             }
 
             object TwoKilometers : Radius() {
                 override val title: String
-                    @Composable get() = HStrings.twoKm.capitalize()
+                    @Composable get() = stringResource(R.string.two_km).capitalize()
             }
 
             companion object {
                 val entries
                     get() = listOf(Any, FiveHundredMeters, OneKilometer, TwoKilometers)
                 val groupTitle: String
-                    @Composable get() = HStrings.searchRadius.capitalize()
+                    @Composable get() = stringResource(R.string.search_radius).capitalize()
             }
         }
     }

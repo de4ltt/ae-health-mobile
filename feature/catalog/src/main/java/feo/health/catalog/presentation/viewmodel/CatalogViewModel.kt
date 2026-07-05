@@ -103,7 +103,10 @@ class CatalogViewModel @Inject constructor(
     }
 
     private fun onClinicsByType(type: String) = viewModelScope.tryWithToast(
-        onError = { revertScreenState() }
+        onError = {
+            pushScreenState(CatalogState.Items.Error("Не удалось загрузить данные по типу"))
+            SearchBarState.enableInput()
+        }
     ) {
         updateScreenState(CatalogState.Items.Loading)
         val result =
@@ -117,7 +120,10 @@ class CatalogViewModel @Inject constructor(
     }
 
     private fun onClinicsByService(item: ICatalogItem) = viewModelScope.tryWithToast(
-        onError = { revertScreenState() }
+        onError = {
+            pushScreenState(CatalogState.Items.Error("Не удалось загрузить данные по услуге"))
+            SearchBarState.enableInput()
+        }
     ) {
         updateScreenState(CatalogState.Items.Loading)
         val result = serviceUseCases.getClinicsByServiceUseCase(item.link!!).toClinicList()
@@ -133,7 +139,7 @@ class CatalogViewModel @Inject constructor(
     private fun onSpecialists(type: ICatalogItem.Companion.CatalogItemType, link: String) =
         viewModelScope.tryWithToast(
             onError = {
-                revertScreenState()
+                pushScreenState(CatalogState.Items.Error("Не удалось загрузить список специалистов"))
             }
         ) {
             if (type == ICatalogItem.Companion.CatalogItemType.CLINIC) {
@@ -144,9 +150,8 @@ class CatalogViewModel @Inject constructor(
         }
 
     private fun onSearch() = viewModelScope.tryWithToast(
-        successMessageRequired = true,
         onError = {
-            revertScreenState()
+            pushScreenState(CatalogState.Items.Error("Произошла ошибка при поиске"))
             SearchBarState.enableInput()
         }
     ) {
@@ -169,11 +174,21 @@ class CatalogViewModel @Inject constructor(
                         is SearchBarState.Filters.Type.Pharmacies -> {
                             val location = LocationService.locationState.value
                             when (location) {
-                                is LocationService.LocationState.Success -> searchPharmacies(
-                                    lon = location.location.longitude,
-                                    lat = location.location.longitude,
-                                    radius = 500
-                                )
+                                is LocationService.LocationState.Success -> {
+                                    val selectedRadiusFilter = SearchBarState.FiltersState.selectedRadius.value.firstOrNull()
+                                    val radiusInMeters = when (selectedRadiusFilter) {
+                                        is SearchBarState.Filters.Radius.FiveHundredMeters -> 500
+                                        is SearchBarState.Filters.Radius.OneKilometer -> 1000
+                                        is SearchBarState.Filters.Radius.TwoKilometers -> 2000
+                                        is SearchBarState.Filters.Radius.Any -> 50000
+                                        else -> 500
+                                    }
+                                    searchPharmacies(
+                                        lon = location.location.longitude,
+                                        lat = location.location.latitude,
+                                        radius = radiusInMeters
+                                    )
+                                }
 
                                 else -> emptyList<ICatalogItem>()
                             }
@@ -194,6 +209,7 @@ class CatalogViewModel @Inject constructor(
                 result
             )
         )
+        SearchBarState.enableInput()
     }
 
     private suspend fun searchAll(query: String): List<ICatalogItem> {

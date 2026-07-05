@@ -45,8 +45,7 @@ import feo.health.ui.component.HText
 import feo.health.ui.component.HToast
 import feo.health.ui.component.container.HContainer
 import feo.health.ui.resource.HIcons
-import feo.health.ui.resource.HStrings
-import feo.health.ui.resource.HStrings.capitalize
+import feo.health.ui.util.capitalize
 import feo.health.ui.theme.HTheme
 import feo.health.ui.util.ILoading
 import kotlin.random.Random
@@ -102,7 +101,7 @@ object Organization : ILoading {
                     item {
                         InfoCard(
                             modifier = infoCardsModifier,
-                            title = HStrings.address.capitalize(),
+                            title = stringResource(feo.health.ui.R.string.address).capitalize(),
                             subtitle = address,
                             icon = HIcons.LOCATION_MARKER
                         )
@@ -114,7 +113,7 @@ object Organization : ILoading {
                     item {
                         InfoCard(
                             modifier = infoCardsModifier,
-                            title = HStrings.phoneNumber.capitalize(),
+                            title = stringResource(feo.health.ui.R.string.phone_number).capitalize(),
                             subtitle = phoneNumber,
                             icon = HIcons.PHONE
                         )
@@ -127,7 +126,7 @@ object Organization : ILoading {
                         val indication = defineIndication(reviews)
                         InfoCard(
                             modifier = infoCardsModifier,
-                            title = HStrings.reviews.capitalize(),
+                            title = stringResource(feo.health.ui.R.string.reviews).capitalize(),
                             subtitle = stringResource(indication.definition).capitalize(),
                             icon = HIcons.CHAT,
                             subtitleColor = indication.color
@@ -139,7 +138,7 @@ object Organization : ILoading {
                     item {
                         InfoCard(
                             modifier = infoCardsModifier,
-                            title = HStrings.openingHours.capitalize(),
+                            title = stringResource(feo.health.ui.R.string.opening_hours).capitalize(),
                             subtitle = openingHours.joinToString("\n"),
                             icon = HIcons.CLOCK
                         )
@@ -150,7 +149,7 @@ object Organization : ILoading {
                     item {
                         InfoCard(
                             modifier = infoCardsModifier,
-                            title = HStrings.website.capitalize(),
+                            title = stringResource(feo.health.ui.R.string.website).capitalize(),
                             subtitle = website,
                             icon = HIcons.WEB_SEARCH
                         )
@@ -174,8 +173,8 @@ object Organization : ILoading {
                                 interactionSource = null,
                                 indication = null
                             ),
-                            title = HStrings.specialists.capitalize(),
-                            subtitle = HStrings.watchServices.capitalize(),
+                            title = stringResource(feo.health.ui.R.string.specialists).capitalize(),
+                            subtitle = stringResource(feo.health.ui.R.string.watch_services).capitalize(),
                             icon = HIcons.INFORMATION_CIRCLE,
                             iconTint = HTheme.colors.background,
                             iconBackgroundTint = HTheme.colors.primary
@@ -387,7 +386,7 @@ object Organization : ILoading {
                 backgroundColor = HTheme.colors.primary
             ) {
                 HText.SingleLine(
-                    text = HStrings.route.capitalize(),
+                    text = stringResource(feo.health.ui.R.string.route).capitalize(),
                     fontWeight = FontWeight.Bold,
                     fontSize = 15.sp,
                     color = HTheme.colors.background
@@ -425,7 +424,7 @@ object Organization : ILoading {
                     backgroundColor = HTheme.colors.primary
                 ) {
                     HText.SingleLine(
-                        text = HStrings.phone.capitalize(),
+                        text = stringResource(feo.health.ui.R.string.phone).capitalize(),
                         fontWeight = FontWeight.Bold,
                         fontSize = 15.sp,
                         color = HTheme.colors.background

@@ -25,6 +25,7 @@ sealed class CatalogState(
         }
 
         data class Found(val found: List<ICatalogItem>) : Items()
+        data class Error(val message: String) : Items()
     }
 
     sealed class ItemDetails(

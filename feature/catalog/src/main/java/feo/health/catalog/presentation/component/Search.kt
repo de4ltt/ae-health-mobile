@@ -45,8 +45,8 @@ import feo.health.ui.component.HTextBar
 import feo.health.ui.component.NavAnchors
 import feo.health.ui.component.container.HList
 import feo.health.ui.resource.HIcons
-import feo.health.ui.resource.HStrings
-import feo.health.ui.resource.HStrings.capitalize
+import androidx.compose.ui.res.stringResource
+import feo.health.ui.util.capitalize
 import feo.health.ui.theme.HTheme
 import feo.health.ui.util.ILoading
 import kotlinx.coroutines.flow.StateFlow
@@ -76,7 +76,7 @@ object Search : ILoading {
                     modifier = Modifier,
                     contentPadding = PaddingValues.Zero,
                     spacing = 10.dp,
-                    title = HStrings.hereIsWhatWeFound.capitalize(),
+                    title = stringResource(feo.health.ui.R.string.here_is_what_we_found).capitalize(),
                     items = (screenState as CatalogState.Items.Found).found,
                     itemContainer = { item ->
                         CatalogItem(

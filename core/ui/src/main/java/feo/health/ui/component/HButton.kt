@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
@@ -18,11 +17,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.input.pointer.pointerInput
 import feo.health.ui.theme.HTheme
 
+/**
+ * A custom button component that provides consistent styling, shapes, and colors
+ * according to the application's design system ([HTheme]).
+ *
+ * It provides two variants: [Default] and [Selectable].
+ */
 object HButton {
 
+    /**
+     * Core layout container of the button.
+     * Handles background, shape, click events, and content arrangement.
+     */
     @Composable
     private operator fun invoke(
         modifier: Modifier,
@@ -59,6 +67,21 @@ object HButton {
         }
     }
 
+    /**
+     * A selectable button variant that supports enabled/disabled states with custom
+     * container and content colors for each state.
+     *
+     * @param modifier The [Modifier] to be applied to this button.
+     * @param buttonShape The [Shape] of the button's background. Defaults to [HTheme.shapes.rounded12].
+     * @param contentPadding The padding values to apply inside the button. Defaults to [HTheme.padding.common].
+     * @param enabled Controls the enabled state of this button. When `false`, the button is not clickable and uses disabled colors. Defaults to `false`.
+     * @param containerColor The background color of the button when enabled. Defaults to [HTheme.colors.primary].
+     * @param contentColor The preferred color for content inside the button when enabled. Defaults to [HTheme.colors.background].
+     * @param disabledContainerColor The background color of the button when disabled. Defaults to [HTheme.colors.disabledContainer].
+     * @param disabledContentColor The preferred color for content inside the button when disabled. Defaults to [HTheme.colors.disabledContent].
+     * @param onClick The callback to be invoked when the button is clicked.
+     * @param content The composable content layout of the button, providing the resolved content [Color] for styling text and icons.
+     */
     @Composable
     fun Selectable(
         modifier: Modifier = Modifier,
@@ -86,6 +109,17 @@ object HButton {
         content = content
     )
 
+    /**
+     * A default button variant that is always clickable and uses standard theme colors.
+     *
+     * @param modifier The [Modifier] to be applied to this button.
+     * @param buttonShape The [Shape] of the button's background. Defaults to [HTheme.shapes.rounded12].
+     * @param contentPadding The padding values to apply inside the button. Defaults to [HTheme.padding.common].
+     * @param containerColor The background color of the button. Defaults to [HTheme.colors.primary].
+     * @param contentColor The preferred color for content inside the button. Defaults to [HTheme.colors.background].
+     * @param onClick The callback to be invoked when the button is clicked.
+     * @param content The composable content layout of the button, providing the resolved content [Color] for styling text and icons.
+     */
     @Composable
     fun Default(
         modifier: Modifier = Modifier,

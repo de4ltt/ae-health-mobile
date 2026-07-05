@@ -199,26 +199,14 @@ class MapperProcessor(
     }
 
     private fun getShortenedMethodNames(first: String, second: String): Pair<String, String> {
-        val suffixes = listOf(
-            "RequestDomain", "ResponseDomain", "Request", "Response", 
-            "Domain", "Network", "DTO", "Dto", "Entity", "Model"
-        )
-        
         fun getMethodName(source: String, target: String): String {
             val sourceWords = source.split(Regex("(?=[A-Z])")).filter { it.isNotEmpty() }
             val targetWords = target.split(Regex("(?=[A-Z])")).filter { it.isNotEmpty() }
             
             val commonWords = sourceWords.intersect(targetWords.toSet())
-            if (commonWords.isNotEmpty()) {
-                val matchedSuffix = suffixes.find { target.endsWith(it) }
-                if (matchedSuffix != null) {
-                    return "to$matchedSuffix"
-                }
-            }
+            val remainingWords = targetWords.filter { !commonWords.contains(it) }
             
-            val noiseWords = setOf("Domain", "Network", "DTO", "Dto", "Entity", "Model", "Feature")
-            val filteredWords = targetWords.filter { !noiseWords.contains(it) }
-            val result = if (filteredWords.isEmpty()) target else filteredWords.joinToString("")
+            val result = if (remainingWords.isEmpty()) target else remainingWords.joinToString("")
             return "to$result"
         }
         

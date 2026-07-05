@@ -107,41 +107,6 @@ class MapperProcessor(
         val toFirstFlow = "${toFirstMethodName}Flow"
         val toFirstFlowList = "${toFirstMethodName}FlowList"
 
-        val longToSecond = "to$secondTypeName"
-        val longToFirst = "to$firstTypeName"
-
-        val deprecationToSecond = if (toSecondMethodName != longToSecond) {
-            """
-            @Deprecated("Use $toSecondMethodName instead", ReplaceWith("$toSecondMethodName()"))
-            fun $firstQualified.$longToSecond(): $secondQualified = this.$toSecondMethodName()
-
-            @Deprecated("Use $toSecondList instead", ReplaceWith("$toSecondList()"))
-            fun List<$firstQualified>.${longToSecond}List(): List<$secondQualified> = this.$toSecondList()
-
-            @Deprecated("Use $toSecondFlowList instead", ReplaceWith("$toSecondFlowList()"))
-            fun Flow<List<$firstQualified>>.${longToSecond}FlowList(): Flow<List<$secondQualified>> = this.$toSecondFlowList()
-
-            @Deprecated("Use $toSecondFlow instead", ReplaceWith("$toSecondFlow()"))
-            fun Flow<$firstQualified>.${longToSecond}Flow(): Flow<$secondQualified> = this.$toSecondFlow()
-            """.trimIndent()
-        } else ""
-
-        val deprecationToFirst = if (toFirstMethodName != longToFirst) {
-            """
-            @Deprecated("Use $toFirstMethodName instead", ReplaceWith("$toFirstMethodName()"))
-            fun $secondQualified.$longToFirst(): $firstQualified = this.$toFirstMethodName()
-
-            @Deprecated("Use $toFirstList instead", ReplaceWith("$toFirstList()"))
-            fun List<$secondQualified>.${longToFirst}List(): List<$firstQualified> = this.$toFirstList()
-
-            @Deprecated("Use $toFirstFlowList instead", ReplaceWith("$toFirstFlowList()"))
-            fun Flow<List<$secondQualified>>.${longToFirst}FlowList(): Flow<List<$firstQualified>> = this.$toFirstFlowList()
-
-            @Deprecated("Use $toFirstFlow instead", ReplaceWith("$toFirstFlow()"))
-            fun Flow<$secondQualified>.${longToFirst}Flow(): Flow<$firstQualified> = this.$toFirstFlow()
-            """.trimIndent()
-        } else ""
-
         val content = """
         package $packageName
 
@@ -209,10 +174,6 @@ class MapperProcessor(
                 this.map { it.$toSecondMethodName() }
             fun Flow<$secondQualified>.$toFirstFlow(): Flow<$firstQualified> = 
                 this.map { it.$toFirstMethodName() }
-
-            $deprecationToSecond
-
-            $deprecationToFirst
         }
     """.trimIndent()
 

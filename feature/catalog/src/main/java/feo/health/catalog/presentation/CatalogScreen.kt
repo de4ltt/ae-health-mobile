@@ -1,12 +1,9 @@
 package feo.health.catalog.presentation
 
-import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.SearchBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -14,30 +11,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import feo.health.catalog.presentation.component.HFilter
-import feo.health.catalog.presentation.component.Organization
 import feo.health.catalog.presentation.component.Search
-import feo.health.catalog.presentation.component.Search.SearchBar
-import feo.health.catalog.presentation.component.Specialists
-import feo.health.catalog.presentation.model.ICatalog
 import feo.health.catalog.presentation.viewmodel.CatalogViewModel
 import feo.health.catalog.presentation.viewmodel.companion.CatalogEvent
 import feo.health.catalog.presentation.viewmodel.companion.CatalogState
 import feo.health.ui.component.NavAnchors
+import feo.health.ui.component.info_text.HErrorScreen
 import feo.health.ui.component.info_text.NothingFound
 import feo.health.ui.component.info_text.StartTheSearch
+import feo.health.ui.navigation.CatalogDetailsRoute
 import feo.health.ui.util.ILoading
 
+/**
+ * A composable function that represents the catalog screen in the application.
+ *
+ * This screen displays the search bar and content area based on the current
+ * state (results, default state, nothing found, error, or loading).
+ *
+ * @param navHostController The navigation controller used to navigate between screens.
+ * @param catalogViewModel The view model that holds the screen state and handles UI events.
+ */
 @Composable
 fun CatalogScreen(
     navHostController: NavHostController,
     catalogViewModel: CatalogViewModel
 ) {
-
-    BackHandler {
-        catalogViewModel.onEvent(CatalogEvent.OnBack)
-    }
-
     LaunchedEffect(Unit) {
         NavAnchors.show()
     }
@@ -47,26 +45,35 @@ fun CatalogScreen(
     Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
 
         AnimatedVisibility(visible = state is CatalogState.Items) {
-            SearchBar { catalogViewModel.onEvent(CatalogEvent.SearchEvent.OnSearch) }
+            Search.SearchBar { catalogViewModel.onEvent(CatalogEvent.SearchEvent.OnSearch) }
         }
 
         when (val screenState = state) {
-            is CatalogState.ItemDetails.Found -> screenState.item.Display(onEvent = catalogViewModel::onEvent)
-
-            is CatalogState.ItemSpecialists.Found -> Specialists.Items.Screen(
-                specialists = screenState.specialists,
-                onClick = catalogViewModel::onEvent
-            )
-
             is CatalogState.Items.Found -> Search.Screen(
                 screenState = catalogViewModel.screenState,
-                onEvent = catalogViewModel::onEvent
+                onEvent = { event ->
+                    if (event is CatalogEvent.ItemInfoEvent.OnDetails) {
+                        catalogViewModel.onEvent(event)
+                        navHostController.navigate(CatalogDetailsRoute(event.item.link!!, event.item.type.name))
+                    } else {
+                        catalogViewModel.onEvent(event)
+                    }
+                }
             )
 
             is CatalogState.Items.Default -> StartTheSearch(Modifier.weight(1f))
             is CatalogState.Items.NothingFound -> NothingFound(Modifier.weight(1f))
+            is CatalogState.Items.Error -> HErrorScreen(
+                message = screenState.message,
+                onRetry = { catalogViewModel.onEvent(CatalogEvent.SearchEvent.OnSearch) },
+                modifier = Modifier.weight(1f)
+            )
 
-            else -> (screenState as ILoading).LoadingScreen()
+            else -> {
+                if (screenState is ILoading) {
+                    screenState.LoadingScreen()
+                }
+            }
         }
     }
 }

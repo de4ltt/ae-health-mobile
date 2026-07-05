@@ -1,27 +1,40 @@
 plugins {
-    id("java-library")
-    alias(libs.plugins.jetbrains.kotlin.jvm)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
     id("com.google.devtools.ksp")
-    kotlin("plugin.serialization")
 }
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-}
-kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
+
+android {
+    namespace = "feo.health.network.ai"
+    compileSdk = 36
+
+    defaultConfig {
+        minSdk = 31
     }
 
-    dependencies {
-        implementation(project(":network"))
-
-        implementation(libs.ktor.client.core)
-        implementation(libs.ktor.client.cio)
-        implementation(libs.ktor.client.content.negotiation)
-        implementation(libs.ktor.serialization.kotlinx.json)
-        ksp(libs.dagger.compiler)
-        implementation(libs.dagger)
-        implementation(libs.dotenv.kotlin)
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
+    kotlinOptions {
+        jvmTarget = "11"
+        freeCompilerArgs = listOf("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
+    }
+}
+
+dependencies {
+    implementation(project(":feature:ai"))
+    implementation(project(":network"))
+    implementation(project(":core:mapper"))
+    ksp(project(":core:mapper"))
+
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.client.content.negotiation)
+
+    ksp(libs.dagger.compiler)
+    implementation(libs.dagger)
+    implementation(libs.dotenv.kotlin)
 }

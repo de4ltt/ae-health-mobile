@@ -28,34 +28,45 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.toUri
 import com.valentinilk.shimmer.shimmer
-import feo.health.catalog.presentation.viewmodel.companion.CatalogEvent
 import feo.health.catalog.presentation.model.ICatalog
 import feo.health.catalog.presentation.model.Review
 import feo.health.catalog.presentation.model.Review.Companion.ReviewIndication.Companion.defineIndication
 import feo.health.catalog.presentation.util.Mock
+import feo.health.catalog.presentation.viewmodel.companion.CatalogEvent
 import feo.health.ui.component.HProgressIndicator
 import feo.health.ui.component.HProgressIndicator.Shimmer.defaultShimmer
 import feo.health.ui.component.HText
 import feo.health.ui.component.container.HContainer
 import feo.health.ui.component.container.HList
 import feo.health.ui.resource.HIcons
-import feo.health.ui.resource.HStrings
-import feo.health.ui.resource.HStrings.capitalize
 import feo.health.ui.theme.HTheme
 import feo.health.ui.theme.fontFamily
 import feo.health.ui.util.ILoading
+import feo.health.ui.util.capitalize
 import java.time.format.DateTimeFormatter
 
+/**
+ * Container object containing components for specialists (doctors) presentation.
+ */
 object Specialists {
 
+    /**
+     * Component namespaces for presenting a specialist's profile.
+     */
     object Profile : ILoading {
+        /**
+         * Renders the detailed profile screen of a specialist/doctor.
+         *
+         * @param modifier Modifier for the layout.
+         * @param specialist The specialist doctor model details to display.
+         */
         @Composable
         fun Screen(
             modifier: Modifier = Modifier,
             specialist: ICatalog.Doctor
         ) = HContainer.TitledScreen(
             modifier = Modifier.fillMaxSize(),
-            title = HStrings.specialistProfile.capitalize(),
+            title = stringResource(feo.health.ui.R.string.specialist_profile).capitalize(),
         ) {
             Column(
                 modifier = modifier,
@@ -99,12 +110,12 @@ object Specialists {
                         Spacer(modifier = Modifier.height(5.dp))
                         specialist.experience?.let {
                             val expString = listOf(
-                                HStrings.experience.capitalize(), it.toString(), when {
-                                    it % 10 == 1 -> HStrings.expOneYr
+                                stringResource(feo.health.ui.R.string.experience).capitalize(), it.toString(), when {
+                                    it % 10 == 1 -> stringResource(feo.health.ui.R.string.exp_one_yr)
                                     it % 10 in 2..4 ->
-                                        if (it > 4) HStrings.expTwoFourMoreYrs else HStrings.expTwoFourLessYrs
+                                        if (it > 4) stringResource(feo.health.ui.R.string.exp_two_four_more_yrs) else stringResource(feo.health.ui.R.string.exp_two_four_less_yrs)
 
-                                    else -> HStrings.expManyYrs
+                                    else -> stringResource(feo.health.ui.R.string.exp_many_yr)
                                 }
                             ).joinToString(" ")
                             HText.SingleLine(
@@ -130,7 +141,7 @@ object Specialists {
                 specialist.reviews?.let { spec ->
                     HList.LazyTitled(
                         modifier = Modifier.fillMaxWidth(),
-                        title = HStrings.reviews.capitalize(),
+                        title = stringResource(feo.health.ui.R.string.reviews).capitalize(),
                         contentPadding = PaddingValues(bottom = 15.dp),
                         fontSize = 22.sp,
                         items = spec,
@@ -139,7 +150,7 @@ object Specialists {
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .wrapContentHeight(),
-                                title = HStrings.appointmentWas.capitalize() + " ${
+                                title = stringResource(feo.health.ui.R.string.appointment_was).capitalize() + " ${
                                     it.date?.format(
                                         DateTimeFormatter.ofPattern("dd.MM.yyyy")
                                     )
@@ -156,6 +167,18 @@ object Specialists {
             }
         }
 
+        /**
+         * Renders an individual review card on the specialist's profile.
+         *
+         * @param modifier Modifier for the layout.
+         * @param description Review comment text.
+         * @param descriptionColor Color for the review description.
+         * @param titleColor Color for the review title.
+         * @param bottomIcon Optional vector icon for rating (e.g. Star).
+         * @param bottomText Optional rating value text.
+         * @param bottomColor Tint color for the rating display.
+         * @param title Title string for the review card.
+         */
         @Composable
         private fun ReviewCard(
             modifier: Modifier = Modifier,
@@ -209,6 +232,11 @@ object Specialists {
             }
         }
 
+        /**
+         * Renders a shimmer placeholder card for reviews during loading.
+         *
+         * @param modifier Modifier for the layout.
+         */
         @Composable
         fun ShimmerReviewCard(
             modifier: Modifier = Modifier,
@@ -262,10 +290,15 @@ object Specialists {
             }
         }
 
+        /**
+         * Renders the shimmer profile screen state.
+         *
+         * @param params Optional parameters for the loading screen (unused).
+         */
         @Composable
         override fun LoadingScreen(vararg params: Any) = HContainer.TitledScreen(
             modifier = Modifier.fillMaxSize(),
-            title = HStrings.specialistProfile.capitalize(),
+            title = stringResource(feo.health.ui.R.string.specialist_profile).capitalize(),
         ) {
             Column(
                 modifier = Modifier,
@@ -335,7 +368,7 @@ object Specialists {
 
                 HList.LazyTitled(
                     modifier = Modifier.fillMaxWidth(),
-                    title = HStrings.reviews.capitalize(),
+                    title = stringResource(feo.health.ui.R.string.reviews).capitalize(),
                     scrollingEnabled = false,
                     contentPadding = PaddingValues(bottom = 15.dp),
                     fontSize = 22.sp,
@@ -352,8 +385,18 @@ object Specialists {
         }
     }
 
+    /**
+     * Component namespaces for presenting a list of specialists.
+     */
     object Items : ILoading {
 
+        /**
+         * Renders the list of specialists.
+         *
+         * @param modifier Modifier for the layout.
+         * @param specialists The list of doctors to display.
+         * @param onClick Click listener callback returning the detailed item click event.
+         */
         @Composable
         fun Screen(
             modifier: Modifier = Modifier,
@@ -361,7 +404,7 @@ object Specialists {
             onClick: (CatalogEvent) -> Unit
         ) = HContainer.TitledScreen(
             modifier = Modifier.fillMaxSize(),
-            title = HStrings.specialists.capitalize()
+            title = stringResource(feo.health.ui.R.string.specialists).capitalize()
         ) {
             HList.Lazy(
                 modifier = modifier,
@@ -382,6 +425,13 @@ object Specialists {
             )
         }
 
+        /**
+         * Renders an individual doctor summary card in the list.
+         *
+         * @param modifier Modifier for the layout.
+         * @param specialist The doctor model details.
+         * @param onClick Action clicked handler.
+         */
         @Composable
         private fun Card(
             modifier: Modifier = Modifier,
@@ -453,7 +503,7 @@ object Specialists {
                             color = HTheme.colors.onBackground
                         )
                     ) {
-                        append("${HStrings.experience.capitalize()}: ")
+                        append("${stringResource(feo.health.ui.R.string.experience).capitalize()}: ")
                     }
                     withStyle(
                         style = SpanStyle(
@@ -465,11 +515,11 @@ object Specialists {
                     ) {
                         append(
                             "$it " + when {
-                                it % 10 == 1 -> HStrings.expOneYr
+                                it % 10 == 1 -> stringResource(feo.health.ui.R.string.exp_one_yr)
                                 it % 10 in 2..4 ->
-                                    if (it > 4) HStrings.expTwoFourMoreYrs else HStrings.expTwoFourLessYrs
+                                    if (it > 4) stringResource(feo.health.ui.R.string.exp_two_four_more_yrs) else stringResource(feo.health.ui.R.string.exp_two_four_less_yrs)
 
-                                else -> HStrings.expManyYrs
+                                else -> stringResource(feo.health.ui.R.string.exp_many_yr)
                             }
                         )
                     }
@@ -486,7 +536,7 @@ object Specialists {
                             fontFamily = fontFamily,
                             color = HTheme.colors.onBackground
                         )
-                    ) { append("${HStrings.reviews.capitalize()}: ") }
+                    ) { append("${stringResource(feo.health.ui.R.string.reviews).capitalize()}: ") }
 
                     val definition = Review.Companion.ReviewIndication.defineIndication(it)
                     withStyle(
@@ -502,6 +552,11 @@ object Specialists {
             }
         }
 
+        /**
+         * Renders a shimmer placeholder card in the list.
+         *
+         * @param modifier Modifier for the layout.
+         */
         @Composable
         private fun ShimmerCard(
             modifier: Modifier = Modifier,
@@ -579,10 +634,15 @@ object Specialists {
             }
         }
 
+        /**
+         * Renders the loading list screen with shimmer card placeholders.
+         *
+         * @param params Optional parameters for the loading screen (unused).
+         */
         @Composable
         override fun LoadingScreen(vararg params: Any) = HContainer.TitledScreen(
             modifier = Modifier.fillMaxSize(),
-            title = HStrings.specialists.capitalize()
+            title = stringResource(feo.health.ui.R.string.specialists).capitalize()
         ) {
             HList.Lazy(
                 modifier = Modifier,

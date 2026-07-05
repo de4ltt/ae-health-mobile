@@ -1,5 +1,7 @@
 package feo.health.auth.presentation.component
 
+import feo.health.ui.R
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -37,7 +39,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -53,78 +54,131 @@ import feo.health.ui.component.HToast
 import feo.health.ui.component.container.HContainer
 import feo.health.ui.component.container.HList
 import feo.health.ui.resource.HIcons
-import feo.health.ui.resource.HStrings
-import feo.health.ui.resource.HStrings.capitalize
 import feo.health.ui.theme.HColorScheme
 import feo.health.ui.theme.HTheme
+import feo.health.ui.util.capitalize
 import kotlinx.coroutines.flow.StateFlow
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.time.ExperimentalTime
 
+/**
+ * Transformation utility masking password text bar outputs into bullet symbols.
+ */
 private object PasswordOutputTransformation : OutputTransformation {
-    private const val mask = '•'
+    private const val MASK = '•'
 
+    /**
+     * Replaces characters in input buffer with masking characters.
+     */
     override fun TextFieldBuffer.transformOutput() {
         for (i in 0 until length) {
-            replace(i, i + 1, mask.toString())
+            replace(i, i + 1, MASK.toString())
         }
     }
 }
 
 
+/**
+ * Presentation component containing all UI layouts for authorization (Sign In and Sign Up templates).
+ */
 object Authorization {
 
+    /**
+     * Enum mapping the fields required in the Sign In screen layout.
+     *
+     * @property hintRes Resource ID pointing to the text bar hint string.
+     * @property icon Icon associated with the field.
+     * @property onInput Callback triggered when text value changes.
+     * @property outputTransformation Text masking properties transformation rules.
+     */
     private enum class SignInFields(
         val hintRes: Int,
         val icon: HIcons,
         val onInput: (String) -> Unit,
         val outputTransformation: OutputTransformation? = null,
     ) {
+        /**
+         * User email input field.
+         */
         EMAIL(
             icon = HIcons.EMAIL,
-            hintRes = HStrings.emailRes,
+            hintRes = R.string.email,
             onInput = {
                 AuthFieldsState.SignIn.email.value = it
             }),
+
+        /**
+         * User password input field.
+         */
         PASSWORD(
             icon = HIcons.KEY,
-            hintRes = HStrings.passwordRes,
+            hintRes = R.string.password,
             onInput = { AuthFieldsState.SignIn.password.value = it },
             outputTransformation = PasswordOutputTransformation
         )
     }
 
+    /**
+     * Enum mapping the fields required in the Sign Up screen layout.
+     *
+     * @property hintRes Resource ID pointing to the text bar hint string.
+     * @property icon Icon associated with the field.
+     * @property onInput Callback triggered when text value changes.
+     * @property outputTransformation Text masking properties transformation rules.
+     */
     private enum class SignUpFields(
         val hintRes: Int,
         val icon: HIcons,
         val onInput: (String) -> Unit,
         val outputTransformation: OutputTransformation? = null,
     ) {
+        /**
+         * User full name input field.
+         */
         NAME(
             icon = HIcons.USER,
-            hintRes = HStrings.nameRes,
+            hintRes = R.string.name,
             onInput = {
                 AuthFieldsState.SignUp.name.value = it
             }
         ),
+
+        /**
+         * User email input field.
+         */
         EMAIL(
             icon = HIcons.EMAIL,
-            hintRes = HStrings.emailRes,
+            hintRes = R.string.email,
             onInput = { AuthFieldsState.SignUp.email.value = it }),
+
+        /**
+         * User password input field.
+         */
         PASSWORD(
             icon = HIcons.KEY,
-            hintRes = HStrings.passwordRes,
+            hintRes = R.string.password,
             onInput = { AuthFieldsState.SignUp.password.value = it },
             outputTransformation = PasswordOutputTransformation
         ),
+
+        /**
+         * User date of birth selection field.
+         */
         DATE_OF_BIRTH(
             icon = HIcons.BIRTHDAY,
-            hintRes = HStrings.dateOfBirth,
+            hintRes = R.string.date_of_birth,
             onInput = { AuthFieldsState.SignUp.dateOfBirth.value = it });
     }
 
+    /**
+     * Renders the Sign In authorization UI layout.
+     *
+     * @param modifier Composable layout adjustments modifier.
+     * @param screenState Flow stream containing the current [AuthState].
+     * @param onEvent Callback to trigger presentation-level [AuthEvent] actions.
+     */
     @Composable
     fun SignInScreen(
         modifier: Modifier = Modifier,
@@ -137,14 +191,14 @@ object Authorization {
 
         val screenState by screenState.collectAsStateWithLifecycle()
 
-        val cannotGoBack = HStrings.cannotGoBack.capitalize()
+        val cannotGoBack = stringResource(R.string.cannot_go_back).capitalize()
 
         HList.DefaultTitled(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
             textAlign = TextAlign.Center,
-            title = HStrings.signIn.capitalize(),
+            title = stringResource(R.string.sign_in).capitalize(),
             items = SignInFields.entries,
             contentPadding = PaddingValues(vertical = 5.dp),
             itemContainer = {
@@ -182,7 +236,7 @@ object Authorization {
                     indication = null,
                     interactionSource = null
                 ),
-            text = HStrings.signUp.capitalize(),
+            text = stringResource(R.string.sign_up).capitalize(),
             textAlign = TextAlign.Center,
             textDecoration = TextDecoration.Underline,
             color = HTheme.colors.onBackground.copy(alpha = 0.5f)
@@ -202,7 +256,7 @@ object Authorization {
             ) {
                 HText.SingleLine(
                     modifier = Modifier.padding(horizontal = 15.dp),
-                    text = HStrings.procede.capitalize(),
+                    text = stringResource(R.string.proceed).capitalize(),
                     fontWeight = FontWeight.SemiBold,
                     color = HTheme.colors.background
                 )
@@ -210,6 +264,13 @@ object Authorization {
         }
     }
 
+    /**
+     * Renders the Sign Up user registration UI layout.
+     *
+     * @param modifier Composable layout adjustments modifier.
+     * @param screenState Flow stream containing the current [AuthState].
+     * @param onEvent Callback to trigger presentation-level [AuthEvent] actions.
+     */
     @OptIn(ExperimentalTime::class)
     @Composable
     fun SignUpScreen(
@@ -219,7 +280,7 @@ object Authorization {
     ) {
 
         val screenState by screenState.collectAsStateWithLifecycle()
-        val cannotGoBack = HStrings.cannotGoBack.capitalize()
+        val cannotGoBack = stringResource(R.string.cannot_go_back).capitalize()
 
         HContainer.Default(
             modifier = modifier.fillMaxSize(),
@@ -230,7 +291,7 @@ object Authorization {
                     .fillMaxWidth()
                     .wrapContentHeight(),
                 textAlign = TextAlign.Center,
-                title = HStrings.signUp.capitalize(),
+                title = stringResource(R.string.sign_up).capitalize(),
                 items = SignUpFields.entries,
                 contentPadding = PaddingValues(vertical = 5.dp),
                 itemContainer = {
@@ -314,7 +375,7 @@ object Authorization {
                         indication = null,
                         interactionSource = null
                     ),
-                text = HStrings.signIn.capitalize(),
+                text = stringResource(R.string.sign_in).capitalize(),
                 textAlign = TextAlign.Center,
                 textDecoration = TextDecoration.Underline,
                 color = HTheme.colors.onBackground.copy(alpha = 0.5f)
@@ -334,7 +395,7 @@ object Authorization {
                 ) {
                     HText.SingleLine(
                         modifier = Modifier.padding(horizontal = 15.dp),
-                        text = HStrings.procede.capitalize(),
+                        text = stringResource(R.string.proceed).capitalize(),
                         fontWeight = FontWeight.SemiBold,
                         color = HTheme.colors.background
                     )
@@ -343,6 +404,12 @@ object Authorization {
         }
     }
 
+    /**
+     * Dialog modal displaying date picker selection controls.
+     *
+     * @param onDateSelected Callback invoked with the selected timestamp in milliseconds.
+     * @param onDismiss Callback invoked when dialog is dismissed.
+     */
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun DatePickerModal(
@@ -373,7 +440,7 @@ object Authorization {
                             contentColor = HTheme.colors.primary
                         )
                 ) {
-                    Text(HStrings.ok.uppercase())
+                    Text(stringResource(R.string.ok).uppercase())
                 }
             },
             dismissButton = {
@@ -382,7 +449,7 @@ object Authorization {
                     colors = ButtonDefaults.textButtonColors()
                         .copy(contentColor = HTheme.colors.primary)
                 ) {
-                    Text(HStrings.cancel.uppercase())
+                    Text(stringResource(R.string.cancel).uppercase())
                 }
             }
         ) {

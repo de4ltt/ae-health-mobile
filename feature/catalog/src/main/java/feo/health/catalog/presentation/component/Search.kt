@@ -1,5 +1,7 @@
 package feo.health.catalog.presentation.component
 
+import feo.health.ui.R
+
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -31,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -45,14 +48,25 @@ import feo.health.ui.component.HTextBar
 import feo.health.ui.component.NavAnchors
 import feo.health.ui.component.container.HList
 import feo.health.ui.resource.HIcons
-import feo.health.ui.resource.HStrings
-import feo.health.ui.resource.HStrings.capitalize
 import feo.health.ui.theme.HTheme
 import feo.health.ui.util.ILoading
+import feo.health.ui.util.capitalize
 import kotlinx.coroutines.flow.StateFlow
 
+/**
+ * Object containing UI components related to the catalog search screen, search bar, and loading states.
+ *
+ * Implements [ILoading] to provide custom loading states.
+ */
 object Search : ILoading {
 
+    /**
+     * Renders the list of found search items when search results are available.
+     *
+     * @param modifier Modifier for the layout.
+     * @param screenState A flow of the catalog screen state.
+     * @param onEvent Event callback for handling catalog-related user interactions.
+     */
     @Composable
     fun Screen(
         modifier: Modifier = Modifier,
@@ -76,7 +90,7 @@ object Search : ILoading {
                     modifier = Modifier,
                     contentPadding = PaddingValues.Zero,
                     spacing = 10.dp,
-                    title = HStrings.hereIsWhatWeFound.capitalize(),
+                    title = stringResource(R.string.here_is_what_we_found).capitalize(),
                     items = (screenState as CatalogState.Items.Found).found,
                     itemContainer = { item ->
                         CatalogItem(
@@ -88,6 +102,11 @@ object Search : ILoading {
         }
     }
 
+    /**
+     * Renders the search input text bar along with the filter trigger button and optional filters section.
+     *
+     * @param onSearch Callback triggered when the search button or keyboard IME action is clicked.
+     */
     @Composable
     fun SearchBar(
         onSearch: () -> Unit
@@ -180,6 +199,11 @@ object Search : ILoading {
         ) { HFilter() }
     }
 
+    /**
+     * Renders a list of skeleton shimmer loaders representing search items while fetching data.
+     *
+     * @param params Optional parameters for the loading screen (unused).
+     */
     @Composable
     override fun LoadingScreen(vararg params: Any) =
         HList.ShimmerTitled(

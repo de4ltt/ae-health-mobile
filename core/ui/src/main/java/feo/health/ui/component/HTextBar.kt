@@ -31,17 +31,39 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import feo.health.ui.resource.HStrings
-import feo.health.ui.resource.HStrings.capitalize
+import feo.health.ui.R
 import feo.health.ui.theme.HTheme
 import feo.health.ui.theme.fontFamily
+import feo.health.ui.util.capitalize
 
+/**
+ * A custom text input field container that wraps [BasicTextField] and provides consistent
+ * layout alignment, hint texts, validation structures, and animation presets.
+ */
 object HTextBar {
 
+    /**
+     * Core layout container of the text input bar.
+     * Integrates state tracking, visual decorators, and style definitions.
+     *
+     * @param modifier The [Modifier] to apply to the input layout.
+     * @param state The [TextFieldState] managing input text value.
+     * @param textStyle Typography configurations.
+     * @param enabled Set false to lock user input capabilities.
+     * @param onInput Callback triggered when text state updates.
+     * @param lineLimits Line constraints of the field.
+     * @param outputTransformation Formatting rules (e.g. secure fields).
+     * @param contentModifier Inner layout Modifier.
+     * @param hintText Placeholder text.
+     * @param keyboardOptions Keyboard configurations.
+     * @param frontItem Start icon composable.
+     * @param backItem End icon composable.
+     */
     @Composable
     private operator fun invoke(
         modifier: Modifier = Modifier,
@@ -52,7 +74,7 @@ object HTextBar {
         lineLimits: TextFieldLineLimits,
         outputTransformation: OutputTransformation? = null,
         contentModifier: Modifier = Modifier,
-        hintText: String = HStrings.search.capitalize(),
+        hintText: String = stringResource(R.string.search).capitalize(),
         keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
         frontItem: @Composable (RowScope.() -> Unit)? = null,
         backItem: @Composable (RowScope.() -> Unit)? = null
@@ -71,6 +93,7 @@ object HTextBar {
             keyboardOptions = keyboardOptions,
             readOnly = !enabled,
             textStyle = TextStyle(
+                color = HTheme.colors.onBackground,
                 fontSize = 15.sp,
                 fontWeight = HTheme.typography.medium.fontWeight,
                 fontFamily = fontFamily
@@ -102,12 +125,24 @@ object HTextBar {
         )
     }
 
+    /**
+     * Renders a non-editable text container representing a search or input field style,
+     * typically used for navigation anchors or quick redirects.
+     *
+     * @param modifier The [Modifier] to be applied to the container layout.
+     * @param state The [TextFieldState] holding the text content to display.
+     * @param contentModifier The [Modifier] to apply to the inner row containing icon and text.
+     * @param hintText Text to be displayed when the state text is empty. Defaults to "Search".
+     * @param textStyle The typography style of the text. Defaults to [HTheme.typography.medium].
+     * @param frontItem Composable block to render an icon or component at the start of the field.
+     * @param backItem Composable block to render an icon or component at the end of the field.
+     */
     @Composable
     fun SingleLineWithFrontIcon(
         modifier: Modifier = Modifier,
         state: TextFieldState = rememberTextFieldState(),
         contentModifier: Modifier = Modifier,
-        hintText: String = HStrings.search.capitalize(),
+        hintText: String = stringResource(R.string.search).capitalize(),
         textStyle: TextStyle = HTheme.typography.medium,
         frontItem: @Composable (RowScope.() -> Unit)? = null,
         backItem: @Composable (RowScope.() -> Unit)? = null
@@ -136,7 +171,7 @@ object HTextBar {
                                 fontWeight = HTheme.typography.medium.fontWeight
                             )
                         BasicText(
-                            style = textStyle,
+                            style = textStyle.copy(color = HTheme.colors.onBackground),
                             maxLines = 1,
                             text = state.text.toString()
                         )
@@ -148,11 +183,21 @@ object HTextBar {
         )
     }
 
+    /**
+     * Renders a basic, standard input field with multi-line or single-line limits.
+     *
+     * @param modifier The [Modifier] to apply to the input layout.
+     * @param state The [TextFieldState] managing input text value.
+     * @param hintText Text placeholder displayed when input is empty.
+     * @param contentModifier The [Modifier] to apply to the inner alignment row.
+     * @param textStyle The text style configuration.
+     * @param lineLimits Line height constraints of the input field. Defaults to [TextFieldLineLimits.MultiLine].
+     */
     @Composable
     fun Default(
         modifier: Modifier = Modifier,
         state: TextFieldState = rememberTextFieldState(),
-        hintText: String = HStrings.search.capitalize(),
+        hintText: String = stringResource(R.string.search).capitalize(),
         contentModifier: Modifier = Modifier,
         textStyle: TextStyle = HTheme.typography.medium,
         lineLimits: TextFieldLineLimits = TextFieldLineLimits.MultiLine()
@@ -165,6 +210,23 @@ object HTextBar {
         contentModifier = contentModifier
     )
 
+    /**
+     * Renders an input field that supports custom front and back components (e.g. clear button, icons)
+     * and triggers callback on state text changes.
+     *
+     * @param modifier The [Modifier] to apply to the input layout.
+     * @param contentModifier The [Modifier] to apply to the inner container row.
+     * @param state The [TextFieldState] managing input text value.
+     * @param outputTransformation Transformation logic for visual formatting of output (e.g. passwords/phone numbers).
+     * @param onInput Callback triggered when input text changes, providing the new raw string.
+     * @param hintText Text placeholder displayed when input is empty.
+     * @param enabled Controls whether user can edit the input field. Defaults to `true`.
+     * @param textStyle The text style configuration.
+     * @param keyboardOptions Keyboard actions and visual layouts. Defaults to [KeyboardOptions.Default].
+     * @param lineLimits Line height constraints of the input field. Defaults to [TextFieldLineLimits.Default].
+     * @param frontItem Composable block to render an icon or component at the start of the field.
+     * @param backItem Composable block to render an icon or component at the end of the field.
+     */
     @Composable
     fun Items(
         modifier: Modifier = Modifier,
@@ -172,7 +234,7 @@ object HTextBar {
         state: TextFieldState = rememberTextFieldState(),
         outputTransformation: OutputTransformation? = null,
         onInput: (String) -> Unit = {},
-        hintText: String = HStrings.search.capitalize(),
+        hintText: String = stringResource(R.string.search).capitalize(),
         enabled: Boolean = true,
         textStyle: TextStyle = HTheme.typography.medium,
         keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -194,6 +256,22 @@ object HTextBar {
         backItem = backItem
     )
 
+    /**
+     * Renders an input search bar that reveals a trailing search/submit action button
+     * with sliding animations when the search button visibility state is active.
+     *
+     * @param modifier The [Modifier] to apply to the outer input field.
+     * @param isButtonVisible Decides if the trailing search action button is shown.
+     * @param onSearch Callback invoked when the search button is clicked.
+     * @param contentModifier The [Modifier] to apply to the inner alignment container row.
+     * @param keyboardOptions Keyboard visual layouts and options.
+     * @param state The [TextFieldState] managing input text value.
+     * @param enabled Controls whether user can edit the search field. Defaults to `true`.
+     * @param textStyle The typography style configuration.
+     * @param lineLimits Line height constraints of the input field.
+     * @param frontItem Composable block to render at the start of the input field.
+     * @param backItem Composable block to render at the end of the input field.
+     */
     @Composable
     fun ButtonItems(
         modifier: Modifier = Modifier,
@@ -243,7 +321,7 @@ object HTextBar {
                     content = {
                         HText.Default(
                             color = it,
-                            text = HStrings.search.capitalize(),
+                            text = stringResource(R.string.search).capitalize(),
                             fontWeight = FontWeight.Bold
                         )
                     }

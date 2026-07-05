@@ -12,20 +12,28 @@ import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 import io.ktor.client.statement.bodyAsText
-import io.ktor.http.Url
 import io.ktor.http.parameters
-import io.ktor.util.reflect.TypeInfo
-import jdk.internal.reflect.ConstantPool
-import kotlinx.serialization.json.Json
-import java.net.URLDecoder
 import java.net.URLEncoder
 import javax.inject.Inject
 
+/**
+ * API implementation managing search directory matching and address geocoding resolution.
+ *
+ * @property httpClient Network HTTP client provider.
+ * @property secrets Core decrypted secrets credentials store.
+ */
 internal class SearchApi @Inject constructor(
     private val httpClient: HttpClient,
     private val secrets: HSecrets
 ) : ISearchApi {
 
+    /**
+     * Queries the catalog search endpoint for clinics, doctors, and services matching query key.
+     *
+     * @param q Match keyword.
+     * @param isLocated Filter coordinates boundary active location.
+     * @return [NetworkResult] wrapping matching [SearchDto] containing matches.
+     */
     override suspend fun search(
         q: String,
         isLocated: Boolean
@@ -39,6 +47,12 @@ internal class SearchApi @Inject constructor(
             }.body()
         }
 
+    /**
+     * Resolves physical coordinate details by query address string using 2GIS API geolocation decoder.
+     *
+     * @param address Full address description.
+     * @return [NetworkResult] wrapping geocoded [CoordsDto] latitude and longitude.
+     */
     override suspend fun getCoordsForAddress(address: String): NetworkResult<CoordsDto> =
         RequestHandler.handle {
             val encodedAddress = URLEncoder.encode(

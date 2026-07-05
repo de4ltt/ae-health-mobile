@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     id("com.google.devtools.ksp")
 }
 
@@ -47,7 +48,6 @@ dependencies {
     implementation(project(":core:secrets"))
 
     implementation(project(":network"))
-    implementation(project(":network:catalog"))
 
     implementation(project(":feature"))
 
@@ -70,4 +70,8 @@ dependencies {
     implementation(libs.dagger)
 
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
 }

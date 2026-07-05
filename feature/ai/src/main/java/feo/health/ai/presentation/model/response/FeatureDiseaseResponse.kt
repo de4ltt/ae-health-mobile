@@ -1,30 +1,42 @@
 package feo.health.ai.presentation.model.response
 
+import feo.health.ui.R
+
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
-import feo.health.ui.resource.HStrings
-import feo.health.ui.resource.HStrings.capitalize
 import feo.health.ui.theme.HTheme
 import feo.health.ui.theme.fontFamily
+import feo.health.ui.util.capitalize
 
+/**
+ * Presentation response entity containing diagnostic results mapped by probability metrics.
+ * Implements [ILinkingDisplay] interface to display clickable annotated text formats.
+ *
+ * @property possibleDiseases Map of disease names mapped to probability percentages values.
+ * @property doctors Recommended doctor specialties associated with diagnostic matches.
+ * @property generalResponse Natural language diagnostic summary output.
+ */
 data class FeatureDiseaseResponse(
     val possibleDiseases: Map<String, Double>,
     val doctors: List<String>,
     val generalResponse: String
 ) : ILinkingDisplay {
 
+    /**
+     * Renders the diagnostic response details as formatted annotated text with support for interactive clicks.
+     *
+     * @param modifier Composable layout adjustments modifier.
+     * @param onTextClick Callback invoked when user clicks an interactive reference link tag.
+     */
     @Composable
     override fun Display(modifier: Modifier, onTextClick: (tag: String, name: String) -> Unit) {
         val fontSize = 17.sp
@@ -39,8 +51,8 @@ data class FeatureDiseaseResponse(
             textDecoration = TextDecoration.Underline
         )
 
-        val possibleDiseasesText = HStrings.possibleDiseases.capitalize()
-        val recommendedDoctorsText = HStrings.recommendedDoctors.capitalize()
+        val possibleDiseasesText = stringResource(R.string.possible_diseases).capitalize()
+        val recommendedDoctorsText = stringResource(R.string.recommended_doctors).capitalize()
 
         val annotated = remember(possibleDiseases, doctors, generalResponse) {
             buildAnnotatedString {

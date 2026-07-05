@@ -15,10 +15,21 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import javax.inject.Inject
 
+/**
+ * API implementation managing AI diagnostic analysis, smart recommendation queries, and medical service specs.
+ *
+ * @property httpClient Network HTTP client provider.
+ */
 internal class AIApi @Inject constructor(
     private val httpClient: HttpClient
 ): IAIApi {
 
+    /**
+     * Queries remote AI service endpoints to resolve matching suggest recommendations list.
+     *
+     * @param suggestionRequest Dynamic recommendation queries configurations parameters.
+     * @return [NetworkResult] wrapping list match suggestions.
+     */
     override suspend fun getSuggestion(suggestionRequest: SuggestionRequest): NetworkResult<SuggestionResponse> =
         RequestHandler.handle {
             httpClient.post(ApiEndpoints.AI.POST_SUGGESTION) {
@@ -26,6 +37,12 @@ internal class AIApi @Inject constructor(
             }.body()
         }
 
+    /**
+     * Submits symptom description properties to query probable diagnostics matching.
+     *
+     * @param diseaseRequest Symptom match description queries parameters.
+     * @return [NetworkResult] wrapping probable disease diagnostics.
+     */
     override suspend fun getDisease(diseaseRequest: DiseaseRequest): NetworkResult<DiseaseResponse> =
         RequestHandler.handle {
             httpClient.post(ApiEndpoints.AI.POST_DISEASE) {
@@ -33,6 +50,12 @@ internal class AIApi @Inject constructor(
             }.body()
         }
 
+    /**
+     * Queries detailed specs properties of a specific medical procedure.
+     *
+     * @param procedureRequest Medical service procedure name query properties.
+     * @return [NetworkResult] wrapping detailed service specs.
+     */
     override suspend fun getProcedureInfo(procedureRequest: ProcedureRequest): NetworkResult<ProcedureResponse> =
         RequestHandler.handle {
             httpClient.post(ApiEndpoints.AI.POST_PROCEDURE) {

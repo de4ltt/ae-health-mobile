@@ -9,15 +9,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.valentinilk.shimmer.LocalShimmerTheme
 import com.valentinilk.shimmer.ShimmerBounds
-import com.valentinilk.shimmer.ShimmerTheme
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import feo.health.ui.theme.HTheme
 
 
+/**
+ * Represents custom progress indicators and skeleton loaders used throughout the application.
+ *
+ * It provides two variants: [Circular] and [Shimmer].
+ *
+ * @property animation Composable block that draws the loader.
+ */
 sealed class HProgressIndicator(
     val animation: @Composable (Modifier, Color, Color) -> Unit
 ) {
+    /**
+     * Renders the loading animation layout.
+     *
+     * @param modifier The [Modifier] to apply to the progress layout.
+     * @param color Primary color of the indicator or shimmer path. Defaults to [HTheme.colors.primary].
+     * @param containerColor Background/container color of the layout. Defaults to [HTheme.colors.onBackgroundContainer].
+     */
     @Composable
     operator fun invoke(
         modifier: Modifier = Modifier,
@@ -25,6 +38,9 @@ sealed class HProgressIndicator(
         containerColor: Color = HTheme.colors.onBackgroundContainer
     ) = animation(modifier, containerColor, color)
 
+    /**
+     * A standard circular spinner indicator centered within a background box container.
+     */
     object Circular : HProgressIndicator({ modifier, containerColor, color ->
         Box(modifier = modifier.background(containerColor), contentAlignment = Alignment.Center) {
             CircularProgressIndicator(
@@ -34,6 +50,9 @@ sealed class HProgressIndicator(
         }
     })
 
+    /**
+     * A shimmer skeleton loader indicator used for content placeholder loading screens.
+     */
     object Shimmer : HProgressIndicator({ modifier, containerColor, color ->
         val theme = LocalShimmerTheme.current.copy(
             shaderColors = listOf(
@@ -49,6 +68,9 @@ sealed class HProgressIndicator(
                 .background(color)
         )
     }) {
+        /**
+         * Resolves a default shimmer instance with standard theme background colors.
+         */
         val defaultShimmer
             @Composable get() = rememberShimmer(
                 shimmerBounds = ShimmerBounds.View, theme = LocalShimmerTheme.current.copy(

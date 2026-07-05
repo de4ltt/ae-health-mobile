@@ -1,6 +1,5 @@
 package feo.health.ui.component
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -23,29 +22,47 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import feo.health.ui.component.container.HList
 import feo.health.ui.navigation.Routes
 import feo.health.ui.resource.HIcons
 import feo.health.ui.theme.HTheme
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
+/**
+ * Renders the bottom navigation bar and coordinates switching between core navigation graphs.
+ */
 object NavAnchors {
 
+    /**
+     * Backing state flow controlling the visibility of the bottom bar component.
+     */
     private val _isShown: MutableStateFlow<Boolean> = MutableStateFlow(false)
+
+    /**
+     * Read-only StateFlow observing the bottom bar visibility state.
+     */
     private val isShown = _isShown.asStateFlow()
 
+    /**
+     * Commands the bottom navigation bar to be visible.
+     */
     fun show() {
         _isShown.value = true
     }
 
+    /**
+     * Commands the bottom navigation bar to be hidden.
+     */
     fun hide() {
         _isShown.value = false
     }
 
+    /**
+     * Composable function that draws the bottom navigation anchors bar.
+     * Renders standard app navigation tabs (Home, AI, Profile).
+     *
+     * @param navHostController The active navigation host controller context.
+     */
     @Composable
     operator fun invoke(
         navHostController: NavHostController
@@ -91,12 +108,29 @@ object NavAnchors {
         }
     }
 
+    /**
+     * Enum mapping containing navigation destination tabs.
+     *
+     * @property icon Vector asset representation of the tab.
+     * @property destination Route string pattern identifier.
+     */
     private enum class Destinations(
         val icon: HIcons,
         val destination: String
     ) {
+        /**
+         * Home Catalog search destination tab.
+         */
         HOME(icon = HIcons.HOME, destination = Routes.catalog),
+
+        /**
+         * AI diagnostics/assistance check destination tab.
+         */
         AI(icon = HIcons.AI, destination = Routes.ai),
+
+        /**
+         * User profile info destination tab.
+         */
         PROFILE(icon = HIcons.USER, destination = Routes.user),
     }
 }

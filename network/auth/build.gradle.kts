@@ -1,28 +1,40 @@
 plugins {
-    id("java-library")
-    alias(libs.plugins.jetbrains.kotlin.jvm)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
     id("com.google.devtools.ksp")
-    kotlin("plugin.serialization")
 }
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+
+android {
+    namespace = "feo.health.network.auth"
+    compileSdk = 36
+
+    defaultConfig {
+        minSdk = 31
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = "11"
+        freeCompilerArgs = listOf("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
+    }
 }
-kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
-    }
-    dependencies {
-        implementation(project(":network"))
-        implementation(libs.ktor.serialization.kotlinx.json)
 
-        implementation(libs.ktor.client.core)
-        implementation(libs.ktor.client.cio)
-        implementation(libs.ktor.client.content.negotiation)
-        implementation(libs.ktor.serialization.kotlinx.json)
+dependencies {
+    implementation(project(":feature:auth"))
+    implementation(project(":network"))
+    implementation(project(":core:mapper"))
+    ksp(project(":core:mapper"))
 
-        ksp(libs.dagger.compiler)
-        implementation(libs.dagger)
-        implementation(libs.dotenv.kotlin)
-    }
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.client.content.negotiation)
+
+    ksp(libs.dagger.compiler)
+    implementation(libs.dagger)
+    implementation(libs.dotenv.kotlin)
 }

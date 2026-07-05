@@ -1,6 +1,5 @@
 package feo.health.auth.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import feo.health.auth.domain.model.SignInDomain
 import feo.health.auth.domain.model.SignUpDomain
@@ -9,20 +8,30 @@ import feo.health.auth.domain.use_case.SignUpUseCase
 import feo.health.auth.presentation.viewmodel.companion.AuthEvent
 import feo.health.auth.presentation.viewmodel.companion.AuthFieldsState
 import feo.health.auth.presentation.viewmodel.companion.AuthState
-import feo.health.ui.component.HToast
 import feo.health.ui.component.HToast.tryWithToast
-import feo.health.ui.resource.HStrings
 import feo.health.ui.viewmodel.HViewModel
-import kotlinx.coroutines.delay
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
+/**
+ * Presentation view model class managing login, signup registration states flows and event handlers.
+ * Extends [HViewModel] base structure.
+ *
+ * @property signInUseCase Sign in credentials authentication check workflow.
+ * @property signUpUseCase Registration sign up account creation workflow.
+ */
 class AuthViewModel @Inject constructor(
     private val signInUseCase: SignInUseCase,
     private val signUpUseCase: SignUpUseCase
 ) : HViewModel<AuthState, AuthEvent>(initialState = AuthState.SignIn.Default) {
 
+    /**
+     * Entry hook mapping incoming UI interaction events to specific handler execution tasks.
+     *
+     * @param event The triggered user presentation action.
+     * @return Any matching return result payload wrapper.
+     */
     override fun onEvent(event: AuthEvent) = when (event) {
         AuthEvent.OnBack -> onBack()
         AuthEvent.OnSignIn -> onSignIn()
@@ -30,6 +39,9 @@ class AuthViewModel @Inject constructor(
         AuthEvent.OnSwitchScreen -> onSwitchScreen()
     }
 
+    /**
+     * Executes the login authentication process based on values in [AuthFieldsState.SignIn].
+     */
     private fun onSignIn() = viewModelScope.tryWithToast(
         successMessageRequired = true,
         onError = { updateScreenState(AuthState.SignIn.Default) }
@@ -44,6 +56,9 @@ class AuthViewModel @Inject constructor(
         updateScreenState(AuthState.SignIn.Authorized)
     }
 
+    /**
+     * Executes the registration signup process based on values in [AuthFieldsState.SignUp].
+     */
     private fun onSignUp() = viewModelScope.tryWithToast(
         successMessageRequired = true,
         onError = { updateScreenState(AuthState.SignUp.Default) }
@@ -60,6 +75,9 @@ class AuthViewModel @Inject constructor(
         updateScreenState(AuthState.SignIn.Default)
     }
 
+    /**
+     * Toggles the rendering state between Sign In and Sign Up page templates.
+     */
     private fun onSwitchScreen() = viewModelScope.tryWithToast {
         if (screenState.value is AuthState.SignIn.Default)
             updateScreenState(AuthState.SignUp.Default)

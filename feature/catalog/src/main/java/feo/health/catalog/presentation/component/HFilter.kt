@@ -6,17 +6,12 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.runtime.Composable
@@ -31,8 +26,18 @@ import feo.health.ui.component.HText
 import feo.health.ui.component.container.HContainer
 import feo.health.ui.theme.HTheme
 
+/**
+ * Component representing the filters section in the catalog search bar.
+ *
+ * This object displays and manages selection for various filters like Type, Radius, or Sorting.
+ */
 object HFilter {
 
+    /**
+     * Composable function invoked when rendering the filter options layout.
+     *
+     * It binds to the filter states (allowed and selected filter values) and renders the option tags.
+     */
     @Composable
     operator fun invoke() {
 

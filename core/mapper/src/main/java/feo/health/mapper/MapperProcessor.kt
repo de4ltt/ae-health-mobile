@@ -10,11 +10,28 @@ import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.validate
 
+/**
+ * Kotlin Symbol Processing (KSP) processor that generates two-way extension mapping functions
+ * for classes annotated with [@Mapper] and implementing [IMapper].
+ *
+ * Automatically generates shortened mapping functions by subtracting the common CamelCase word
+ * intersection between source and target classes. It also generates deprecation wrappers
+ * for backward compatibility with previous long-named functions.
+ *
+ * @property codeGenerator KSP tool used to create new file resources.
+ * @property logger KSP diagnostic logger tool.
+ */
 class MapperProcessor(
     private val codeGenerator: CodeGenerator,
     private val logger: KSPLogger
 ) : SymbolProcessor {
 
+    /**
+     * Processes annotations on symbols in the source codebase.
+     *
+     * @param resolver KSP environment resolver.
+     * @return List of unresolved annotated symbols.
+     */
     override fun process(resolver: Resolver): List<KSAnnotated> {
         val annotationName = "feo.health.mapper.Mapper"
         val symbols = resolver.getSymbolsWithAnnotation(annotationName)
@@ -24,6 +41,12 @@ class MapperProcessor(
         return invalidSymbols
     }
 
+    /**
+     * Generates a concrete file containing short-named two-way extension mapper mappings
+     * for the provided class.
+     *
+     * @param classDeclaration The mapper class declaration.
+     */
     private fun generateMapper(classDeclaration: KSClassDeclaration) {
         val autoMapperInterface = classDeclaration.superTypes
             .map { it.resolve() }
@@ -75,6 +98,50 @@ class MapperProcessor(
             fileName = fileName
         )
 
+        val (toSecondMethodName, toFirstMethodName) = getShortenedMethodNames(firstTypeName, secondTypeName)
+        val toSecondList = "${toSecondMethodName}List"
+        val toSecondFlow = "${toSecondMethodName}Flow"
+        val toSecondFlowList = "${toSecondMethodName}FlowList"
+
+        val toFirstList = "${toFirstMethodName}List"
+        val toFirstFlow = "${toFirstMethodName}Flow"
+        val toFirstFlowList = "${toFirstMethodName}FlowList"
+
+        val longToSecond = "to$secondTypeName"
+        val longToFirst = "to$firstTypeName"
+
+        val deprecationToSecond = if (toSecondMethodName != longToSecond) {
+            """
+            @Deprecated("Use $toSecondMethodName instead", ReplaceWith("$toSecondMethodName()"))
+            fun $firstQualified.$longToSecond(): $secondQualified = this.$toSecondMethodName()
+
+            @Deprecated("Use $toSecondList instead", ReplaceWith("$toSecondList()"))
+            fun List<$firstQualified>.${longToSecond}List(): List<$secondQualified> = this.$toSecondList()
+
+            @Deprecated("Use $toSecondFlowList instead", ReplaceWith("$toSecondFlowList()"))
+            fun Flow<List<$firstQualified>>.${longToSecond}FlowList(): Flow<List<$secondQualified>> = this.$toSecondFlowList()
+
+            @Deprecated("Use $toSecondFlow instead", ReplaceWith("$toSecondFlow()"))
+            fun Flow<$firstQualified>.${longToSecond}Flow(): Flow<$secondQualified> = this.$toSecondFlow()
+            """.trimIndent()
+        } else ""
+
+        val deprecationToFirst = if (toFirstMethodName != longToFirst) {
+            """
+            @Deprecated("Use $toFirstMethodName instead", ReplaceWith("$toFirstMethodName()"))
+            fun $secondQualified.$longToFirst(): $firstQualified = this.$toFirstMethodName()
+
+            @Deprecated("Use $toFirstList instead", ReplaceWith("$toFirstList()"))
+            fun List<$secondQualified>.${longToFirst}List(): List<$firstQualified> = this.$toFirstList()
+
+            @Deprecated("Use $toFirstFlowList instead", ReplaceWith("$toFirstFlowList()"))
+            fun Flow<List<$secondQualified>>.${longToFirst}FlowList(): Flow<List<$firstQualified>> = this.$toFirstFlowList()
+
+            @Deprecated("Use $toFirstFlow instead", ReplaceWith("$toFirstFlow()"))
+            fun Flow<$secondQualified>.${longToFirst}Flow(): Flow<$firstQualified> = this.$toFirstFlow()
+            """.trimIndent()
+        } else ""
+
         val content = """
         package $packageName
 
@@ -100,7 +167,7 @@ class MapperProcessor(
                 }
             }
 
-            fun $firstQualified.to$secondTypeName(): $secondQualified {
+            fun $firstQualified.$toSecondMethodName(): $secondQualified {
                 val mapper = getMapperInstance()
                 try {
                     val mapperClass = mapper.javaClass
@@ -114,7 +181,7 @@ class MapperProcessor(
                 }
             }
 
-            fun $secondQualified.to$firstTypeName(): $firstQualified {
+            fun $secondQualified.$toFirstMethodName(): $firstQualified {
                 val mapper = getMapperInstance()
                 try {
                     val mapperClass = mapper.javaClass
@@ -128,20 +195,24 @@ class MapperProcessor(
                 }
             }
 
-            fun List<$firstQualified>.to${secondTypeName}List(): List<$secondQualified> = 
-                this.map { it.to$secondTypeName() }
-            fun List<$secondQualified>.to${firstTypeName}List(): List<$firstQualified> = 
-                this.map { it.to$firstTypeName() }
+            fun List<$firstQualified>.$toSecondList(): List<$secondQualified> = 
+                this.map { it.$toSecondMethodName() }
+            fun List<$secondQualified>.$toFirstList(): List<$firstQualified> = 
+                this.map { it.$toFirstMethodName() }
             
-            fun Flow<List<$firstQualified>>.to${secondTypeName}FlowList(): Flow<List<$secondQualified>> = 
-                this.map { it.to${secondTypeName}List() }
-            fun Flow<List<$secondQualified>>.to${firstTypeName}FlowList(): Flow<List<$firstQualified>> = 
-                this.map { it.to${firstTypeName}List() }
+            fun Flow<List<$firstQualified>>.$toSecondFlowList(): Flow<List<$secondQualified>> = 
+                this.map { it.$toSecondList() }
+            fun Flow<List<$secondQualified>>.$toFirstFlowList(): Flow<List<$firstQualified>> = 
+                this.map { it.$toFirstList() }
             
-            fun Flow<$firstQualified>.to${secondTypeName}Flow(): Flow<$secondQualified> = 
-                this.map { it.to$secondTypeName() }
-            fun Flow<$secondQualified>.to${firstTypeName}Flow(): Flow<$firstQualified> = 
-                this.map { it.to$firstTypeName() }
+            fun Flow<$firstQualified>.$toSecondFlow(): Flow<$secondQualified> = 
+                this.map { it.$toSecondMethodName() }
+            fun Flow<$secondQualified>.$toFirstFlow(): Flow<$firstQualified> = 
+                this.map { it.$toFirstMethodName() }
+
+            $deprecationToSecond
+
+            $deprecationToFirst
         }
     """.trimIndent()
 
@@ -150,6 +221,43 @@ class MapperProcessor(
         }
     }
 
+    /**
+     * Deduces short target method names by performing CamelCase word tokenization
+     * and subtracting intersection of words between source and target classes.
+     *
+     * @param first Qualified/simple name of the first class.
+     * @param second Qualified/simple name of the second class.
+     * @return Pair of short names to map First->Second and Second->First respectively.
+     */
+    private fun getShortenedMethodNames(first: String, second: String): Pair<String, String> {
+        /**
+         * Inner helper function calculating token set subtraction.
+         *
+         * @param source The source class name.
+         * @param target The target class name.
+         * @return The resulting short name prefix.
+         */
+        fun getMethodName(source: String, target: String): String {
+            val sourceWords = source.split(Regex("(?=[A-Z])")).filter { it.isNotEmpty() }
+            val targetWords = target.split(Regex("(?=[A-Z])")).filter { it.isNotEmpty() }
+            
+            val commonWords = sourceWords.intersect(targetWords.toSet())
+            val remainingWords = targetWords.filter { !commonWords.contains(it) }
+            
+            val result = if (remainingWords.isEmpty()) target else remainingWords.joinToString("")
+            return "to$result"
+        }
+        
+        return Pair(getMethodName(first, second), getMethodName(second, first))
+    }
+
+    /**
+     * Invoked at the completion of processing rounds.
+     */
     override fun finish() {}
+
+    /**
+     * Invoked if KSP encounters processing round errors.
+     */
     override fun onError() {}
 }

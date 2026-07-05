@@ -18,11 +18,25 @@ import kotlinx.serialization.json.jsonPrimitive
 import java.util.Base64
 import javax.inject.Inject
 
+/**
+ * API implementation managing user authentication sessions.
+ * Sends requests to sign in or sign up, and automatically parses/saves tokens and user credentials locally.
+ *
+ * @property httpClient Network HTTP client provider.
+ * @property dataStore Local storage provider used to update token variables.
+ */
 internal class AuthApi @Inject constructor(
     private val httpClient: HttpClient,
     private val dataStore: HDataStore
 ) : IAuthApi {
 
+    /**
+     * Authenticates credentials, saves tokens and extracted user identifier to datastore,
+     * and returns the logged-in session response details.
+     *
+     * @param signInRequest Contains login credentials.
+     * @return [NetworkResult] wrapping the session token details.
+     */
     override suspend fun signIn(signInRequest: SignInRequest): NetworkResult<SignInResponse> =
         RequestHandler.handle {
             val result = httpClient.post(ApiEndpoints.Auth.SIGN_IN) {
@@ -42,6 +56,12 @@ internal class AuthApi @Inject constructor(
             result
         }
 
+    /**
+     * Registers a new user account profile.
+     *
+     * @param signUpRequest Contains registration info.
+     * @return [NetworkResult] signaling complete status.
+     */
     override suspend fun signUp(signUpRequest: SignUpRequest): NetworkResult<Unit> =
         RequestHandler.handle {
             httpClient.post(ApiEndpoints.Auth.SIGN_UP) {
@@ -49,6 +69,12 @@ internal class AuthApi @Inject constructor(
             }.body<Unit>()
         }
 
+    /**
+     * Decodes and extracts the user identifier claim from the active bearer JWT token string.
+     *
+     * @param token Authentication bearer JWT string.
+     * @return Extracted user id value, or `null` if payload is corrupted or missing "userId" key.
+     */
     private fun extractJwtUserIdClaim(token: String): String? {
         val parts = token.split('.')
         if (parts.size < 2) return null
@@ -62,6 +88,12 @@ internal class AuthApi @Inject constructor(
         return json["userId"]?.jsonPrimitive?.contentOrNull
     }
 
+    /**
+     * Utility performing Base64 decoding mapping rules on JWT token properties.
+     *
+     * @param input Raw Base64 string from JWT claim segment.
+     * @return Decoded readable string content.
+     */
     private fun base64UrlDecodeToString(input: String): String {
         var s = input.replace('-', '+').replace('_', '/')
         val pad = s.length % 4

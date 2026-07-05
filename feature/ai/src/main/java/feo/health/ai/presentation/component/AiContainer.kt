@@ -1,5 +1,7 @@
 package feo.health.ai.presentation.component
 
+import feo.health.ui.R
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.fadeIn
@@ -52,14 +54,25 @@ import feo.health.ui.component.HTextBar
 import feo.health.ui.component.container.HContainer
 import feo.health.ui.component.container.HOptionSelector
 import feo.health.ui.resource.HIcons
-import feo.health.ui.resource.HStrings
-import feo.health.ui.resource.HStrings.capitalize
 import feo.health.ui.theme.HTheme
 import feo.health.ui.util.ILoading
+import feo.health.ui.util.capitalize
 import kotlinx.coroutines.flow.StateFlow
 
+/**
+ * Main UI Composable container displaying the AI Diagnostic Search Panel.
+ * Handles switching between searching for medical procedures, symptom diagnostics, or smart recommendations.
+ */
 object AiContainer : ILoading {
 
+    /**
+     * Renders the default search and diagnostic state layout.
+     *
+     * @param modifier Composable layout adjustments modifier.
+     * @param state Flow stream containing the current [AiState].
+     * @param onEvent Callback to trigger presentation-level [AiEvent] actions.
+     * @param onTextClick Callback invoked when user clicks an interactive reference link tag.
+     */
     @Composable
     fun Default(
         modifier: Modifier = Modifier,
@@ -89,7 +102,7 @@ object AiContainer : ILoading {
                 textFieldState.clearText()
         }
 
-        HContainer.TitledScreen(modifier = modifier, title = HStrings.ai.uppercase()) {
+        HContainer.TitledScreen(modifier = modifier, title = stringResource(R.string.ai).uppercase()) {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 HTextBar.Items(
                     enabled = searchBarEnabled,
@@ -205,6 +218,14 @@ object AiContainer : ILoading {
         }
     }
 
+    /**
+     * Renders symptom tag input layout.
+     *
+     * @param modifier Composable layout adjustments modifier.
+     * @param symptomTags Dynamic list containing added symptoms tags.
+     * @param onAdd Callback to add a new symptom tag.
+     * @param onRemove Callback to remove a symptom tag.
+     */
     @Composable
     private fun SymptomsTags(
         modifier: Modifier = Modifier,
@@ -247,7 +268,7 @@ object AiContainer : ILoading {
                     .height(IntrinsicSize.Min),
                 contentModifier = Modifier.padding(horizontal = 15.dp, vertical = 5.dp),
                 lineLimits = TextFieldLineLimits.SingleLine,
-                hintText = HStrings.addSymptom.capitalize(),
+                hintText = stringResource(R.string.add_symptom).capitalize(),
                 state = textFieldState,
                 backItem = {
                     HIcons.PLUS(
@@ -271,6 +292,13 @@ object AiContainer : ILoading {
         }
     }
 
+    /**
+     * Renders a single symptom tag chip Composable item.
+     *
+     * @param modifier Composable layout adjustments modifier.
+     * @param title Title string content for the chip.
+     * @param onRemove Callback to invoke when chip is removed.
+     */
     @Composable
     private fun SymptomTag(
         modifier: Modifier = Modifier,
@@ -303,6 +331,11 @@ object AiContainer : ILoading {
         }
     }
 
+    /**
+     * Renders circular loading progress indicators during query search tasks execution.
+     *
+     * @param params Arbitrary parameter variables.
+     */
     @Composable
     override fun LoadingScreen(vararg params: Any) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

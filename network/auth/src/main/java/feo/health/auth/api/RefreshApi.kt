@@ -1,8 +1,8 @@
 package feo.health.auth.api
 
 import feo.health.network.endpoints.ApiEndpoints
-import feo.health.network.refresh_api.IRefreshApi
 import feo.health.network.model.NetworkResult
+import feo.health.network.refresh_api.IRefreshApi
 import feo.health.network.refresh_api.RefreshTokenRequest
 import feo.health.network.refresh_api.RefreshTokenResponse
 import feo.health.network.util.RequestHandler
@@ -12,9 +12,22 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import javax.inject.Inject
 
+/**
+ * Implementation of [IRefreshApi] that handles communication with the authentication server
+ * to update expired access tokens using active refresh sessions.
+ *
+ * @property httpClient Network HTTP client provider.
+ */
 internal class RefreshApi @Inject constructor(
     private val httpClient: HttpClient
 ) : IRefreshApi {
+
+    /**
+     * Executes post request to update access token parameters.
+     *
+     * @param refreshTokenRequest Parameters encapsulating refresh token.
+     * @return [NetworkResult] wrapping the response token parameters.
+     */
     override suspend fun refreshToken(refreshTokenRequest: RefreshTokenRequest): NetworkResult<RefreshTokenResponse> =
         RequestHandler.handle {
             httpClient.post(ApiEndpoints.Auth.REFRESH_TOKEN) {

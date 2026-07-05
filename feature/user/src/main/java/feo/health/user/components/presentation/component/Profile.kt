@@ -64,12 +64,11 @@ import feo.health.ui.component.HTextBar
 import feo.health.ui.component.container.HContainer
 import feo.health.ui.navigation.Routes
 import feo.health.ui.resource.HIcons
-import feo.health.ui.resource.HStrings
-import feo.health.ui.resource.HStrings.capitalize
 import feo.health.ui.theme.HColorScheme
 import feo.health.ui.theme.HTheme
 import feo.health.ui.theme.fontFamily
 import feo.health.ui.util.Validator
+import feo.health.ui.util.capitalize
 import feo.health.user.components.presentation.component.Profile.InfoCardState.Companion.inverseState
 import feo.health.user.components.presentation.model.ChangePassword
 import feo.health.user.components.presentation.model.User
@@ -77,8 +76,21 @@ import feo.health.user.components.presentation.viewmodel.companion.UserEvent
 import feo.health.user.components.presentation.viewmodel.companion.UserState
 import kotlinx.coroutines.flow.StateFlow
 
+/**
+ * Component representing the Profile screen.
+ * Contains user profile data display and editing functionality,
+ * account settings navigation, password changing, and account management.
+ */
 object Profile {
 
+    /**
+     * Composable screen displaying the main user profile.
+     * Displays loading shimmer or profile cards based on [state].
+     *
+     * @param state The state flow of [UserState] representing the current profile state.
+     * @param navHostController The navigation controller used to transition to other screens.
+     * @param onEvent Callback function to propagate [UserEvent] occurrences to the ViewModel.
+     */
     @Composable
     fun Screen(
         state: StateFlow<UserState>,
@@ -86,7 +98,7 @@ object Profile {
         onEvent: (UserEvent) -> Unit
     ) = HContainer.TitledScreen(
         modifier = Modifier.fillMaxSize(),
-        title = HStrings.profile.capitalize()
+        title = stringResource(feo.health.ui.R.string.profile).capitalize()
     ) {
 
         val state by state.collectAsStateWithLifecycle()
@@ -96,9 +108,10 @@ object Profile {
         }
 
         Column {
-            when (state) {
-                UserState.Profile.Default -> ProfileScreenInfoCards(
-                    user = UserState.Profile.Default.user!!,
+            val stateValue = state
+            when (stateValue) {
+                is UserState.Profile.Default -> ProfileScreenInfoCards(
+                    user = stateValue.user!!,
                     onEvent = onEvent,
                     onLogOut = { navHostController.navigate(Routes.authLogOut) }
                 )
@@ -120,6 +133,14 @@ object Profile {
         }
     }
 
+    /**
+     * Composable function rendering a column of information cards (Name, Email, Weight, Height)
+     * as well as action cards (Change Password, History, Favourites, Log Out, Delete Account).
+     *
+     * @param user The current [User] data model displaying profile fields.
+     * @param onLogOut Callback to invoke when the user clicks the log out action.
+     * @param onEvent Callback function to trigger user actions/events.
+     */
     @Composable
     private fun ProfileScreenInfoCards(
         user: User,
@@ -133,7 +154,7 @@ object Profile {
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             ProfileInfoCard(
-                subtitle = stringResource(HStrings.nameRes).capitalize(),
+                subtitle = stringResource(feo.health.ui.R.string.name).capitalize(),
                 icon = HIcons.USER,
                 title = user.name,
                 onValueChange = {
@@ -155,7 +176,7 @@ object Profile {
             )
 
             ProfileInfoCard(
-                subtitle = stringResource(HStrings.emailRes).capitalize(),
+                subtitle = stringResource(feo.health.ui.R.string.email).capitalize(),
                 icon = HIcons.EMAIL,
                 title = user.email,
                 keyboardType = KeyboardType.Email,
@@ -178,9 +199,9 @@ object Profile {
 
 
             ProfileInfoCard(
-                subtitle = stringResource(HStrings.weightRes).capitalize(),
+                subtitle = stringResource(feo.health.ui.R.string.weigth).capitalize(),
                 icon = HIcons.WEIGHT,
-                title = user.weightKg?.toString() ?: HStrings.notSet.capitalize(),
+                title = user.weightKg?.toString() ?: stringResource(feo.health.ui.R.string.not_set).capitalize(),
                 keyboardType = KeyboardType.Number,
                 onValueChange = {
                     Validator.validate(
@@ -200,7 +221,7 @@ object Profile {
             )
 
             ProfileInfoCard(
-                subtitle = stringResource(HStrings.heightRes).capitalize(),
+                subtitle = stringResource(feo.health.ui.R.string.height).capitalize(),
                 icon = HIcons.ARROW_UP,
                 title = user.height?.toString(),
                 keyboardType = KeyboardType.Decimal,
@@ -245,7 +266,7 @@ object Profile {
             )
 
             ProfileItemCard(
-                title = HStrings.history.capitalize(),
+                title = stringResource(feo.health.ui.R.string.history).capitalize(),
                 iconBackgroundTint = HTheme.colors.secondary,
                 iconTint = HTheme.colors.background,
                 onClick = { onEvent(UserEvent.History.OnRefresh) },
@@ -253,7 +274,7 @@ object Profile {
             )
 
             ProfileItemCard(
-                title = HStrings.favourites.capitalize(),
+                title = stringResource(feo.health.ui.R.string.favourites).capitalize(),
                 iconBackgroundTint = HTheme.colors.secondary,
                 iconTint = HTheme.colors.background,
                 onClick = { onEvent(UserEvent.Favourites.OnRefresh) },
@@ -261,7 +282,7 @@ object Profile {
             )
 
             ProfileItemCard(
-                title = HStrings.logOut.capitalize(),
+                title = stringResource(feo.health.ui.R.string.log_out).capitalize(),
                 iconBackgroundTint = HTheme.colors.onBackgroundContainer,
                 iconTint = HTheme.colors.onBackground,
                 onClick = {
@@ -272,7 +293,7 @@ object Profile {
             )
 
             ProfileItemCard(
-                title = HStrings.deleteAccount.capitalize(),
+                title = stringResource(feo.health.ui.R.string.delete_account).capitalize(),
                 iconBackgroundTint = HColorScheme.Additional.RED,
                 iconTint = HTheme.colors.background,
                 onClick = { onEvent(UserEvent.Profile.OnDeleteUser) },
@@ -281,6 +302,21 @@ object Profile {
         }
     }
 
+    /**
+     * Composable card for displaying and editing individual user profile fields (e.g. name, height).
+     * Supports shared element transitions between display and edit modes.
+     *
+     * @param modifier Modifier to apply to this layout.
+     * @param title The current text value displayed in the card (e.g. the user's name).
+     * @param subtitle The label of the card (e.g. "Name", "Height").
+     * @param icon The [HIcons] icon corresponding to this profile attribute.
+     * @param hintText Text to show when the value is not set.
+     * @param keyboardType Keyboard type for editing the text field (e.g. [KeyboardType.Number]).
+     * @param iconBackgroundTint Background tint color for the icon container.
+     * @param titleColor Text color for the title.
+     * @param subtitleColor Text color for the subtitle.
+     * @param onValueChange Callback triggered when the value is edited and confirmed.
+     */
     @OptIn(ExperimentalSharedTransitionApi::class)
     @Composable
     private fun ProfileInfoCard(
@@ -288,7 +324,7 @@ object Profile {
         title: String? = null,
         subtitle: String? = null,
         icon: HIcons,
-        hintText: String = HStrings.notSet.capitalize(),
+        hintText: String = stringResource(feo.health.ui.R.string.not_set).capitalize(),
         keyboardType: KeyboardType = KeyboardType.Text,
         iconBackgroundTint: Color = HTheme.colors.onBackgroundContainer,
         titleColor: Color = HTheme.colors.onBackground,
@@ -473,6 +509,20 @@ object Profile {
         }
     }
 
+    /**
+     * Composable card representing a clickable navigation or action item on the profile screen (e.g. Favourites, Log out).
+     *
+     * @param modifier Modifier to apply to this layout.
+     * @param title Title of the item.
+     * @param subtitle Optional subtitle of the item.
+     * @param icon The [HIcons] icon of the item.
+     * @param iconTint Color tint applied to the icon.
+     * @param hintText Text to show if the title is null.
+     * @param iconBackgroundTint Background tint color for the icon container.
+     * @param titleColor Text color for the title.
+     * @param subtitleColor Text color for the subtitle.
+     * @param onClick Callback triggered when the item is clicked.
+     */
     @Composable
     private fun ProfileItemCard(
         modifier: Modifier = Modifier,
@@ -480,7 +530,7 @@ object Profile {
         subtitle: String? = null,
         icon: HIcons,
         iconTint: Color = HTheme.colors.onBackground,
-        hintText: String = HStrings.notSet.capitalize(),
+        hintText: String = stringResource(feo.health.ui.R.string.not_set).capitalize(),
         iconBackgroundTint: Color = HTheme.colors.onBackgroundContainer,
         titleColor: Color = HTheme.colors.onBackground,
         subtitleColor: Color = HTheme.colors.secondary,
@@ -540,11 +590,29 @@ object Profile {
         }
     }
 
+    /**
+     * Enum representing the presentation state of a profile card.
+     */
     private enum class InfoCardState {
+        /**
+         * State where the card is in text input edit mode.
+         */
         EDIT,
+
+        /**
+         * State where the card is displaying static text.
+         */
         DISPLAY;
 
+        /**
+         * Companion object containing utilities for [InfoCardState].
+         */
         companion object {
+            /**
+             * Returns the opposite [InfoCardState].
+             *
+             * @return The inverted [InfoCardState] (EDIT -> DISPLAY, DISPLAY -> EDIT).
+             */
             fun InfoCardState.inverseState(): InfoCardState = when (this) {
                 EDIT -> DISPLAY
                 DISPLAY -> EDIT
@@ -552,6 +620,12 @@ object Profile {
         }
     }
 
+    /**
+     * Composable card that allows the user to expand password changing fields and submit changes.
+     *
+     * @param modifier Modifier to apply to this layout.
+     * @param onPasswordChange Callback containing the old and new passwords.
+     */
     @OptIn(ExperimentalSharedTransitionApi::class)
     @Composable
     private fun ChangePasswordCard(
@@ -632,7 +706,7 @@ object Profile {
                                         sharedContentState = sharedText,
                                         animatedVisibilityScope = this@AnimatedContent
                                     ),
-                                text = HStrings.changePassword.capitalize(),
+                                text = stringResource(feo.health.ui.R.string.change_password).capitalize(),
                                 color = HTheme.colors.background,
                                 textAlign = TextAlign.Start,
                                 fontWeight = FontWeight.SemiBold,
@@ -663,7 +737,7 @@ object Profile {
                                 .wrapContentHeight()
                                 .background(HTheme.colors.background, HTheme.shapes.rounded12),
                             contentModifier = Modifier.padding(15.dp),
-                            hintText = HStrings.oldPassword.capitalize(),
+                            hintText = stringResource(feo.health.ui.R.string.old_password).capitalize(),
                             state = oldPasswordState
                         )
                         HTextBar.Default(
@@ -672,7 +746,7 @@ object Profile {
                                 .wrapContentHeight()
                                 .background(HTheme.colors.background, HTheme.shapes.rounded12),
                             contentModifier = Modifier.padding(15.dp),
-                            hintText = HStrings.newPassword.capitalize(),
+                            hintText = stringResource(feo.health.ui.R.string.new_password).capitalize(),
                             state = newPasswordState
                         )
                     }
@@ -713,7 +787,7 @@ object Profile {
                                     sharedContentState = sharedText,
                                     animatedVisibilityScope = this@AnimatedContent
                                 ),
-                            text = HStrings.changePassword.capitalize(),
+                            text = stringResource(feo.health.ui.R.string.change_password).capitalize(),
                             color = HTheme.colors.onBackground,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Normal
@@ -725,6 +799,11 @@ object Profile {
         }
     }
 
+    /**
+     * Composable function that displays a shimmering placeholder card representing profile data loading.
+     *
+     * @param modifier Modifier to apply to this layout.
+     */
     @Composable
     private fun ShimmerInfoCard(modifier: Modifier = Modifier) = Row(
         modifier = modifier.height(IntrinsicSize.Max),

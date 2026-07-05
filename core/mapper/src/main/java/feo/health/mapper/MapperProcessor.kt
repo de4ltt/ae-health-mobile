@@ -75,6 +75,50 @@ class MapperProcessor(
             fileName = fileName
         )
 
+        val (toSecondMethodName, toFirstMethodName) = getShortenedMethodNames(firstTypeName, secondTypeName)
+        val toSecondList = "${toSecondMethodName}List"
+        val toSecondFlow = "${toSecondMethodName}Flow"
+        val toSecondFlowList = "${toSecondMethodName}FlowList"
+
+        val toFirstList = "${toFirstMethodName}List"
+        val toFirstFlow = "${toFirstMethodName}Flow"
+        val toFirstFlowList = "${toFirstMethodName}FlowList"
+
+        val longToSecond = "to$secondTypeName"
+        val longToFirst = "to$firstTypeName"
+
+        val deprecationToSecond = if (toSecondMethodName != longToSecond) {
+            """
+            @Deprecated("Use $toSecondMethodName instead", ReplaceWith("$toSecondMethodName()"))
+            fun $firstQualified.$longToSecond(): $secondQualified = this.$toSecondMethodName()
+
+            @Deprecated("Use $toSecondList instead", ReplaceWith("$toSecondList()"))
+            fun List<$firstQualified>.${longToSecond}List(): List<$secondQualified> = this.$toSecondList()
+
+            @Deprecated("Use $toSecondFlowList instead", ReplaceWith("$toSecondFlowList()"))
+            fun Flow<List<$firstQualified>>.${longToSecond}FlowList(): Flow<List<$secondQualified>> = this.$toSecondFlowList()
+
+            @Deprecated("Use $toSecondFlow instead", ReplaceWith("$toSecondFlow()"))
+            fun Flow<$firstQualified>.${longToSecond}Flow(): Flow<$secondQualified> = this.$toSecondFlow()
+            """.trimIndent()
+        } else ""
+
+        val deprecationToFirst = if (toFirstMethodName != longToFirst) {
+            """
+            @Deprecated("Use $toFirstMethodName instead", ReplaceWith("$toFirstMethodName()"))
+            fun $secondQualified.$longToFirst(): $firstQualified = this.$toFirstMethodName()
+
+            @Deprecated("Use $toFirstList instead", ReplaceWith("$toFirstList()"))
+            fun List<$secondQualified>.${longToFirst}List(): List<$firstQualified> = this.$toFirstList()
+
+            @Deprecated("Use $toFirstFlowList instead", ReplaceWith("$toFirstFlowList()"))
+            fun Flow<List<$secondQualified>>.${longToFirst}FlowList(): Flow<List<$firstQualified>> = this.$toFirstFlowList()
+
+            @Deprecated("Use $toFirstFlow instead", ReplaceWith("$toFirstFlow()"))
+            fun Flow<$secondQualified>.${longToFirst}Flow(): Flow<$firstQualified> = this.$toFirstFlow()
+            """.trimIndent()
+        } else ""
+
         val content = """
         package $packageName
 
@@ -100,7 +144,7 @@ class MapperProcessor(
                 }
             }
 
-            fun $firstQualified.to$secondTypeName(): $secondQualified {
+            fun $firstQualified.$toSecondMethodName(): $secondQualified {
                 val mapper = getMapperInstance()
                 try {
                     val mapperClass = mapper.javaClass
@@ -114,7 +158,7 @@ class MapperProcessor(
                 }
             }
 
-            fun $secondQualified.to$firstTypeName(): $firstQualified {
+            fun $secondQualified.$toFirstMethodName(): $firstQualified {
                 val mapper = getMapperInstance()
                 try {
                     val mapperClass = mapper.javaClass
@@ -128,26 +172,57 @@ class MapperProcessor(
                 }
             }
 
-            fun List<$firstQualified>.to${secondTypeName}List(): List<$secondQualified> = 
-                this.map { it.to$secondTypeName() }
-            fun List<$secondQualified>.to${firstTypeName}List(): List<$firstQualified> = 
-                this.map { it.to$firstTypeName() }
+            fun List<$firstQualified>.$toSecondList(): List<$secondQualified> = 
+                this.map { it.$toSecondMethodName() }
+            fun List<$secondQualified>.$toFirstList(): List<$firstQualified> = 
+                this.map { it.$toFirstMethodName() }
             
-            fun Flow<List<$firstQualified>>.to${secondTypeName}FlowList(): Flow<List<$secondQualified>> = 
-                this.map { it.to${secondTypeName}List() }
-            fun Flow<List<$secondQualified>>.to${firstTypeName}FlowList(): Flow<List<$firstQualified>> = 
-                this.map { it.to${firstTypeName}List() }
+            fun Flow<List<$firstQualified>>.$toSecondFlowList(): Flow<List<$secondQualified>> = 
+                this.map { it.$toSecondList() }
+            fun Flow<List<$secondQualified>>.$toFirstFlowList(): Flow<List<$firstQualified>> = 
+                this.map { it.$toFirstList() }
             
-            fun Flow<$firstQualified>.to${secondTypeName}Flow(): Flow<$secondQualified> = 
-                this.map { it.to$secondTypeName() }
-            fun Flow<$secondQualified>.to${firstTypeName}Flow(): Flow<$firstQualified> = 
-                this.map { it.to$firstTypeName() }
+            fun Flow<$firstQualified>.$toSecondFlow(): Flow<$secondQualified> = 
+                this.map { it.$toSecondMethodName() }
+            fun Flow<$secondQualified>.$toFirstFlow(): Flow<$firstQualified> = 
+                this.map { it.$toFirstMethodName() }
+
+            $deprecationToSecond
+
+            $deprecationToFirst
         }
     """.trimIndent()
 
         file.use { outputStream ->
             outputStream.write(content.toByteArray())
         }
+    }
+
+    private fun getShortenedMethodNames(first: String, second: String): Pair<String, String> {
+        val suffixes = listOf(
+            "RequestDomain", "ResponseDomain", "Request", "Response", 
+            "Domain", "Network", "DTO", "Dto", "Entity", "Model"
+        )
+        
+        fun getMethodName(source: String, target: String): String {
+            val sourceWords = source.split(Regex("(?=[A-Z])")).filter { it.isNotEmpty() }
+            val targetWords = target.split(Regex("(?=[A-Z])")).filter { it.isNotEmpty() }
+            
+            val commonWords = sourceWords.intersect(targetWords.toSet())
+            if (commonWords.isNotEmpty()) {
+                val matchedSuffix = suffixes.find { target.endsWith(it) }
+                if (matchedSuffix != null) {
+                    return "to$matchedSuffix"
+                }
+            }
+            
+            val noiseWords = setOf("Domain", "Network", "DTO", "Dto", "Entity", "Model", "Feature")
+            val filteredWords = targetWords.filter { !noiseWords.contains(it) }
+            val result = if (filteredWords.isEmpty()) target else filteredWords.joinToString("")
+            return "to$result"
+        }
+        
+        return Pair(getMethodName(first, second), getMethodName(second, first))
     }
 
     override fun finish() {}

@@ -37,7 +37,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -63,11 +62,11 @@ import java.util.Locale
 import kotlin.time.ExperimentalTime
 
 private object PasswordOutputTransformation : OutputTransformation {
-    private const val mask = '•'
+    private const val MASK = '•'
 
     override fun TextFieldBuffer.transformOutput() {
         for (i in 0 until length) {
-            replace(i, i + 1, mask.toString())
+            replace(i, i + 1, MASK.toString())
         }
     }
 }

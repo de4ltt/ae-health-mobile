@@ -1,6 +1,5 @@
 package feo.health.auth.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import feo.health.auth.domain.model.SignInDomain
 import feo.health.auth.domain.model.SignUpDomain
@@ -9,10 +8,8 @@ import feo.health.auth.domain.use_case.SignUpUseCase
 import feo.health.auth.presentation.viewmodel.companion.AuthEvent
 import feo.health.auth.presentation.viewmodel.companion.AuthFieldsState
 import feo.health.auth.presentation.viewmodel.companion.AuthState
-import feo.health.ui.component.HToast
 import feo.health.ui.component.HToast.tryWithToast
 import feo.health.ui.viewmodel.HViewModel
-import kotlinx.coroutines.delay
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject

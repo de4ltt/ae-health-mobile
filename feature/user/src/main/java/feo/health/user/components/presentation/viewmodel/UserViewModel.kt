@@ -16,6 +16,7 @@ import feo.health.user.components.presentation.model.UCatalogItem
 import feo.health.user.components.presentation.model.User
 import feo.health.user.components.presentation.viewmodel.companion.UserEvent
 import feo.health.user.components.presentation.viewmodel.companion.UserState
+import feo.health.ui.dispatcher.AppDispatchers
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -40,9 +41,10 @@ class UserViewModel @Inject constructor(
     }
 
     private fun onRefreshProfile() = viewModelScope.tryWithToast {
-        UserState.Profile.Default.user = userUseCases.getUserInfoUseCase().toUser()
-        updateScreenState(UserState.Profile.Default)
-        super.initialState = UserState.Profile.Default
+        val user = userUseCases.getUserInfoUseCase().toUser()
+        val defaultState = UserState.Profile.Default(user)
+        updateScreenState(defaultState)
+        super.initialState = defaultState
     }
 
     private fun onLogOut() = viewModelScope.tryWithToast(
@@ -58,8 +60,7 @@ class UserViewModel @Inject constructor(
     ) {
         updateScreenState(UserState.Profile.Loading)
         val newUser = userUseCases.updateUserInfoUseCase(user.toUserDomain()).toUser()
-        UserState.Profile.Default.user = newUser
-        updateScreenState(UserState.Profile.Default)
+        updateScreenState(UserState.Profile.Default(newUser))
     }
 
     private fun onDeleteUser() = viewModelScope.tryWithToast(
@@ -75,7 +76,8 @@ class UserViewModel @Inject constructor(
     ) {
         updateScreenState(UserState.Profile.Loading)
         userUseCases.changePasswordUseCase(changePassword.toChangePasswordDomain())
-        updateScreenState(UserState.Profile.Default)
+        val currentUser = (screenState.value as? UserState.Profile.Default)?.user
+        updateScreenState(UserState.Profile.Default(currentUser))
     }
 
     private fun onDeleteFavourite(item: UCatalogItem) = viewModelScope.tryWithToast(
@@ -105,7 +107,7 @@ class UserViewModel @Inject constructor(
     }
 
     private fun onItemDetails(item: UCatalogItem) = viewModelScope.tryWithToast(
-        dispatcher = Dispatchers.Main
+        dispatcher = AppDispatchers.main
     ) {
     }
 

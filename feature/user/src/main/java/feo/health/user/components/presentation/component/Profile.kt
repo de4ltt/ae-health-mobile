@@ -64,8 +64,8 @@ import feo.health.ui.component.HTextBar
 import feo.health.ui.component.container.HContainer
 import feo.health.ui.navigation.Routes
 import feo.health.ui.resource.HIcons
-import feo.health.ui.resource.HStrings
-import feo.health.ui.resource.HStrings.capitalize
+import androidx.compose.ui.res.stringResource
+import feo.health.ui.util.capitalize
 import feo.health.ui.theme.HColorScheme
 import feo.health.ui.theme.HTheme
 import feo.health.ui.theme.fontFamily
@@ -86,7 +86,7 @@ object Profile {
         onEvent: (UserEvent) -> Unit
     ) = HContainer.TitledScreen(
         modifier = Modifier.fillMaxSize(),
-        title = HStrings.profile.capitalize()
+        title = stringResource(feo.health.ui.R.string.profile).capitalize()
     ) {
 
         val state by state.collectAsStateWithLifecycle()
@@ -96,9 +96,10 @@ object Profile {
         }
 
         Column {
-            when (state) {
-                UserState.Profile.Default -> ProfileScreenInfoCards(
-                    user = UserState.Profile.Default.user!!,
+            val stateValue = state
+            when (stateValue) {
+                is UserState.Profile.Default -> ProfileScreenInfoCards(
+                    user = stateValue.user!!,
                     onEvent = onEvent,
                     onLogOut = { navHostController.navigate(Routes.authLogOut) }
                 )
@@ -133,7 +134,7 @@ object Profile {
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             ProfileInfoCard(
-                subtitle = stringResource(HStrings.nameRes).capitalize(),
+                subtitle = stringResource(feo.health.ui.R.string.name).capitalize(),
                 icon = HIcons.USER,
                 title = user.name,
                 onValueChange = {
@@ -155,7 +156,7 @@ object Profile {
             )
 
             ProfileInfoCard(
-                subtitle = stringResource(HStrings.emailRes).capitalize(),
+                subtitle = stringResource(feo.health.ui.R.string.email).capitalize(),
                 icon = HIcons.EMAIL,
                 title = user.email,
                 keyboardType = KeyboardType.Email,
@@ -178,9 +179,9 @@ object Profile {
 
 
             ProfileInfoCard(
-                subtitle = stringResource(HStrings.weightRes).capitalize(),
+                subtitle = stringResource(feo.health.ui.R.string.weigth).capitalize(),
                 icon = HIcons.WEIGHT,
-                title = user.weightKg?.toString() ?: HStrings.notSet.capitalize(),
+                title = user.weightKg?.toString() ?: stringResource(feo.health.ui.R.string.not_set).capitalize(),
                 keyboardType = KeyboardType.Number,
                 onValueChange = {
                     Validator.validate(
@@ -200,7 +201,7 @@ object Profile {
             )
 
             ProfileInfoCard(
-                subtitle = stringResource(HStrings.heightRes).capitalize(),
+                subtitle = stringResource(feo.health.ui.R.string.height).capitalize(),
                 icon = HIcons.ARROW_UP,
                 title = user.height?.toString(),
                 keyboardType = KeyboardType.Decimal,
@@ -245,7 +246,7 @@ object Profile {
             )
 
             ProfileItemCard(
-                title = HStrings.history.capitalize(),
+                title = stringResource(feo.health.ui.R.string.history).capitalize(),
                 iconBackgroundTint = HTheme.colors.secondary,
                 iconTint = HTheme.colors.background,
                 onClick = { onEvent(UserEvent.History.OnRefresh) },
@@ -253,7 +254,7 @@ object Profile {
             )
 
             ProfileItemCard(
-                title = HStrings.favourites.capitalize(),
+                title = stringResource(feo.health.ui.R.string.favourites).capitalize(),
                 iconBackgroundTint = HTheme.colors.secondary,
                 iconTint = HTheme.colors.background,
                 onClick = { onEvent(UserEvent.Favourites.OnRefresh) },
@@ -261,7 +262,7 @@ object Profile {
             )
 
             ProfileItemCard(
-                title = HStrings.logOut.capitalize(),
+                title = stringResource(feo.health.ui.R.string.log_out).capitalize(),
                 iconBackgroundTint = HTheme.colors.onBackgroundContainer,
                 iconTint = HTheme.colors.onBackground,
                 onClick = {
@@ -272,7 +273,7 @@ object Profile {
             )
 
             ProfileItemCard(
-                title = HStrings.deleteAccount.capitalize(),
+                title = stringResource(feo.health.ui.R.string.delete_account).capitalize(),
                 iconBackgroundTint = HColorScheme.Additional.RED,
                 iconTint = HTheme.colors.background,
                 onClick = { onEvent(UserEvent.Profile.OnDeleteUser) },
@@ -288,7 +289,7 @@ object Profile {
         title: String? = null,
         subtitle: String? = null,
         icon: HIcons,
-        hintText: String = HStrings.notSet.capitalize(),
+        hintText: String = stringResource(feo.health.ui.R.string.not_set).capitalize(),
         keyboardType: KeyboardType = KeyboardType.Text,
         iconBackgroundTint: Color = HTheme.colors.onBackgroundContainer,
         titleColor: Color = HTheme.colors.onBackground,
@@ -480,7 +481,7 @@ object Profile {
         subtitle: String? = null,
         icon: HIcons,
         iconTint: Color = HTheme.colors.onBackground,
-        hintText: String = HStrings.notSet.capitalize(),
+        hintText: String = stringResource(feo.health.ui.R.string.not_set).capitalize(),
         iconBackgroundTint: Color = HTheme.colors.onBackgroundContainer,
         titleColor: Color = HTheme.colors.onBackground,
         subtitleColor: Color = HTheme.colors.secondary,
@@ -632,7 +633,7 @@ object Profile {
                                         sharedContentState = sharedText,
                                         animatedVisibilityScope = this@AnimatedContent
                                     ),
-                                text = HStrings.changePassword.capitalize(),
+                                text = stringResource(feo.health.ui.R.string.change_password).capitalize(),
                                 color = HTheme.colors.background,
                                 textAlign = TextAlign.Start,
                                 fontWeight = FontWeight.SemiBold,
@@ -663,7 +664,7 @@ object Profile {
                                 .wrapContentHeight()
                                 .background(HTheme.colors.background, HTheme.shapes.rounded12),
                             contentModifier = Modifier.padding(15.dp),
-                            hintText = HStrings.oldPassword.capitalize(),
+                            hintText = stringResource(feo.health.ui.R.string.old_password).capitalize(),
                             state = oldPasswordState
                         )
                         HTextBar.Default(
@@ -672,7 +673,7 @@ object Profile {
                                 .wrapContentHeight()
                                 .background(HTheme.colors.background, HTheme.shapes.rounded12),
                             contentModifier = Modifier.padding(15.dp),
-                            hintText = HStrings.newPassword.capitalize(),
+                            hintText = stringResource(feo.health.ui.R.string.new_password).capitalize(),
                             state = newPasswordState
                         )
                     }
@@ -713,7 +714,7 @@ object Profile {
                                     sharedContentState = sharedText,
                                     animatedVisibilityScope = this@AnimatedContent
                                 ),
-                            text = HStrings.changePassword.capitalize(),
+                            text = stringResource(feo.health.ui.R.string.change_password).capitalize(),
                             color = HTheme.colors.onBackground,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Normal

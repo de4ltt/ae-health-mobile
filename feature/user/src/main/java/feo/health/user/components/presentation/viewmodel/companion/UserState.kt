@@ -20,9 +20,7 @@ sealed class UserState {
     }
 
     sealed class Profile : UserState() {
-        data object Default : Profile() {
-            var user: User? = null
-        }
+        data class Default(val user: User? = null) : Profile()
 
         data object Loading : Profile()
     }

@@ -51,13 +51,15 @@ fun AuthScreen(
             )
     }
 
-    if (screenState is AuthState.SignIn.Authorized) {
-        navHostController.navigate(Routes.catalog) {
-            popUpTo(Routes.auth) {
-                inclusive = true
+    LaunchedEffect(screenState) {
+        if (screenState is AuthState.SignIn.Authorized) {
+            navHostController.navigate(Routes.catalog) {
+                popUpTo(Routes.auth) {
+                    inclusive = true
+                }
+                launchSingleTop = true
             }
-            launchSingleTop = true
+            authViewModel.onEvent(AuthEvent.OnBack)
         }
-        authViewModel.onEvent(AuthEvent.OnBack)
     }
 }

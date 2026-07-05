@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -14,8 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
-import feo.health.ui.resource.HStrings
-import feo.health.ui.resource.HStrings.capitalize
+import feo.health.ui.util.capitalize
 import feo.health.ui.theme.HTheme
 import feo.health.ui.theme.fontFamily
 
@@ -39,8 +39,8 @@ data class FeatureDiseaseResponse(
             textDecoration = TextDecoration.Underline
         )
 
-        val possibleDiseasesText = HStrings.possibleDiseases.capitalize()
-        val recommendedDoctorsText = HStrings.recommendedDoctors.capitalize()
+        val possibleDiseasesText = stringResource(feo.health.ui.R.string.possible_diseases).capitalize()
+        val recommendedDoctorsText = stringResource(feo.health.ui.R.string.recommended_doctors).capitalize()
 
         val annotated = remember(possibleDiseases, doctors, generalResponse) {
             buildAnnotatedString {

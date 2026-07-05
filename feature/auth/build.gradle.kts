@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     id("com.google.devtools.ksp")
 }
 
@@ -43,7 +44,6 @@ dependencies {
     implementation(project(":feature"))
 
     implementation(project(":network"))
-    implementation(project(":network:auth"))
 
     ksp(project(":core:mapper"))
     implementation(project(":core:mapper"))
@@ -64,4 +64,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     ksp(libs.dagger.compiler)
+    implementation(libs.kotlinx.serialization.json)
 }

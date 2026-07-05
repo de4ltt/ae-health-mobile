@@ -6,20 +6,40 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import feo.health.auth.presentation.AuthScreen
 import feo.health.auth.presentation.viewmodel.AuthViewModel
-import feo.health.auth.presentation.viewmodel.companion.AuthEvent
 import feo.health.ui.navigation.Routes
+import feo.health.ui.navigation.AuthRoute
+import feo.health.ui.navigation.AuthLogOutRoute
+import kotlinx.serialization.Serializable
 
 fun NavGraphBuilder.authNavGraph(
     navHostController: NavHostController,
     authViewModel: AuthViewModel
 ) {
+    // String-based route for compatibility
     composable(route = Routes.auth) {
         AuthScreen(
             navHostController = navHostController,
             authViewModel = authViewModel
         )
     }
+
     composable(route = Routes.authLogOut) { backStackEntry ->
+        LaunchedEffect(Unit) {
+            navHostController.navigate(Routes.auth) {
+                popUpTo(backStackEntry.destination.id) { inclusive = true }
+            }
+        }
+    }
+
+    // Type-safe routes
+    composable<AuthRoute> {
+        AuthScreen(
+            navHostController = navHostController,
+            authViewModel = authViewModel
+        )
+    }
+
+    composable<AuthLogOutRoute> { backStackEntry ->
         LaunchedEffect(Unit) {
             navHostController.navigate(Routes.auth) {
                 popUpTo(backStackEntry.destination.id) { inclusive = true }

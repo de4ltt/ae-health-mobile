@@ -7,9 +7,12 @@ import feo.health.network.di.component.NetworkComponent
 import feo.health.user.api.IUserApi
 import feo.health.user.di.module.UserModule
 
+import feo.health.user.components.data.di.UserRepositoryProvider
+import feo.health.user.di.module.RepositoryModule
+
 @NetworkUserScope
-@Component(modules = [UserModule::class], dependencies = [NetworkComponent::class])
-interface NetworkUserComponent {
+@Component(modules = [UserModule::class, RepositoryModule::class], dependencies = [NetworkComponent::class])
+interface NetworkUserComponent : UserRepositoryProvider {
 
     fun userApi(): IUserApi
 

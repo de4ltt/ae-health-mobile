@@ -11,7 +11,6 @@ import feo.health.auth.presentation.viewmodel.companion.AuthFieldsState
 import feo.health.auth.presentation.viewmodel.companion.AuthState
 import feo.health.ui.component.HToast
 import feo.health.ui.component.HToast.tryWithToast
-import feo.health.ui.resource.HStrings
 import feo.health.ui.viewmodel.HViewModel
 import kotlinx.coroutines.delay
 import java.time.LocalDate

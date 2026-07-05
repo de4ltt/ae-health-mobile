@@ -13,8 +13,8 @@ import feo.health.ui.component.HText
 import feo.health.ui.component.container.HContainer
 import feo.health.ui.component.container.HList
 import feo.health.ui.model.ICatalogItem
-import feo.health.ui.resource.HStrings
-import feo.health.ui.resource.HStrings.capitalize
+import androidx.compose.ui.res.stringResource
+import feo.health.ui.util.capitalize
 import feo.health.ui.util.ILoading
 import feo.health.user.components.presentation.model.UCatalogItem
 import feo.health.user.components.presentation.viewmodel.companion.UserEvent
@@ -28,7 +28,7 @@ object Favourites : ILoading {
         onEvent: (UserEvent) -> Unit
     ) = HContainer.TitledScreen(
         modifier = Modifier.fillMaxSize(),
-        title = HStrings.favourites.capitalize()
+        title = stringResource(feo.health.ui.R.string.favourites).capitalize()
     ) {
         favouriteItems.forEach { entry ->
             HText.SingleLine(
@@ -54,7 +54,7 @@ object Favourites : ILoading {
     @Composable
     override fun LoadingScreen(vararg params: Any) = HContainer.TitledScreen(
         modifier = Modifier.fillMaxSize(),
-        title = HStrings.favourites.capitalize()
+        title = stringResource(feo.health.ui.R.string.favourites).capitalize()
     ) {
         HList.Lazy(
             modifier = Modifier,

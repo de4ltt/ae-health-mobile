@@ -1,15 +1,13 @@
 package feo.health.user.components.presentation
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import feo.health.network.endpoints.ApiEndpoints
 import feo.health.ui.util.ILoading
-import feo.health.user.components.presentation.component.Favourites
-import feo.health.user.components.presentation.component.History
 import feo.health.user.components.presentation.component.Profile
+import feo.health.ui.navigation.UserFavouritesRoute
+import feo.health.ui.navigation.UserHistoryRoute
 import feo.health.user.components.presentation.viewmodel.UserViewModel
 import feo.health.user.components.presentation.viewmodel.companion.UserEvent
 import feo.health.user.components.presentation.viewmodel.companion.UserState
@@ -19,32 +17,29 @@ fun UserScreen(
     navHostController: NavHostController,
     userViewModel: UserViewModel
 ) {
-
-    BackHandler {
-        userViewModel.onEvent(UserEvent.OnBack)
-    }
-
     val state by userViewModel.screenState.collectAsStateWithLifecycle()
 
     when (val screenState = state) {
-        is UserState.Favourites.Default -> Favourites.Screen(
-            favouriteItems = screenState.favourites,
-            navHostController = navHostController,
-            onEvent = userViewModel::onEvent
-        )
-
-        is UserState.History.Default -> History.Screen(
-            historyItems = screenState.history,
-            navHostController = navHostController,
-            onEvent = userViewModel::onEvent
-        )
-
         is UserState.Profile -> Profile.Screen(
             state = userViewModel.screenState,
             navHostController = navHostController,
-            onEvent = userViewModel::onEvent
+            onEvent = { event ->
+                if (event is UserEvent.Favourites.OnRefresh) {
+                    userViewModel.onEvent(event)
+                    navHostController.navigate(UserFavouritesRoute)
+                } else if (event is UserEvent.History.OnRefresh) {
+                    userViewModel.onEvent(event)
+                    navHostController.navigate(UserHistoryRoute)
+                } else {
+                    userViewModel.onEvent(event)
+                }
+            }
         )
 
-        else -> (screenState as ILoading).LoadingScreen()
+        else -> {
+            if (screenState is ILoading) {
+                screenState.LoadingScreen()
+            }
+        }
     }
 }

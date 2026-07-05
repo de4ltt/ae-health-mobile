@@ -1,8 +1,8 @@
-package feo.health.user.components.data.di.module
+package feo.health.user.di.module
 
 import dagger.Binds
 import dagger.Module
-import feo.health.user.components.data.di.FeatureUserScope
+import feo.health.user.di.NetworkUserScope
 import feo.health.user.components.data.repository.FavouriteRepository
 import feo.health.user.components.data.repository.HistoryRepository
 import feo.health.user.components.data.repository.UserRepository
@@ -13,15 +13,15 @@ import feo.health.user.components.domain.repository.IUserRepository
 @Module
 internal abstract class RepositoryModule {
 
-    @FeatureUserScope
+    @NetworkUserScope
     @Binds
     abstract fun bindHistoryRepository(historyRepository: HistoryRepository): IHistoryRepository
 
-    @FeatureUserScope
+    @NetworkUserScope
     @Binds
     abstract fun bindUserRepository(userRepository: UserRepository): IUserRepository
 
-    @FeatureUserScope
+    @NetworkUserScope
     @Binds
     abstract fun bindFavouriteRepository(favouriteRepository: FavouriteRepository): IFavouritesRepository
 

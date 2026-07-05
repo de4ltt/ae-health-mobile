@@ -53,8 +53,7 @@ import feo.health.ui.component.HToast
 import feo.health.ui.component.container.HContainer
 import feo.health.ui.component.container.HList
 import feo.health.ui.resource.HIcons
-import feo.health.ui.resource.HStrings
-import feo.health.ui.resource.HStrings.capitalize
+import feo.health.ui.util.capitalize
 import feo.health.ui.theme.HColorScheme
 import feo.health.ui.theme.HTheme
 import kotlinx.coroutines.flow.StateFlow
@@ -84,13 +83,13 @@ object Authorization {
     ) {
         EMAIL(
             icon = HIcons.EMAIL,
-            hintRes = HStrings.emailRes,
+            hintRes = feo.health.ui.R.string.email,
             onInput = {
                 AuthFieldsState.SignIn.email.value = it
             }),
         PASSWORD(
             icon = HIcons.KEY,
-            hintRes = HStrings.passwordRes,
+            hintRes = feo.health.ui.R.string.password,
             onInput = { AuthFieldsState.SignIn.password.value = it },
             outputTransformation = PasswordOutputTransformation
         )
@@ -104,24 +103,24 @@ object Authorization {
     ) {
         NAME(
             icon = HIcons.USER,
-            hintRes = HStrings.nameRes,
+            hintRes = feo.health.ui.R.string.name,
             onInput = {
                 AuthFieldsState.SignUp.name.value = it
             }
         ),
         EMAIL(
             icon = HIcons.EMAIL,
-            hintRes = HStrings.emailRes,
+            hintRes = feo.health.ui.R.string.email,
             onInput = { AuthFieldsState.SignUp.email.value = it }),
         PASSWORD(
             icon = HIcons.KEY,
-            hintRes = HStrings.passwordRes,
+            hintRes = feo.health.ui.R.string.password,
             onInput = { AuthFieldsState.SignUp.password.value = it },
             outputTransformation = PasswordOutputTransformation
         ),
         DATE_OF_BIRTH(
             icon = HIcons.BIRTHDAY,
-            hintRes = HStrings.dateOfBirth,
+            hintRes = feo.health.ui.R.string.date_of_birth,
             onInput = { AuthFieldsState.SignUp.dateOfBirth.value = it });
     }
 
@@ -137,14 +136,14 @@ object Authorization {
 
         val screenState by screenState.collectAsStateWithLifecycle()
 
-        val cannotGoBack = HStrings.cannotGoBack.capitalize()
+        val cannotGoBack = stringResource(feo.health.ui.R.string.cannot_go_back).capitalize()
 
         HList.DefaultTitled(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
             textAlign = TextAlign.Center,
-            title = HStrings.signIn.capitalize(),
+            title = stringResource(feo.health.ui.R.string.sign_in).capitalize(),
             items = SignInFields.entries,
             contentPadding = PaddingValues(vertical = 5.dp),
             itemContainer = {
@@ -182,7 +181,7 @@ object Authorization {
                     indication = null,
                     interactionSource = null
                 ),
-            text = HStrings.signUp.capitalize(),
+            text = stringResource(feo.health.ui.R.string.sign_up).capitalize(),
             textAlign = TextAlign.Center,
             textDecoration = TextDecoration.Underline,
             color = HTheme.colors.onBackground.copy(alpha = 0.5f)
@@ -202,7 +201,7 @@ object Authorization {
             ) {
                 HText.SingleLine(
                     modifier = Modifier.padding(horizontal = 15.dp),
-                    text = HStrings.procede.capitalize(),
+                    text = stringResource(feo.health.ui.R.string.proceed).capitalize(),
                     fontWeight = FontWeight.SemiBold,
                     color = HTheme.colors.background
                 )
@@ -219,7 +218,7 @@ object Authorization {
     ) {
 
         val screenState by screenState.collectAsStateWithLifecycle()
-        val cannotGoBack = HStrings.cannotGoBack.capitalize()
+        val cannotGoBack = stringResource(feo.health.ui.R.string.cannot_go_back).capitalize()
 
         HContainer.Default(
             modifier = modifier.fillMaxSize(),
@@ -230,7 +229,7 @@ object Authorization {
                     .fillMaxWidth()
                     .wrapContentHeight(),
                 textAlign = TextAlign.Center,
-                title = HStrings.signUp.capitalize(),
+                title = stringResource(feo.health.ui.R.string.sign_up).capitalize(),
                 items = SignUpFields.entries,
                 contentPadding = PaddingValues(vertical = 5.dp),
                 itemContainer = {
@@ -314,7 +313,7 @@ object Authorization {
                         indication = null,
                         interactionSource = null
                     ),
-                text = HStrings.signIn.capitalize(),
+                text = stringResource(feo.health.ui.R.string.sign_in).capitalize(),
                 textAlign = TextAlign.Center,
                 textDecoration = TextDecoration.Underline,
                 color = HTheme.colors.onBackground.copy(alpha = 0.5f)
@@ -334,7 +333,7 @@ object Authorization {
                 ) {
                     HText.SingleLine(
                         modifier = Modifier.padding(horizontal = 15.dp),
-                        text = HStrings.procede.capitalize(),
+                        text = stringResource(feo.health.ui.R.string.proceed).capitalize(),
                         fontWeight = FontWeight.SemiBold,
                         color = HTheme.colors.background
                     )
@@ -373,7 +372,7 @@ object Authorization {
                             contentColor = HTheme.colors.primary
                         )
                 ) {
-                    Text(HStrings.ok.uppercase())
+                    Text(stringResource(feo.health.ui.R.string.ok).uppercase())
                 }
             },
             dismissButton = {
@@ -382,7 +381,7 @@ object Authorization {
                     colors = ButtonDefaults.textButtonColors()
                         .copy(contentColor = HTheme.colors.primary)
                 ) {
-                    Text(HStrings.cancel.uppercase())
+                    Text(stringResource(feo.health.ui.R.string.cancel).uppercase())
                 }
             }
         ) {

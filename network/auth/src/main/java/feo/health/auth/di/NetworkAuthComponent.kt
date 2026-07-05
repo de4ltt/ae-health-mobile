@@ -9,9 +9,12 @@ import feo.health.network.di.component.NetworkComponent
 import feo.health.network.refresh_api.IRefreshApi
 import io.ktor.client.HttpClient
 
+import feo.health.auth.data.di.AuthRepositoryProvider
+import feo.health.auth.di.module.RepositoryModule
+
 @NetworkAuthScope
-@Component(modules = [AuthModule::class], dependencies = [NetworkComponent::class])
-interface NetworkAuthComponent {
+@Component(modules = [AuthModule::class, RepositoryModule::class], dependencies = [NetworkComponent::class])
+interface NetworkAuthComponent : AuthRepositoryProvider {
 
     fun authApi(): IAuthApi
 

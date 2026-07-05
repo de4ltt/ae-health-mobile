@@ -52,8 +52,7 @@ import feo.health.ui.component.HTextBar
 import feo.health.ui.component.container.HContainer
 import feo.health.ui.component.container.HOptionSelector
 import feo.health.ui.resource.HIcons
-import feo.health.ui.resource.HStrings
-import feo.health.ui.resource.HStrings.capitalize
+import feo.health.ui.util.capitalize
 import feo.health.ui.theme.HTheme
 import feo.health.ui.util.ILoading
 import kotlinx.coroutines.flow.StateFlow
@@ -89,7 +88,7 @@ object AiContainer : ILoading {
                 textFieldState.clearText()
         }
 
-        HContainer.TitledScreen(modifier = modifier, title = HStrings.ai.uppercase()) {
+        HContainer.TitledScreen(modifier = modifier, title = stringResource(feo.health.ui.R.string.ai).uppercase()) {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 HTextBar.Items(
                     enabled = searchBarEnabled,
@@ -247,7 +246,7 @@ object AiContainer : ILoading {
                     .height(IntrinsicSize.Min),
                 contentModifier = Modifier.padding(horizontal = 15.dp, vertical = 5.dp),
                 lineLimits = TextFieldLineLimits.SingleLine,
-                hintText = HStrings.addSymptom.capitalize(),
+                hintText = stringResource(feo.health.ui.R.string.add_symptom).capitalize(),
                 state = textFieldState,
                 backItem = {
                     HIcons.PLUS(

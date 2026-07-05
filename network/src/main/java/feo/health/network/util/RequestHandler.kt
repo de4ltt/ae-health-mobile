@@ -13,9 +13,9 @@ object RequestHandler {
     } catch (e: CancellationException) {
         throw e
     } catch (e: HttpException) {
-        throw Exception("${e.status} + ${e.message}")
+        NetworkResult.Error(e, e.status)
     } catch (e: Exception) {
-        throw Exception("${e.message}")
+        NetworkResult.Error(e)
     }
 }
 

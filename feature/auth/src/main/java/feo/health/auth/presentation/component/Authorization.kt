@@ -52,18 +52,24 @@ import feo.health.ui.component.HToast
 import feo.health.ui.component.container.HContainer
 import feo.health.ui.component.container.HList
 import feo.health.ui.resource.HIcons
-import feo.health.ui.util.capitalize
 import feo.health.ui.theme.HColorScheme
 import feo.health.ui.theme.HTheme
+import feo.health.ui.util.capitalize
 import kotlinx.coroutines.flow.StateFlow
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.time.ExperimentalTime
 
+/**
+ * Transformation utility masking password text bar outputs into bullet symbols.
+ */
 private object PasswordOutputTransformation : OutputTransformation {
     private const val MASK = '•'
 
+    /**
+     * Replaces characters in input buffer with masking characters.
+     */
     override fun TextFieldBuffer.transformOutput() {
         for (i in 0 until length) {
             replace(i, i + 1, MASK.toString())
@@ -72,20 +78,38 @@ private object PasswordOutputTransformation : OutputTransformation {
 }
 
 
+/**
+ * Presentation component containing all UI layouts for authorization (Sign In and Sign Up templates).
+ */
 object Authorization {
 
+    /**
+     * Enum mapping the fields required in the Sign In screen layout.
+     *
+     * @property hintRes Resource ID pointing to the text bar hint string.
+     * @property icon Icon associated with the field.
+     * @property onInput Callback triggered when text value changes.
+     * @property outputTransformation Text masking properties transformation rules.
+     */
     private enum class SignInFields(
         val hintRes: Int,
         val icon: HIcons,
         val onInput: (String) -> Unit,
         val outputTransformation: OutputTransformation? = null,
     ) {
+        /**
+         * User email input field.
+         */
         EMAIL(
             icon = HIcons.EMAIL,
             hintRes = feo.health.ui.R.string.email,
             onInput = {
                 AuthFieldsState.SignIn.email.value = it
             }),
+
+        /**
+         * User password input field.
+         */
         PASSWORD(
             icon = HIcons.KEY,
             hintRes = feo.health.ui.R.string.password,
@@ -94,12 +118,23 @@ object Authorization {
         )
     }
 
+    /**
+     * Enum mapping the fields required in the Sign Up screen layout.
+     *
+     * @property hintRes Resource ID pointing to the text bar hint string.
+     * @property icon Icon associated with the field.
+     * @property onInput Callback triggered when text value changes.
+     * @property outputTransformation Text masking properties transformation rules.
+     */
     private enum class SignUpFields(
         val hintRes: Int,
         val icon: HIcons,
         val onInput: (String) -> Unit,
         val outputTransformation: OutputTransformation? = null,
     ) {
+        /**
+         * User full name input field.
+         */
         NAME(
             icon = HIcons.USER,
             hintRes = feo.health.ui.R.string.name,
@@ -107,22 +142,41 @@ object Authorization {
                 AuthFieldsState.SignUp.name.value = it
             }
         ),
+
+        /**
+         * User email input field.
+         */
         EMAIL(
             icon = HIcons.EMAIL,
             hintRes = feo.health.ui.R.string.email,
             onInput = { AuthFieldsState.SignUp.email.value = it }),
+
+        /**
+         * User password input field.
+         */
         PASSWORD(
             icon = HIcons.KEY,
             hintRes = feo.health.ui.R.string.password,
             onInput = { AuthFieldsState.SignUp.password.value = it },
             outputTransformation = PasswordOutputTransformation
         ),
+
+        /**
+         * User date of birth selection field.
+         */
         DATE_OF_BIRTH(
             icon = HIcons.BIRTHDAY,
             hintRes = feo.health.ui.R.string.date_of_birth,
             onInput = { AuthFieldsState.SignUp.dateOfBirth.value = it });
     }
 
+    /**
+     * Renders the Sign In authorization UI layout.
+     *
+     * @param modifier Composable layout adjustments modifier.
+     * @param screenState Flow stream containing the current [AuthState].
+     * @param onEvent Callback to trigger presentation-level [AuthEvent] actions.
+     */
     @Composable
     fun SignInScreen(
         modifier: Modifier = Modifier,
@@ -208,6 +262,13 @@ object Authorization {
         }
     }
 
+    /**
+     * Renders the Sign Up user registration UI layout.
+     *
+     * @param modifier Composable layout adjustments modifier.
+     * @param screenState Flow stream containing the current [AuthState].
+     * @param onEvent Callback to trigger presentation-level [AuthEvent] actions.
+     */
     @OptIn(ExperimentalTime::class)
     @Composable
     fun SignUpScreen(
@@ -341,6 +402,12 @@ object Authorization {
         }
     }
 
+    /**
+     * Dialog modal displaying date picker selection controls.
+     *
+     * @param onDateSelected Callback invoked with the selected timestamp in milliseconds.
+     * @param onDismiss Callback invoked when dialog is dismissed.
+     */
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun DatePickerModal(

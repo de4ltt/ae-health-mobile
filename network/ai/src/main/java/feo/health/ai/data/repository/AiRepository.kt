@@ -2,11 +2,11 @@ package feo.health.ai.data.repository
 
 import feo.health.ai.api.IAIApi
 import feo.health.ai.data.mapper.DiseaseRequestToFeatureDiseaseRequestDomainMapper.toDiseaseRequest
-import feo.health.ai.data.mapper.DiseaseResponseToFeatureDiseaseResponseDomainMapper.toFeatureDiseaseResponseDomain
+import feo.health.ai.data.mapper.DiseaseResponseToFeatureDiseaseResponseDomainMapper.toFeatureDomain
 import feo.health.ai.data.mapper.ProcedureRequestToFeatureProcedureRequestDomainMapper.toProcedureRequest
-import feo.health.ai.data.mapper.ProcedureResponseToFeatureProcedureResponseDomainMapper.toFeatureProcedureResponseDomain
+import feo.health.ai.data.mapper.ProcedureResponseToFeatureProcedureResponseDomainMapper.toFeatureDomain
 import feo.health.ai.data.mapper.SuggestionRequestToFeatureSuggestionRequestDomainMapper.toSuggestionRequest
-import feo.health.ai.data.mapper.SuggestionResponseToFeatureSuggestionResponseDomainMapper.toFeatureSuggestionResponseDomain
+import feo.health.ai.data.mapper.SuggestionResponseToFeatureSuggestionResponseDomainMapper.toFeatureDomain
 import feo.health.ai.domain.model.request.FeatureDiseaseRequestDomain
 import feo.health.ai.domain.model.request.FeatureProcedureRequestDomain
 import feo.health.ai.domain.model.request.FeatureSuggestionRequestDomain
@@ -22,11 +22,11 @@ class AiRepository @Inject constructor(
 ) : IAiRepository {
 
     override suspend fun getSuggestion(suggestionRequest: FeatureSuggestionRequestDomain): FeatureSuggestionResponseDomain =
-        aiApi.getSuggestion(suggestionRequest.toSuggestionRequest()).mapResult { it.toFeatureSuggestionResponseDomain() }
+        aiApi.getSuggestion(suggestionRequest.toSuggestionRequest()).mapResult { it.toFeatureDomain() }
 
     override suspend fun getDisease(diseaseRequest: FeatureDiseaseRequestDomain): FeatureDiseaseResponseDomain =
-        aiApi.getDisease(diseaseRequest.toDiseaseRequest()).mapResult { it.toFeatureDiseaseResponseDomain() }
+        aiApi.getDisease(diseaseRequest.toDiseaseRequest()).mapResult { it.toFeatureDomain() }
 
     override suspend fun getProcedureInfo(procedureRequest: FeatureProcedureRequestDomain): FeatureProcedureResponseDomain =
-        aiApi.getProcedureInfo(procedureRequest.toProcedureRequest()).mapResult { it.toFeatureProcedureResponseDomain() }
+        aiApi.getProcedureInfo(procedureRequest.toProcedureRequest()).mapResult { it.toFeatureDomain() }
 }

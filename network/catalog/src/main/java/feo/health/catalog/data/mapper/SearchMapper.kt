@@ -1,11 +1,11 @@
 package feo.health.catalog.data.mapper
 
-import feo.health.catalog.data.mapper.ClinicDtoToClinicDomainMapper.toClinicDomainList
-import feo.health.catalog.data.mapper.ClinicDtoToClinicDomainMapper.toClinicDtoList
-import feo.health.catalog.data.mapper.DoctorDtoToDoctorDomainMapper.toDoctorDomainList
-import feo.health.catalog.data.mapper.DoctorDtoToDoctorDomainMapper.toDoctorDtoList
-import feo.health.catalog.data.mapper.ServiceDtoToServiceDomainMapper.toServiceDomainList
-import feo.health.catalog.data.mapper.ServiceDtoToServiceDomainMapper.toServiceDtoList
+import feo.health.catalog.data.mapper.ClinicDtoToClinicDomainMapper.toDomainList as toClinicDomainList
+import feo.health.catalog.data.mapper.ClinicDtoToClinicDomainMapper.toDtoList as toClinicDtoList
+import feo.health.catalog.data.mapper.DoctorDtoToDoctorDomainMapper.toDomainList as toDoctorDomainList
+import feo.health.catalog.data.mapper.DoctorDtoToDoctorDomainMapper.toDtoList as toDoctorDtoList
+import feo.health.catalog.data.mapper.ServiceDtoToServiceDomainMapper.toDomainList as toServiceDomainList
+import feo.health.catalog.data.mapper.ServiceDtoToServiceDomainMapper.toDtoList as toServiceDtoList
 import feo.health.catalog.domain.model.SearchDomain
 import feo.health.catalog.search.dto.SearchDto
 import feo.health.mapper.IMapper

@@ -1,7 +1,7 @@
 package feo.health.catalog.data.repository
 
-import feo.health.catalog.data.mapper.DoctorDtoToDoctorDomainMapper.toDoctorDomain
-import feo.health.catalog.data.mapper.DoctorDtoToDoctorDomainMapper.toDoctorDomainList
+import feo.health.catalog.data.mapper.DoctorDtoToDoctorDomainMapper.toDomain
+import feo.health.catalog.data.mapper.DoctorDtoToDoctorDomainMapper.toDomainList
 import feo.health.catalog.doctor.api.IDoctorApi
 import feo.health.catalog.domain.model.DoctorDomain
 import feo.health.catalog.domain.repository.IDoctorRepository
@@ -14,13 +14,13 @@ class DoctorRepository @Inject constructor(
 
     override suspend fun getDoctors(q: String): List<DoctorDomain> = doctorApi
         .getDoctors(q = q)
-        .mapResult { it.toDoctorDomainList() }
+        .mapResult { it.toDomainList() }
 
     override suspend fun getDoctorInfo(link: String): DoctorDomain = doctorApi
         .getDoctorInfo(link = link)
-        .mapResult { it.toDoctorDomain() }
+        .mapResult { it.toDomain() }
 
     override suspend fun getDoctorsBySpeciality(speciality: String): List<DoctorDomain> = doctorApi
         .getDoctorsBySpeciality(speciality = speciality)
-        .mapResult { it.toDoctorDomainList() }
+        .mapResult { it.toDomainList() }
 }

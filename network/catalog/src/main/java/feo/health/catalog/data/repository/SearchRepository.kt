@@ -1,7 +1,7 @@
 package feo.health.catalog.data.repository
 
-import feo.health.catalog.data.mapper.CoordsDomainToCoordsDtoMapper.toCoordsDomain
-import feo.health.catalog.data.mapper.SearchDtoToSearchDomainMapper.toSearchDomain
+import feo.health.catalog.data.mapper.CoordsDomainToCoordsDtoMapper.toDomain as toCoordsDomain
+import feo.health.catalog.data.mapper.SearchDtoToSearchDomainMapper.toDomain as toSearchDomain
 import feo.health.catalog.domain.model.CoordsDomain
 import feo.health.catalog.domain.model.SearchDomain
 import feo.health.catalog.domain.repository.ISearchRepository

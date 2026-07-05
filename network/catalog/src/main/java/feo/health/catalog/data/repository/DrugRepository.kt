@@ -1,7 +1,7 @@
 package feo.health.catalog.data.repository
 
-import feo.health.catalog.data.mapper.DrugDtoToDrugDomainMapper.toDrugDomain
-import feo.health.catalog.data.mapper.DrugDtoToDrugDomainMapper.toDrugDomainList
+import feo.health.catalog.data.mapper.DrugDtoToDrugDomainMapper.toDomain
+import feo.health.catalog.data.mapper.DrugDtoToDrugDomainMapper.toDomainList
 import feo.health.catalog.domain.model.DrugDomain
 import feo.health.catalog.domain.repository.IDrugRepository
 import feo.health.catalog.drug.api.IDrugApi
@@ -14,9 +14,9 @@ class DrugRepository @Inject constructor(
 
     override suspend fun getDrugs(q: String): List<DrugDomain> = drugApi
         .getDrugs(q = q)
-        .mapResult { it.toDrugDomainList() }
+        .mapResult { it.toDomainList() }
 
     override suspend fun getDrugInfo(link: String): DrugDomain = drugApi
         .getDrugInfo(link = link)
-        .mapResult { it.toDrugDomain() }
+        .mapResult { it.toDomain() }
 }

@@ -1,7 +1,7 @@
 package feo.health.catalog.data.repository
 
-import feo.health.catalog.data.mapper.ClinicDtoToClinicDomainMapper.toClinicDomainList
-import feo.health.catalog.data.mapper.ServiceDtoToServiceDomainMapper.toServiceDomainList
+import feo.health.catalog.data.mapper.ClinicDtoToClinicDomainMapper.toDomainList as toClinicDomainList
+import feo.health.catalog.data.mapper.ServiceDtoToServiceDomainMapper.toDomainList as toServiceDomainList
 import feo.health.catalog.domain.model.ClinicDomain
 import feo.health.catalog.domain.model.ServiceDomain
 import feo.health.catalog.domain.repository.IServicesRepository

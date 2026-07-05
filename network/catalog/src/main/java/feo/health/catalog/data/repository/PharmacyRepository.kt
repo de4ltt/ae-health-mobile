@@ -1,8 +1,8 @@
 package feo.health.catalog.data.repository
 
-import feo.health.catalog.data.mapper.PharmacyDtoToPharmacyDomainMapper.toPharmacyDomain
-import feo.health.catalog.data.mapper.PharmacyDtoToPharmacyDomainMapper.toPharmacyDomainList
-import feo.health.catalog.data.mapper.PharmacyDtoToPharmacyDomainMapper.toPharmacyDto
+import feo.health.catalog.data.mapper.PharmacyDtoToPharmacyDomainMapper.toDomain
+import feo.health.catalog.data.mapper.PharmacyDtoToPharmacyDomainMapper.toDomainList
+import feo.health.catalog.data.mapper.PharmacyDtoToPharmacyDomainMapper.toDto
 import feo.health.catalog.domain.model.PharmacyDomain
 import feo.health.catalog.domain.repository.IPharmacyRepository
 import feo.health.catalog.pharmacy.api.IPharmacyApi
@@ -19,13 +19,13 @@ class PharmacyRepository @Inject constructor(
         radius: Int
     ): List<PharmacyDomain> = pharmacyApi
         .getPharmacies(lat = lat, lon = lon, radius = radius)
-        .mapResult { it.toPharmacyDomainList() }
+        .mapResult { it.toDomainList() }
 
     override suspend fun visitPharmacy(pharmacyDomain: PharmacyDomain) = pharmacyApi
-        .visitPharmacy(pharmacyDomain.toPharmacyDto())
+        .visitPharmacy(pharmacyDomain.toDto())
         .mapResult { it }
 
     override suspend fun getPharmacyById(id: Long): PharmacyDomain = pharmacyApi
         .getPharmacyById(id = id)
-        .mapResult { it.toPharmacyDomain() }
+        .mapResult { it.toDomain() }
 }

@@ -1,6 +1,6 @@
 package feo.health.catalog.data.repository
 
-import feo.health.catalog.data.mapper.DiseaseDtoToDiseaseDomainMapper.toDiseaseDomainList
+import feo.health.catalog.data.mapper.DiseaseDtoToDiseaseDomainMapper.toDomainList
 import feo.health.catalog.disease.api.IDiseaseApi
 import feo.health.catalog.domain.model.DiseaseDomain
 import feo.health.catalog.domain.repository.IDiseaseRepository
@@ -12,7 +12,7 @@ class DiseaseRepository @Inject constructor(
 ) : IDiseaseRepository {
 
     override suspend fun getDiseases(q: String): List<DiseaseDomain> = diseaseApi
-        .getDiseases(q = q).mapResult { it.toDiseaseDomainList() }
+        .getDiseases(q = q).mapResult { it.toDomainList() }
 
     override suspend fun getDiseaseInfo(link: String): String = diseaseApi
         .getDiseaseInfo(link = link).mapResult { it }

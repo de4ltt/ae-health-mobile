@@ -1,9 +1,9 @@
 package feo.health.catalog.data.mapper
 
-import feo.health.catalog.data.mapper.DrugFormDomainToDrugFormDtoMapper.toDrugFormDomainList
-import feo.health.catalog.data.mapper.DrugFormDomainToDrugFormDtoMapper.toDrugFormDtoList
-import feo.health.catalog.data.mapper.InstructionSectionDomainToInstructionSectionDtoMapper.toInstructionSectionDomainList
-import feo.health.catalog.data.mapper.InstructionSectionDomainToInstructionSectionDtoMapper.toInstructionSectionDtoList
+import feo.health.catalog.data.mapper.DrugFormDomainToDrugFormDtoMapper.toDomainList as toFormDomainList
+import feo.health.catalog.data.mapper.DrugFormDomainToDrugFormDtoMapper.toDtoList as toFormDtoList
+import feo.health.catalog.data.mapper.InstructionSectionDomainToInstructionSectionDtoMapper.toDomainList as toInstructionDomainList
+import feo.health.catalog.data.mapper.InstructionSectionDomainToInstructionSectionDtoMapper.toDtoList as toInstructionDtoList
 import feo.health.catalog.domain.model.DrugDomain
 import feo.health.catalog.drug.dto.DrugDto
 import feo.health.mapper.IMapper
@@ -21,8 +21,8 @@ private object DrugMapper : IMapper<DrugDto, DrugDomain> {
         priceQuality = priceQuality,
         sideEffects = sideEffects,
         reviewsCount = reviewsCount,
-        forms = forms.toDrugFormDomainList(),
-        instructionSections = instructionSections.toInstructionSectionDomainList()
+        forms = forms.toFormDomainList(),
+        instructionSections = instructionSections.toInstructionDomainList()
     )
 
     override fun DrugDomain.toFirst(): DrugDto =
@@ -36,8 +36,8 @@ private object DrugMapper : IMapper<DrugDto, DrugDomain> {
             priceQuality = priceQuality,
             sideEffects = sideEffects,
             reviewsCount = reviewsCount,
-            forms = forms.toDrugFormDtoList(),
-            instructionSections = instructionSections.toInstructionSectionDtoList()
+            forms = forms.toFormDtoList(),
+            instructionSections = instructionSections.toInstructionDtoList()
         )
 
     @Mapper

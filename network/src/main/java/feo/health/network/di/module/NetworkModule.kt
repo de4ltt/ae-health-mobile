@@ -4,10 +4,9 @@ import dagger.Module
 import dagger.Provides
 import feo.health.network.datastore.HDataStore
 import feo.health.network.di.NetworkModuleScope
-import feo.health.network.refresh_api.IRefreshApi
-import feo.health.network.refresh_api.RefreshApiHolder
 import feo.health.network.model.NetworkException
 import feo.health.network.model.NetworkResult
+import feo.health.network.refresh_api.RefreshApiHolder
 import feo.health.network.refresh_api.RefreshTokenRequest
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.DefaultRequest
@@ -21,15 +20,24 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.statement.bodyAsText
-import io.ktor.client.utils.EmptyContent.contentType
-import io.ktor.http.ContentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 
+/**
+ * Dagger module configuring and constructing the shared [HttpClient] client.
+ * Configures headers, connection timeouts, serialization handlers, authorization updates, and exception parsing.
+ */
 @Module
 internal object NetworkModule {
 
+    /**
+     * Constructs and initializes Ktor HTTP client configured with content negotiation, timeouts, logging, auth interceptors, and validators.
+     *
+     * @param dataStore Datastore instance used to load and update token properties.
+     * @param refreshApiHolder Holder tracking the session refresh token endpoint implementation.
+     * @return Configured Ktor [HttpClient].
+     */
     @NetworkModuleScope
     @Provides
     fun provideHttpClient(dataStore: HDataStore, refreshApiHolder: RefreshApiHolder): HttpClient =

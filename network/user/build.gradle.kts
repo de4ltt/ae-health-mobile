@@ -27,6 +27,7 @@ dependencies {
     implementation(project(":feature:user"))
     implementation(project(":network"))
     implementation(project(":core:mapper"))
+    implementation(project(":core:database"))
     ksp(project(":core:mapper"))
 
     implementation(libs.ktor.client.core)

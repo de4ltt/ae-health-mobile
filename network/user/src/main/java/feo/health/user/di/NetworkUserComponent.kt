@@ -8,12 +8,13 @@ import feo.health.user.api.IUserApi
 import feo.health.user.components.data.di.UserRepositoryProvider
 import feo.health.user.di.module.RepositoryModule
 import feo.health.user.di.module.UserModule
+import feo.health.database.di.CoreDatabaseComponent
 
 /**
  * Dagger dependency injection component providing user remote APIs and repository instances.
  */
 @NetworkUserScope
-@Component(modules = [UserModule::class, RepositoryModule::class], dependencies = [NetworkComponent::class])
+@Component(modules = [UserModule::class, RepositoryModule::class], dependencies = [NetworkComponent::class, CoreDatabaseComponent::class])
 interface NetworkUserComponent : UserRepositoryProvider {
 
     /**
@@ -52,6 +53,14 @@ interface NetworkUserComponent : UserRepositoryProvider {
          * @return Dagger builder instance.
          */
         fun bindNetworkComponent(networkComponent: NetworkComponent): Builder
+
+        /**
+         * Hooks the core local database component dependencies.
+         *
+         * @param coreDatabaseComponent Local database tables provider.
+         * @return Dagger builder instance.
+         */
+        fun bindCoreDatabaseComponent(coreDatabaseComponent: CoreDatabaseComponent): Builder
 
         /**
          * Builds and returns the [NetworkUserComponent].

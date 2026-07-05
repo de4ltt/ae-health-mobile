@@ -56,6 +56,7 @@ dependencies {
     implementation(project(":feature:user"))
 
     implementation(project(":core:secrets"))
+    implementation(project(":core:database"))
 
     implementation(project(":network"))
     implementation(project(":network:auth"))

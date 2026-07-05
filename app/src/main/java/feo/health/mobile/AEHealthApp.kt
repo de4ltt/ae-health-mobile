@@ -36,6 +36,8 @@ import feo.health.user.components.data.di.FeatureUserComponent
 import feo.health.user.components.presentation.viewmodel.UserViewModel
 import feo.health.user.di.DaggerNetworkUserComponent
 import feo.health.user.di.NetworkUserComponent
+import feo.health.database.di.CoreDatabaseComponent
+import feo.health.database.di.DaggerCoreDatabaseComponent
 
 class AEHealthApp : Application() {
 
@@ -44,6 +46,7 @@ class AEHealthApp : Application() {
     lateinit var refreshApi: IRefreshApi
 
     lateinit var coreSecretsComponent: CoreSecretsComponent
+    lateinit var coreDatabaseComponent: CoreDatabaseComponent
 
     lateinit var networkComponent: NetworkComponent
     lateinit var networkAIComponent: NetworkAIComponent
@@ -78,6 +81,10 @@ class AEHealthApp : Application() {
         coreSecretsComponent = DaggerCoreSecretsComponent.builder()
             .bindSecrets(Secrets)
             .build()
+
+        coreDatabaseComponent = DaggerCoreDatabaseComponent.builder()
+            .bindContext(this)
+            .build()
     }
 
     private fun initializeNetworkComponents() {
@@ -103,6 +110,7 @@ class AEHealthApp : Application() {
             .build()
         networkUserComponent = DaggerNetworkUserComponent.builder()
             .bindNetworkComponent(networkComponent)
+            .bindCoreDatabaseComponent(coreDatabaseComponent)
             .bindDatastore(dataStore)
             .build()
     }

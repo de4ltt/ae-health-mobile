@@ -17,10 +17,27 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import feo.health.ui.component.HText
 
+/**
+ * Interface defining display behaviors for rich text containing clickable reference tag elements.
+ */
 interface ILinkingDisplay {
+    /**
+     * Composable function designed to render detailed rich text with support for interactive clicks.
+     *
+     * @param modifier Composable layout adjustments modifier.
+     * @param onTextClick Callback invoked when user clicks an interactive reference link tag.
+     */
     @Composable
     fun Display(modifier: Modifier, onTextClick: (tag: String, name: String) -> Unit)
 
+    /**
+     * Extension to parse custom XML-like tags (e.g. `<disease>` or `<doctor>`) from a raw string
+     * and append them with specific link styling and annotations to the builder.
+     *
+     * @param text Raw XML-annotated text string.
+     * @param defaultStyle Normal text style configuration.
+     * @param linkStyle Interactive text link style configuration.
+     */
     fun AnnotatedString.Builder.appendAnnotatedXmlText(
         text: String,
         defaultStyle: TextStyle,
@@ -49,6 +66,13 @@ interface ILinkingDisplay {
         }
     }
 
+    /**
+     * Helper Composable to render the built [AnnotatedString] inside a tap-detecting layout.
+     *
+     * @param modifier Composable layout adjustments modifier.
+     * @param annotated Rich text instance with link annotations.
+     * @param onClick Callback invoked when user clicks an interactive reference link tag.
+     */
     @Composable
     fun DisplayText(
         modifier: Modifier = Modifier,

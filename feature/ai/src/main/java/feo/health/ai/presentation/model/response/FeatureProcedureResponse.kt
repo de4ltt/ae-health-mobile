@@ -2,29 +2,40 @@ package feo.health.ai.presentation.model.response
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
-import feo.health.ui.util.capitalize
 import feo.health.ui.theme.HTheme
 import feo.health.ui.theme.fontFamily
+import feo.health.ui.util.capitalize
 
+/**
+ * Presentation response entity containing detailed properties about a medical service procedure.
+ * Implements [ILinkingDisplay] interface to display clickable annotated text formats.
+ *
+ * @property name Procedure name.
+ * @property description Detailed description text.
+ * @property contradictions List of medical contraindications/warnings.
+ * @property indications List of clinical indications.
+ */
 data class FeatureProcedureResponse(
     val name: String,
     val description: String,
     val contradictions: List<String>,
     val indications: List<String>
 ) : ILinkingDisplay {
+    /**
+     * Renders the procedure response details as formatted annotated text with support for interactive clicks.
+     *
+     * @param modifier Composable layout adjustments modifier.
+     * @param onTextClick Callback invoked when user clicks an interactive reference link tag.
+     */
     @Composable
     override fun Display(modifier: Modifier, onTextClick: (tag: String, name: String) -> Unit) {
         val fontSize = 17.sp

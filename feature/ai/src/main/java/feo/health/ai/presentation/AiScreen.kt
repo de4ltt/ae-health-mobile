@@ -20,6 +20,12 @@ private const val TAG_DOCTOR = "doctor"
 private const val TAG_DISEASE = "disease"
 private const val SEARCH_URI = "https://www.google.com/search?q="
 
+/**
+ * Main UI Composable screen rendering the AI diagnostic assistant chat and query interfaces.
+ *
+ * @param navHostController Router navigation controller interface helper.
+ * @param aiViewModel View model containing screen states and event processors.
+ */
 @Composable
 fun AiScreen(
     navHostController: NavHostController,

@@ -11,8 +11,18 @@ import feo.health.catalog.presentation.model.Search
 import feo.health.mapper.IMapper
 import feo.health.mapper.Mapper
 
+/**
+ * Mapper object for translating between [Search] and [SearchDomain].
+ *
+ * This mapper uses the @Mapper annotation and implements [IMapper].
+ */
 @Mapper
 private object SearchMapper : IMapper<Search, SearchDomain> {
+    /**
+     * Converts a [Search] instance to [SearchDomain].
+     *
+     * @return The converted [SearchDomain] instance.
+     */
     override fun Search.toSecond(): SearchDomain =
         SearchDomain(
             doctors = doctors.toDoctorDomainList(),
@@ -20,6 +30,11 @@ private object SearchMapper : IMapper<Search, SearchDomain> {
             services = services.toServiceDomainList()
         )
 
+    /**
+     * Converts a [SearchDomain] instance back to [Search].
+     *
+     * @return The converted [Search] instance.
+     */
     override fun SearchDomain.toFirst(): Search =
         Search(
             doctors = doctors.toDoctorList(),

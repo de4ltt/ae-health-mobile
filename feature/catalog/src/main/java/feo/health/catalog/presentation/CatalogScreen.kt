@@ -11,17 +11,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import feo.health.ui.component.NavAnchors
-import feo.health.ui.component.info_text.NothingFound
 import feo.health.catalog.presentation.component.Search
-import feo.health.ui.component.info_text.StartTheSearch
-import feo.health.ui.component.info_text.HErrorScreen
-import feo.health.ui.navigation.CatalogDetailsRoute
 import feo.health.catalog.presentation.viewmodel.CatalogViewModel
 import feo.health.catalog.presentation.viewmodel.companion.CatalogEvent
 import feo.health.catalog.presentation.viewmodel.companion.CatalogState
+import feo.health.ui.component.NavAnchors
+import feo.health.ui.component.info_text.HErrorScreen
+import feo.health.ui.component.info_text.NothingFound
+import feo.health.ui.component.info_text.StartTheSearch
+import feo.health.ui.navigation.CatalogDetailsRoute
 import feo.health.ui.util.ILoading
 
+/**
+ * A composable function that represents the catalog screen in the application.
+ *
+ * This screen displays the search bar and content area based on the current
+ * state (results, default state, nothing found, error, or loading).
+ *
+ * @param navHostController The navigation controller used to navigate between screens.
+ * @param catalogViewModel The view model that holds the screen state and handles UI events.
+ */
 @Composable
 fun CatalogScreen(
     navHostController: NavHostController,

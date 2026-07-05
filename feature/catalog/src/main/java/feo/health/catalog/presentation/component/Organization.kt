@@ -34,24 +34,43 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import com.valentinilk.shimmer.shimmer
 import feo.health.catalog.presentation.model.Coords
-import feo.health.catalog.presentation.viewmodel.companion.CatalogEvent
 import feo.health.catalog.presentation.model.ICatalog
-import feo.health.ui.model.ICatalogItem
 import feo.health.catalog.presentation.model.Review
 import feo.health.catalog.presentation.model.Review.Companion.ReviewIndication.Companion.defineIndication
+import feo.health.catalog.presentation.viewmodel.companion.CatalogEvent
 import feo.health.ui.component.HProgressIndicator
 import feo.health.ui.component.HProgressIndicator.Shimmer.defaultShimmer
 import feo.health.ui.component.HText
 import feo.health.ui.component.HToast
 import feo.health.ui.component.container.HContainer
+import feo.health.ui.model.ICatalogItem
 import feo.health.ui.resource.HIcons
-import feo.health.ui.util.capitalize
 import feo.health.ui.theme.HTheme
 import feo.health.ui.util.ILoading
-import kotlin.random.Random
+import feo.health.ui.util.capitalize
 
+/**
+ * Object containing UI components for displaying detailed information about organizations (Pharmacies and Clinics).
+ *
+ * Implements [ILoading] to provide custom loading states.
+ */
 object Organization : ILoading {
 
+    /**
+     * The common layout template screen for displaying organization information.
+     *
+     * @param modifier Modifier for the layout.
+     * @param phoneNumber The contact phone number of the organization.
+     * @param name The name of the organization.
+     * @param website The website address of the organization.
+     * @param address The physical address.
+     * @param openingHours The operating schedule.
+     * @param reviews The user reviews.
+     * @param itemType The category type of catalog item.
+     * @param link The link for specialists/services.
+     * @param coords The geographical coordinates of the organization.
+     * @param onEvent Event callback for parent actions.
+     */
     @Composable
     private fun ItemScreen(
         modifier: Modifier = Modifier,
@@ -202,6 +221,13 @@ object Organization : ILoading {
         }
     }
 
+    /**
+     * A card component displaying pharmacy details.
+     *
+     * @param modifier Modifier for the layout.
+     * @param pharmacy The pharmacy model object containing name, contact, etc.
+     * @param onEvent Event callback for handling user interactions.
+     */
     @Composable
     fun PharmacyItemCard(
         modifier: Modifier = Modifier,
@@ -221,6 +247,13 @@ object Organization : ILoading {
         )
     }
 
+    /**
+     * A card component displaying clinic details.
+     *
+     * @param modifier Modifier for the layout.
+     * @param clinic The clinic model object containing name, reviews, coords, etc.
+     * @param onEvent Event callback for handling user interactions.
+     */
     @Composable
     fun ClinicItemCard(
         modifier: Modifier = Modifier,
@@ -238,6 +271,18 @@ object Organization : ILoading {
         onEvent = onEvent
     )
 
+    /**
+     * Helper component that renders an information row with an icon and label.
+     *
+     * @param modifier Modifier for the layout.
+     * @param title The label text to display.
+     * @param subtitle Optional detail text under the title.
+     * @param icon The icon vector graphic.
+     * @param iconTint Vector icon tint color.
+     * @param iconBackgroundTint Background color of the icon container.
+     * @param titleColor Text color of the title.
+     * @param subtitleColor Text color of the subtitle.
+     */
     @Composable
     private fun InfoCard(
         modifier: Modifier = Modifier,
@@ -294,6 +339,11 @@ object Organization : ILoading {
         }
     }
 
+    /**
+     * A skeleton loading screen row that simulates an InfoCard.
+     *
+     * @param modifier Modifier for the layout.
+     */
     @Composable
     private fun ShimmerInfoCard(modifier: Modifier = Modifier) = Row(
         modifier = modifier.height(IntrinsicSize.Max),
@@ -342,6 +392,14 @@ object Organization : ILoading {
         }
     }
 
+    /**
+     * Row of buttons for primary actions at the bottom of the screen (Back, Route, Phone).
+     *
+     * @param modifier Modifier for the layout.
+     * @param onBack Callback for when the back button is clicked.
+     * @param onRoute Callback to open navigation maps for the address.
+     * @param onPhone Callback to start a phone call.
+     */
     @Composable
     private fun BottomButtons(
         modifier: Modifier = Modifier,
@@ -433,6 +491,11 @@ object Organization : ILoading {
         }
     }
 
+    /**
+     * Renders the loading skeleton for organization pages.
+     *
+     * @param params Expected to contain a single [String] representing the screen title at index 0.
+     */
     @Composable
     override fun LoadingScreen(vararg params: Any) = HContainer.TitledScreen(
         modifier = Modifier.fillMaxSize(),

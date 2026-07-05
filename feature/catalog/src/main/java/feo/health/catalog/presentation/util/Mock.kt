@@ -6,7 +6,13 @@ import feo.health.catalog.presentation.model.Review
 import java.time.LocalDate
 import kotlin.random.Random
 
+/**
+ * Utility object containing mock data generators and templates for UI preview and testing.
+ */
 object Mock {
+    /**
+     * A mock instance of [ICatalog.Clinic] used for previews.
+     */
     val clinic = ICatalog.Clinic(
         name = "Республиканская больница имени Яндекса и МАXа",
         link = "clinic-1431",
@@ -23,6 +29,9 @@ object Mock {
         itemType = "clinic"
     )
 
+    /**
+     * A mock instance of [ICatalog.Pharmacy] used for previews.
+     */
     val pharmacy = ICatalog.Pharmacy(
         name = "Великая аптека Яндекса",
         phoneNumber = "+79788819289",
@@ -33,7 +42,16 @@ object Mock {
         )
     )
 
+    /**
+     * Helper function returning a random catalog organization item (either the mock clinic or pharmacy).
+     *
+     * @return A random [ICatalog] organization.
+     */
     private fun randItem() = listOf(clinic, pharmacy)[Random.nextInt(2)]
+
+    /**
+     * A mock list of [ICatalog.Doctor] instances populated with sample details and reviews.
+     */
     val specialists = MutableList(40) { index ->
         ICatalog.Doctor(
             name = "Докторов Доктор Докторович",

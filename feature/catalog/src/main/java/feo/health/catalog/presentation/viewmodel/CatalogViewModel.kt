@@ -22,6 +22,18 @@ import feo.health.ui.model.ICatalogItem
 import feo.health.ui.viewmodel.HViewModel
 import javax.inject.Inject
 
+/**
+ * ViewModel that handles business logic for displaying, searching, and managing catalog items
+ * such as doctors, clinics, services, and pharmacies.
+ *
+ * Extends [HViewModel] with [CatalogState] and [CatalogEvent].
+ *
+ * @property clinicUseCases Clinic business logic use cases.
+ * @property doctorUseCases Doctor business logic use cases.
+ * @property pharmacyUseCases Pharmacy business logic use cases.
+ * @property serviceUseCases Service business logic use cases.
+ * @property searchUseCases Search business logic use cases.
+ */
 class CatalogViewModel @Inject constructor(
     private val clinicUseCases: ICatalogUseCases.Clinic,
     private val doctorUseCases: ICatalogUseCases.Doctor,
@@ -31,6 +43,11 @@ class CatalogViewModel @Inject constructor(
 ) : HViewModel<CatalogState, CatalogEvent>(
     initialState = CatalogState.Items.Default
 ) {
+    /**
+     * Processes incoming UI events and performs transitions.
+     *
+     * @param event The catalog event to handle.
+     */
     override fun onEvent(event: CatalogEvent) = when (event) {
         is CatalogEvent.ItemInfoEvent.OnDetails -> onDetails(event.item)
         is CatalogEvent.ItemInfoEvent.OnSpecialists -> onSpecialists(
@@ -42,6 +59,11 @@ class CatalogViewModel @Inject constructor(
         CatalogEvent.OnBack -> onBack()
     }
 
+    /**
+     * Loads detailed information for the specified catalog item.
+     *
+     * @param item The selected catalog item to inspect.
+     */
     private fun onDetails(item: ICatalogItem) = viewModelScope.tryWithToast(
         onError = { revertScreenState() }
     ) {
@@ -88,6 +110,11 @@ class CatalogViewModel @Inject constructor(
 
     }
 
+    /**
+     * Loads and displays doctors matching a given specialty.
+     *
+     * @param speciality The specialty identifier.
+     */
     private fun onDoctorsBySpeciality(speciality: String) = viewModelScope.tryWithToast(
         onError = { revertScreenState() }
     ) {
@@ -102,6 +129,11 @@ class CatalogViewModel @Inject constructor(
         SearchBarState.enableInput()
     }
 
+    /**
+     * Loads and displays clinics matching a given clinic type.
+     *
+     * @param type The clinic type identifier.
+     */
     private fun onClinicsByType(type: String) = viewModelScope.tryWithToast(
         onError = {
             pushScreenState(CatalogState.Items.Error("Не удалось загрузить данные по типу"))
@@ -119,6 +151,11 @@ class CatalogViewModel @Inject constructor(
         SearchBarState.enableInput()
     }
 
+    /**
+     * Loads and displays clinics offering a given service.
+     *
+     * @param item The selected service item.
+     */
     private fun onClinicsByService(item: ICatalogItem) = viewModelScope.tryWithToast(
         onError = {
             pushScreenState(CatalogState.Items.Error("Не удалось загрузить данные по услуге"))
@@ -136,6 +173,12 @@ class CatalogViewModel @Inject constructor(
         SearchBarState.enableInput()
     }
 
+    /**
+     * Loads the specialists list for a given clinic organization.
+     *
+     * @param type The catalog item type of the organization.
+     * @param link The link/ID key of the organization.
+     */
     private fun onSpecialists(type: ICatalogItem.Companion.CatalogItemType, link: String) =
         viewModelScope.tryWithToast(
             onError = {
@@ -149,6 +192,9 @@ class CatalogViewModel @Inject constructor(
             } else HToast.makeError()
         }
 
+    /**
+     * Executes search based on the query text input and active search filters.
+     */
     private fun onSearch() = viewModelScope.tryWithToast(
         onError = {
             pushScreenState(CatalogState.Items.Error("Произошла ошибка при поиске"))
@@ -212,6 +258,12 @@ class CatalogViewModel @Inject constructor(
         SearchBarState.enableInput()
     }
 
+    /**
+     * Helper to search all doctors, clinics, and services matching a query.
+     *
+     * @param query The query string.
+     * @return List of matching catalog items.
+     */
     private suspend fun searchAll(query: String): List<ICatalogItem> {
         val result = mutableListOf<ICatalogItem>()
         searchUseCases.searchUseCase.invoke(q = query, isLocated = false).let {
@@ -222,17 +274,43 @@ class CatalogViewModel @Inject constructor(
         return result
     }
 
+    /**
+     * Helper to search services.
+     *
+     * @param query The query string.
+     * @return List of matching services.
+     */
     private suspend fun searchServices(query: String): List<ICatalogItem> =
         serviceUseCases.getServicesUseCase(query).toServiceList().map { it.getCatalogItem() }
 
+    /**
+     * Helper to search clinics.
+     *
+     * @param query The query string.
+     * @return List of matching clinics.
+     */
     private suspend fun searchClinics(query: String): List<ICatalogItem> =
         clinicUseCases.getClinicsUseCase(q = query, isLocated = false).toClinicList()
             .map { it.getCatalogItem() }
 
+    /**
+     * Helper to search doctors.
+     *
+     * @param query The query string.
+     * @return List of matching doctors.
+     */
     private suspend fun searchDoctors(query: String): List<ICatalogItem> =
         doctorUseCases.getDoctorsUseCase(q = query).toDoctorList()
             .map { it.getCatalogItem() }
 
+    /**
+     * Helper to search pharmacies within a location radius.
+     *
+     * @param lat Latitude coordinate.
+     * @param lon Longitude coordinate.
+     * @param radius Search radius in meters.
+     * @return List of matching pharmacies.
+     */
     private suspend fun searchPharmacies(
         lat: Double,
         lon: Double,

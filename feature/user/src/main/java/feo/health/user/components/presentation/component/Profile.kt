@@ -64,12 +64,11 @@ import feo.health.ui.component.HTextBar
 import feo.health.ui.component.container.HContainer
 import feo.health.ui.navigation.Routes
 import feo.health.ui.resource.HIcons
-import androidx.compose.ui.res.stringResource
-import feo.health.ui.util.capitalize
 import feo.health.ui.theme.HColorScheme
 import feo.health.ui.theme.HTheme
 import feo.health.ui.theme.fontFamily
 import feo.health.ui.util.Validator
+import feo.health.ui.util.capitalize
 import feo.health.user.components.presentation.component.Profile.InfoCardState.Companion.inverseState
 import feo.health.user.components.presentation.model.ChangePassword
 import feo.health.user.components.presentation.model.User
@@ -77,8 +76,21 @@ import feo.health.user.components.presentation.viewmodel.companion.UserEvent
 import feo.health.user.components.presentation.viewmodel.companion.UserState
 import kotlinx.coroutines.flow.StateFlow
 
+/**
+ * Component representing the Profile screen.
+ * Contains user profile data display and editing functionality,
+ * account settings navigation, password changing, and account management.
+ */
 object Profile {
 
+    /**
+     * Composable screen displaying the main user profile.
+     * Displays loading shimmer or profile cards based on [state].
+     *
+     * @param state The state flow of [UserState] representing the current profile state.
+     * @param navHostController The navigation controller used to transition to other screens.
+     * @param onEvent Callback function to propagate [UserEvent] occurrences to the ViewModel.
+     */
     @Composable
     fun Screen(
         state: StateFlow<UserState>,
@@ -121,6 +133,14 @@ object Profile {
         }
     }
 
+    /**
+     * Composable function rendering a column of information cards (Name, Email, Weight, Height)
+     * as well as action cards (Change Password, History, Favourites, Log Out, Delete Account).
+     *
+     * @param user The current [User] data model displaying profile fields.
+     * @param onLogOut Callback to invoke when the user clicks the log out action.
+     * @param onEvent Callback function to trigger user actions/events.
+     */
     @Composable
     private fun ProfileScreenInfoCards(
         user: User,
@@ -282,6 +302,21 @@ object Profile {
         }
     }
 
+    /**
+     * Composable card for displaying and editing individual user profile fields (e.g. name, height).
+     * Supports shared element transitions between display and edit modes.
+     *
+     * @param modifier Modifier to apply to this layout.
+     * @param title The current text value displayed in the card (e.g. the user's name).
+     * @param subtitle The label of the card (e.g. "Name", "Height").
+     * @param icon The [HIcons] icon corresponding to this profile attribute.
+     * @param hintText Text to show when the value is not set.
+     * @param keyboardType Keyboard type for editing the text field (e.g. [KeyboardType.Number]).
+     * @param iconBackgroundTint Background tint color for the icon container.
+     * @param titleColor Text color for the title.
+     * @param subtitleColor Text color for the subtitle.
+     * @param onValueChange Callback triggered when the value is edited and confirmed.
+     */
     @OptIn(ExperimentalSharedTransitionApi::class)
     @Composable
     private fun ProfileInfoCard(
@@ -474,6 +509,20 @@ object Profile {
         }
     }
 
+    /**
+     * Composable card representing a clickable navigation or action item on the profile screen (e.g. Favourites, Log out).
+     *
+     * @param modifier Modifier to apply to this layout.
+     * @param title Title of the item.
+     * @param subtitle Optional subtitle of the item.
+     * @param icon The [HIcons] icon of the item.
+     * @param iconTint Color tint applied to the icon.
+     * @param hintText Text to show if the title is null.
+     * @param iconBackgroundTint Background tint color for the icon container.
+     * @param titleColor Text color for the title.
+     * @param subtitleColor Text color for the subtitle.
+     * @param onClick Callback triggered when the item is clicked.
+     */
     @Composable
     private fun ProfileItemCard(
         modifier: Modifier = Modifier,
@@ -541,11 +590,29 @@ object Profile {
         }
     }
 
+    /**
+     * Enum representing the presentation state of a profile card.
+     */
     private enum class InfoCardState {
+        /**
+         * State where the card is in text input edit mode.
+         */
         EDIT,
+
+        /**
+         * State where the card is displaying static text.
+         */
         DISPLAY;
 
+        /**
+         * Companion object containing utilities for [InfoCardState].
+         */
         companion object {
+            /**
+             * Returns the opposite [InfoCardState].
+             *
+             * @return The inverted [InfoCardState] (EDIT -> DISPLAY, DISPLAY -> EDIT).
+             */
             fun InfoCardState.inverseState(): InfoCardState = when (this) {
                 EDIT -> DISPLAY
                 DISPLAY -> EDIT
@@ -553,6 +620,12 @@ object Profile {
         }
     }
 
+    /**
+     * Composable card that allows the user to expand password changing fields and submit changes.
+     *
+     * @param modifier Modifier to apply to this layout.
+     * @param onPasswordChange Callback containing the old and new passwords.
+     */
     @OptIn(ExperimentalSharedTransitionApi::class)
     @Composable
     private fun ChangePasswordCard(
@@ -726,6 +799,11 @@ object Profile {
         }
     }
 
+    /**
+     * Composable function that displays a shimmering placeholder card representing profile data loading.
+     *
+     * @param modifier Modifier to apply to this layout.
+     */
     @Composable
     private fun ShimmerInfoCard(modifier: Modifier = Modifier) = Row(
         modifier = modifier.height(IntrinsicSize.Max),

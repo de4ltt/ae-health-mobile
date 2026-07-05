@@ -19,12 +19,33 @@ import feo.health.user.components.presentation.viewmodel.companion.UserEvent
 import feo.health.user.components.presentation.viewmodel.companion.UserState
 import javax.inject.Inject
 
-class UserViewModel @Inject constructor(
+/**
+ * ViewModel for managing user-related flows including profile details, settings, view history, and favourites.
+ * Extends [HViewModel] to utilize state management conventions.
+ *
+ * @property favouriteUseCases Use cases for managing favourite items.
+ * @property historyUseCases Use cases for managing viewing history.
+ * @property userUseCases Use cases for general user account operations.
+ */
+class UserViewModel
+/**
+ * Primary constructor for [UserViewModel] injecting required use case boundaries.
+ *
+ * @param favouriteUseCases Use cases for managing favourite items.
+ * @param historyUseCases Use cases for managing viewing history.
+ * @param userUseCases Use cases for general user account operations.
+ */
+@Inject constructor(
     private val favouriteUseCases: IFavouriteUseCases,
     private val historyUseCases: IHistoryUseCases,
     private val userUseCases: IUserUseCases
 ) : HViewModel<UserState, UserEvent>(initialState = UserState.Profile.Loading) {
 
+    /**
+     * Entry point for incoming UI events. Routes events to their corresponding processors.
+     *
+     * @param event The [UserEvent] triggered by user interaction.
+     */
     override fun onEvent(event: UserEvent) = when (event) {
         UserEvent.OnBack -> onBack()
         UserEvent.Favourites.OnRefresh -> onRefreshFavourite()
@@ -39,6 +60,11 @@ class UserViewModel @Inject constructor(
         UserEvent.Profile.OnRefresh -> onRefreshProfile()
     }
 
+    /**
+     * Fetches current user profile information and updates the state.
+     *
+     * @return The launched coroutine [kotlinx.coroutines.Job].
+     */
     private fun onRefreshProfile() = viewModelScope.tryWithToast {
         val user = userUseCases.getUserInfoUseCase().toUser()
         val defaultState = UserState.Profile.Default(user)
@@ -46,6 +72,11 @@ class UserViewModel @Inject constructor(
         super.initialState = defaultState
     }
 
+    /**
+     * Initiates the account log out sequence.
+     *
+     * @return The launched coroutine [kotlinx.coroutines.Job].
+     */
     private fun onLogOut() = viewModelScope.tryWithToast(
         successMessageRequired = true,
         onError = { revertScreenState() }
@@ -53,6 +84,12 @@ class UserViewModel @Inject constructor(
         userUseCases.logOutUseCase()
     }
 
+    /**
+     * Submits updated profile information for the current user.
+     *
+     * @param user The [User] model containing updated details.
+     * @return The launched coroutine [kotlinx.coroutines.Job].
+     */
     private fun onUpdateUserData(user: User) = viewModelScope.tryWithToast(
         successMessageRequired = true,
         onError = { revertScreenState() }
@@ -62,6 +99,11 @@ class UserViewModel @Inject constructor(
         updateScreenState(UserState.Profile.Default(newUser))
     }
 
+    /**
+     * Triggers the user account deletion flow.
+     *
+     * @return The launched coroutine [kotlinx.coroutines.Job].
+     */
     private fun onDeleteUser() = viewModelScope.tryWithToast(
         onError = { revertScreenState() }
     ) {
@@ -69,6 +111,12 @@ class UserViewModel @Inject constructor(
         userUseCases.deleteUserUseCase()
     }
 
+    /**
+     * Changes the user's password.
+     *
+     * @param changePassword Model specifying the old and new passwords.
+     * @return The launched coroutine [kotlinx.coroutines.Job].
+     */
     private fun onChangePassword(changePassword: ChangePassword) = viewModelScope.tryWithToast(
         successMessageRequired = true,
         onError = { revertScreenState() }
@@ -79,6 +127,12 @@ class UserViewModel @Inject constructor(
         updateScreenState(UserState.Profile.Default(currentUser))
     }
 
+    /**
+     * Removes an item from the user's favourites list.
+     *
+     * @param item The [UCatalogItem] to delete.
+     * @return The launched coroutine [kotlinx.coroutines.Job].
+     */
     private fun onDeleteFavourite(item: UCatalogItem) = viewModelScope.tryWithToast(
         successMessageRequired = true,
         onError = { revertScreenState() }
@@ -88,6 +142,12 @@ class UserViewModel @Inject constructor(
         onRefreshFavourite()
     }
 
+    /**
+     * Removes an item from the user's viewing history.
+     *
+     * @param item The [UCatalogItem] to delete.
+     * @return The launched coroutine [kotlinx.coroutines.Job].
+     */
     private fun onDeleteHistory(item: UCatalogItem) = viewModelScope.tryWithToast(
         successMessageRequired = true,
         onError = { revertScreenState() }
@@ -97,6 +157,11 @@ class UserViewModel @Inject constructor(
         onRefreshHistory()
     }
 
+    /**
+     * Refreshes the user's viewing history items.
+     *
+     * @return The launched coroutine [kotlinx.coroutines.Job].
+     */
     private fun onRefreshHistory() = viewModelScope.tryWithToast(
         onError = { revertScreenState() }
     ) {
@@ -105,11 +170,22 @@ class UserViewModel @Inject constructor(
         pushScreenState(UserState.History.Default(result))
     }
 
+    /**
+     * Handles transitions to detail view for a specific catalog item.
+     *
+     * @param item The [UCatalogItem] to view.
+     * @return The launched coroutine [kotlinx.coroutines.Job].
+     */
     private fun onItemDetails(item: UCatalogItem) = viewModelScope.tryWithToast(
         dispatcher = AppDispatchers.main
     ) {
     }
 
+    /**
+     * Refreshes the user's favourites list.
+     *
+     * @return The launched coroutine [kotlinx.coroutines.Job].
+     */
     private fun onRefreshFavourite() = viewModelScope.tryWithToast(
         onError = { revertScreenState() }
     ) {

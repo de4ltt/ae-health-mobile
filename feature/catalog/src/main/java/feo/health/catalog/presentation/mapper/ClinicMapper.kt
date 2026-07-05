@@ -7,8 +7,18 @@ import feo.health.catalog.presentation.model.ICatalog
 import feo.health.mapper.IMapper
 import feo.health.mapper.Mapper
 
+/**
+ * Mapper object for translating between [ClinicDomain] and [ICatalog.Clinic].
+ *
+ * This mapper uses the @Mapper annotation and implements [IMapper].
+ */
 @Mapper
 private object ClinicMapper : IMapper<ClinicDomain, ICatalog.Clinic> {
+    /**
+     * Converts a [ClinicDomain] instance to [ICatalog.Clinic].
+     *
+     * @return The converted [ICatalog.Clinic] instance.
+     */
     override fun ClinicDomain.toSecond(): ICatalog.Clinic =
         ICatalog.Clinic(
             name = name,
@@ -20,6 +30,11 @@ private object ClinicMapper : IMapper<ClinicDomain, ICatalog.Clinic> {
             reviews = reviews?.toReviewList()
         )
 
+    /**
+     * Converts an [ICatalog.Clinic] instance back to [ClinicDomain].
+     *
+     * @return The converted [ClinicDomain] instance.
+     */
     override fun ICatalog.Clinic.toFirst(): ClinicDomain =
         ClinicDomain(
             name = name,

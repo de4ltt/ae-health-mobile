@@ -12,18 +12,23 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import feo.health.ui.navigation.Routes
-import feo.health.ui.navigation.UserRoute
 import feo.health.ui.navigation.UserFavouritesRoute
 import feo.health.ui.navigation.UserHistoryRoute
-import feo.health.ui.util.ILoading
+import feo.health.ui.navigation.UserRoute
 import feo.health.user.components.presentation.UserScreen
 import feo.health.user.components.presentation.component.Favourites
 import feo.health.user.components.presentation.component.History
 import feo.health.user.components.presentation.viewmodel.UserViewModel
 import feo.health.user.components.presentation.viewmodel.companion.UserEvent
 import feo.health.user.components.presentation.viewmodel.companion.UserState
-import kotlinx.serialization.Serializable
 
+/**
+ * Configures the user feature navigation graph.
+ * Sets up composable destinations for the main user profile screen, favourites, and history.
+ *
+ * @param navHostController The navigation controller used to coordinate navigation.
+ * @param userViewModel The ViewModel instance shared across the user screen destinations.
+ */
 fun NavGraphBuilder.userNavGraph(
     navHostController: NavHostController,
     userViewModel: UserViewModel
@@ -59,6 +64,14 @@ fun NavGraphBuilder.userNavGraph(
     }
 }
 
+/**
+ * Composable screen displaying the user's favourite items.
+ * Observes the current favourites state from the [userViewModel] and triggers
+ * navigation pop on back gestures.
+ *
+ * @param navHostController The navigation controller used to pop back or navigate elsewhere.
+ * @param userViewModel The ViewModel instance used to fetch data and trigger events.
+ */
 @Composable
 fun UserFavouritesScreen(
     navHostController: NavHostController,
@@ -90,6 +103,14 @@ fun UserFavouritesScreen(
     }
 }
 
+/**
+ * Composable screen displaying the user's viewing history.
+ * Observes the current history state from the [userViewModel] and handles
+ * hardware back button events.
+ *
+ * @param navHostController The navigation controller used to pop back or navigate elsewhere.
+ * @param userViewModel The ViewModel instance used to fetch data and trigger events.
+ */
 @Composable
 fun UserHistoryScreen(
     navHostController: NavHostController,

@@ -3,11 +3,9 @@ package feo.health.catalog.presentation.viewmodel.companion
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import feo.health.ui.R
-import feo.health.ui.util.capitalize
 import feo.health.ui.dispatcher.AppDispatchers
+import feo.health.ui.util.capitalize
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

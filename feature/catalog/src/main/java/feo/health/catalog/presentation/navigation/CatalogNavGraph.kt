@@ -1,6 +1,5 @@
 package feo.health.catalog.presentation.navigation
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,15 +21,23 @@ import feo.health.catalog.presentation.viewmodel.CatalogViewModel
 import feo.health.catalog.presentation.viewmodel.companion.CatalogEvent
 import feo.health.catalog.presentation.viewmodel.companion.CatalogState
 import feo.health.catalog.presentation.viewmodel.companion.SearchBarState
-import feo.health.ui.navigation.Routes
 import feo.health.ui.navigation.CatalogDetailsRoute
 import feo.health.ui.navigation.CatalogSpecialistsRoute
-import feo.health.ui.util.ILoading
+import feo.health.ui.navigation.Routes
 import kotlinx.serialization.Serializable
 
+/**
+ * Serializable object representing the base catalog route in the navigation system.
+ */
 @Serializable
 object CatalogBaseRoute
 
+/**
+ * Sets up the navigation destinations and composables for the catalog feature graph.
+ *
+ * @param navHostController Navigation controller for driving flow and back stack operations.
+ * @param catalogViewModel Common ViewModel holding UI states and dispatching actions.
+ */
 fun NavGraphBuilder.catalogNavGraph(
     navHostController: NavHostController,
     catalogViewModel: CatalogViewModel
@@ -76,6 +83,16 @@ fun NavGraphBuilder.catalogNavGraph(
     }
 }
 
+/**
+ * Composable rendering the detailed view of a selected catalog item.
+ *
+ * Handles back press intercepting to update the ViewModel state before popping the back stack.
+ *
+ * @param navHostController Controller for navigating back or nested details.
+ * @param catalogViewModel ViewModel driving details states.
+ * @param link The details URL/link of the catalog item.
+ * @param type The type name of the catalog item (e.g. Clinic, Doctor, Pharmacy).
+ */
 @Composable
 fun CatalogDetailsScreen(
     navHostController: NavHostController,
@@ -115,6 +132,15 @@ fun CatalogDetailsScreen(
     }
 }
 
+/**
+ * Composable rendering the specialists list of a specific organization.
+ *
+ * Handles back press intercepting to update the ViewModel state before popping the back stack.
+ *
+ * @param navHostController Controller to pop navigation stack or move to a specialist's profile.
+ * @param catalogViewModel ViewModel driving specialists states.
+ * @param link The endpoint/link from which specialists are loaded.
+ */
 @Composable
 fun CatalogSpecialistsScreen(
     navHostController: NavHostController,

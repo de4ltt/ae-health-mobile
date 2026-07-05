@@ -1,5 +1,7 @@
 package feo.health.ai.presentation.component
 
+import feo.health.ui.R
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.fadeIn
@@ -100,7 +102,7 @@ object AiContainer : ILoading {
                 textFieldState.clearText()
         }
 
-        HContainer.TitledScreen(modifier = modifier, title = stringResource(feo.health.ui.R.string.ai).uppercase()) {
+        HContainer.TitledScreen(modifier = modifier, title = stringResource(R.string.ai).uppercase()) {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 HTextBar.Items(
                     enabled = searchBarEnabled,
@@ -266,7 +268,7 @@ object AiContainer : ILoading {
                     .height(IntrinsicSize.Min),
                 contentModifier = Modifier.padding(horizontal = 15.dp, vertical = 5.dp),
                 lineLimits = TextFieldLineLimits.SingleLine,
-                hintText = stringResource(feo.health.ui.R.string.add_symptom).capitalize(),
+                hintText = stringResource(R.string.add_symptom).capitalize(),
                 state = textFieldState,
                 backItem = {
                     HIcons.PLUS(

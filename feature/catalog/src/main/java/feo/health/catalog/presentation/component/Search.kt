@@ -1,5 +1,7 @@
 package feo.health.catalog.presentation.component
 
+import feo.health.ui.R
+
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -88,7 +90,7 @@ object Search : ILoading {
                     modifier = Modifier,
                     contentPadding = PaddingValues.Zero,
                     spacing = 10.dp,
-                    title = stringResource(feo.health.ui.R.string.here_is_what_we_found).capitalize(),
+                    title = stringResource(R.string.here_is_what_we_found).capitalize(),
                     items = (screenState as CatalogState.Items.Found).found,
                     itemContainer = { item ->
                         CatalogItem(

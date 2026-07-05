@@ -1,5 +1,7 @@
 package feo.health.ai.presentation.model.response
 
+import feo.health.ui.R
+
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -50,9 +52,9 @@ data class FeatureProcedureResponse(
             textDecoration = TextDecoration.Underline
         )
 
-        val descriptionText = stringResource(feo.health.ui.R.string.description).capitalize()
-        val indicationsText = stringResource(feo.health.ui.R.string.indication).capitalize()
-        val contradictionsText = stringResource(feo.health.ui.R.string.contradictions).capitalize()
+        val descriptionText = stringResource(R.string.description).capitalize()
+        val indicationsText = stringResource(R.string.indication).capitalize()
+        val contradictionsText = stringResource(R.string.contradictions).capitalize()
 
         val annotated = remember {
             buildAnnotatedString {

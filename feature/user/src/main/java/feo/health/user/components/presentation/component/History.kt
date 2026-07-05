@@ -1,5 +1,7 @@
 package feo.health.user.components.presentation.component
 
+import feo.health.ui.R
+
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -38,7 +40,7 @@ object History : ILoading {
         onEvent: (UserEvent) -> Unit
     ) = HContainer.TitledScreen(
         modifier = Modifier.fillMaxSize(),
-        title = stringResource(feo.health.ui.R.string.history).capitalize()
+        title = stringResource(R.string.history).capitalize()
     ) {
         historyItems.forEach { entry ->
             HText.SingleLine(
@@ -69,7 +71,7 @@ object History : ILoading {
     @Composable
     override fun LoadingScreen(vararg params: Any) = HContainer.TitledScreen(
         modifier = Modifier.fillMaxSize(),
-        title = stringResource(feo.health.ui.R.string.history).capitalize()
+        title = stringResource(R.string.history).capitalize()
     ) {
         HList.Lazy(
             modifier = Modifier,

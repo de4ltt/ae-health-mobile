@@ -1,5 +1,7 @@
 package feo.health.auth.presentation.component
 
+import feo.health.ui.R
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -102,7 +104,7 @@ object Authorization {
          */
         EMAIL(
             icon = HIcons.EMAIL,
-            hintRes = feo.health.ui.R.string.email,
+            hintRes = R.string.email,
             onInput = {
                 AuthFieldsState.SignIn.email.value = it
             }),
@@ -112,7 +114,7 @@ object Authorization {
          */
         PASSWORD(
             icon = HIcons.KEY,
-            hintRes = feo.health.ui.R.string.password,
+            hintRes = R.string.password,
             onInput = { AuthFieldsState.SignIn.password.value = it },
             outputTransformation = PasswordOutputTransformation
         )
@@ -137,7 +139,7 @@ object Authorization {
          */
         NAME(
             icon = HIcons.USER,
-            hintRes = feo.health.ui.R.string.name,
+            hintRes = R.string.name,
             onInput = {
                 AuthFieldsState.SignUp.name.value = it
             }
@@ -148,7 +150,7 @@ object Authorization {
          */
         EMAIL(
             icon = HIcons.EMAIL,
-            hintRes = feo.health.ui.R.string.email,
+            hintRes = R.string.email,
             onInput = { AuthFieldsState.SignUp.email.value = it }),
 
         /**
@@ -156,7 +158,7 @@ object Authorization {
          */
         PASSWORD(
             icon = HIcons.KEY,
-            hintRes = feo.health.ui.R.string.password,
+            hintRes = R.string.password,
             onInput = { AuthFieldsState.SignUp.password.value = it },
             outputTransformation = PasswordOutputTransformation
         ),
@@ -166,7 +168,7 @@ object Authorization {
          */
         DATE_OF_BIRTH(
             icon = HIcons.BIRTHDAY,
-            hintRes = feo.health.ui.R.string.date_of_birth,
+            hintRes = R.string.date_of_birth,
             onInput = { AuthFieldsState.SignUp.dateOfBirth.value = it });
     }
 
@@ -189,14 +191,14 @@ object Authorization {
 
         val screenState by screenState.collectAsStateWithLifecycle()
 
-        val cannotGoBack = stringResource(feo.health.ui.R.string.cannot_go_back).capitalize()
+        val cannotGoBack = stringResource(R.string.cannot_go_back).capitalize()
 
         HList.DefaultTitled(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight(),
             textAlign = TextAlign.Center,
-            title = stringResource(feo.health.ui.R.string.sign_in).capitalize(),
+            title = stringResource(R.string.sign_in).capitalize(),
             items = SignInFields.entries,
             contentPadding = PaddingValues(vertical = 5.dp),
             itemContainer = {
@@ -234,7 +236,7 @@ object Authorization {
                     indication = null,
                     interactionSource = null
                 ),
-            text = stringResource(feo.health.ui.R.string.sign_up).capitalize(),
+            text = stringResource(R.string.sign_up).capitalize(),
             textAlign = TextAlign.Center,
             textDecoration = TextDecoration.Underline,
             color = HTheme.colors.onBackground.copy(alpha = 0.5f)
@@ -254,7 +256,7 @@ object Authorization {
             ) {
                 HText.SingleLine(
                     modifier = Modifier.padding(horizontal = 15.dp),
-                    text = stringResource(feo.health.ui.R.string.proceed).capitalize(),
+                    text = stringResource(R.string.proceed).capitalize(),
                     fontWeight = FontWeight.SemiBold,
                     color = HTheme.colors.background
                 )
@@ -278,7 +280,7 @@ object Authorization {
     ) {
 
         val screenState by screenState.collectAsStateWithLifecycle()
-        val cannotGoBack = stringResource(feo.health.ui.R.string.cannot_go_back).capitalize()
+        val cannotGoBack = stringResource(R.string.cannot_go_back).capitalize()
 
         HContainer.Default(
             modifier = modifier.fillMaxSize(),
@@ -289,7 +291,7 @@ object Authorization {
                     .fillMaxWidth()
                     .wrapContentHeight(),
                 textAlign = TextAlign.Center,
-                title = stringResource(feo.health.ui.R.string.sign_up).capitalize(),
+                title = stringResource(R.string.sign_up).capitalize(),
                 items = SignUpFields.entries,
                 contentPadding = PaddingValues(vertical = 5.dp),
                 itemContainer = {
@@ -373,7 +375,7 @@ object Authorization {
                         indication = null,
                         interactionSource = null
                     ),
-                text = stringResource(feo.health.ui.R.string.sign_in).capitalize(),
+                text = stringResource(R.string.sign_in).capitalize(),
                 textAlign = TextAlign.Center,
                 textDecoration = TextDecoration.Underline,
                 color = HTheme.colors.onBackground.copy(alpha = 0.5f)
@@ -393,7 +395,7 @@ object Authorization {
                 ) {
                     HText.SingleLine(
                         modifier = Modifier.padding(horizontal = 15.dp),
-                        text = stringResource(feo.health.ui.R.string.proceed).capitalize(),
+                        text = stringResource(R.string.proceed).capitalize(),
                         fontWeight = FontWeight.SemiBold,
                         color = HTheme.colors.background
                     )
@@ -438,7 +440,7 @@ object Authorization {
                             contentColor = HTheme.colors.primary
                         )
                 ) {
-                    Text(stringResource(feo.health.ui.R.string.ok).uppercase())
+                    Text(stringResource(R.string.ok).uppercase())
                 }
             },
             dismissButton = {
@@ -447,7 +449,7 @@ object Authorization {
                     colors = ButtonDefaults.textButtonColors()
                         .copy(contentColor = HTheme.colors.primary)
                 ) {
-                    Text(stringResource(feo.health.ui.R.string.cancel).uppercase())
+                    Text(stringResource(R.string.cancel).uppercase())
                 }
             }
         ) {
